@@ -1,7 +1,7 @@
 """
 TODO:
 1) DOCUMENTATION
-3) Known limitations:
+2) Known limitations:
     a) Only one stimulus trigger can be configured per trial
 
 DONE:
@@ -45,7 +45,8 @@ DONE:
                          a) VR fps: 60Hz
                          b) Tail tracking tested with video file. 100-150 fps should work, test with camera
                          c) Teensy sync timeout of 0.004 seconds
-                         b) UDP timeout of 0.001 seconds and UDP buffer size of 64 bytes 
+                         b) UDP timeout of 0.001 seconds and UDP buffer size of 64 bytes
+17) Implement ptic flow stimulus delivery and trialwise gloabal gain setting
 """
 
 from pathlib import Path
@@ -170,6 +171,7 @@ class ZebrafishVirtualReality(ShowBase):
         self.start_trial = False
         self.start_2p = False
         self.end_2p = False
+        self.optic_flow_state = False
         self.stim_state = False
         self.stim_state_pulsed = False
         self.framecount_2p = 0.
@@ -289,6 +291,7 @@ class ZebrafishVirtualReality(ShowBase):
         self.use_keyboard               = self.trialconfig['use_keyboard']
         self.keyboard_gain              = self.trialconfig['keyboard_gain']
         self.keyboard_heading_increment = self.trialconfig['keyboard_heading_increment']
+        self.fish_gain                  = self.trialconfig['fish_gain']
         self.enable2d                   = self.trialconfig['enable2d']
         self.displacement_restart       = self.trialconfig['displacement_restart']
         self.displacement_trial_start   = self.trialconfig['displacement_trial_start']
@@ -315,6 +318,15 @@ class ZebrafishVirtualReality(ShowBase):
         self.stim_radius        = self.trialconfig['stim_radius']
         self.stim_onset_time    = self.trialconfig['stim_onset_time']
         self.stim_duration      = self.trialconfig['stim_duration']
+
+        #Optic flow
+        self.optic_flow                 = self.trialconfig['optic_flow']
+        self.optic_flow_reference_frame = self.trialconfig['optic_flow_reference_frame']
+        self.optic_flow_direction       = self.trialconfig['optic_flow_direction']
+        self.optic_flow_velocity        = self.trialconfig['optic_flow_velocity']
+        self.optic_flow_mode            = self.trialconfig['optic_flow_mode']
+        self.optic_flow_coord           = self.trialconfig['optic_flow_coord']
+        self.optic_flow_radius          = self.trialconfig['optic_flow_radius']
 
         #Cue cards for showing landmarks and displaying video
         self.show_landmarks     = self.trialconfig['show_landmarks']
@@ -517,6 +529,17 @@ class ZebrafishVirtualReality(ShowBase):
         elif self.keyMap["left"]:
             builtins.base.camera.setH(builtins.base.camera, self.keyboard_heading_increment * self.frame_dt)
 
+        if self.optic_flow_state == True:
+
+            if self.optic_flow_reference_frame == 'allocentric':
+                current_h = builtins.base.camera.getH() # get current heading
+                builtins.base.camera.setH(self.optic_flow_direction) # set heading to the desired optic flow direction
+                builtins.base.camera.setY(builtins.base.camera, self.optic_flow_velocity * self.frame_dt)
+                builtins.base.camera.setH(current_h) # reset heading to fish heading
+
+            if self.optic_flow_reference_frame == 'egocentric':
+                builtins.base.camera.setY(builtins.base.camera, self.optic_flow_velocity * self.frame_dt)
+
 
     def updateCameraWithTailTracking(self):
         data, addr = None, None
@@ -534,9 +557,39 @@ class ZebrafishVirtualReality(ShowBase):
         else:
             self.velocity, self.theta = 0, 0
 
-        builtins.base.camera.setY(builtins.base.camera, self.velocity * self.frame_dt)
+        builtins.base.camera.setY(builtins.base.camera, self.velocity * self.frame_dt * self.fish_gain)
         if self.enable2d:
-            builtins.base.camera.setH(builtins.base.camera, self.theta * self.frame_dt)
+            builtins.base.camera.setH(builtins.base.camera, self.theta * self.frame_dt * self.fish_gain)
+
+        if self.optic_flow_state == True:
+
+            if self.optic_flow_reference_frame == 'allocentric':
+                current_h = builtins.base.camera.getH() # get current heading
+                builtins.base.camera.setH(self.optic_flow_direction) # set heading to the desired optic flow direction
+                builtins.base.camera.setY(builtins.base.camera, self.optic_flow_velocity * self.frame_dt * self.fish_gain)
+                builtins.base.camera.setH(current_h) # reset heading to fish heading
+                
+            if self.optic_flow_reference_frame == 'egocentric':    
+                builtins.base.camera.setY(builtins.base.camera, self.optic_flow_velocity * self.frame_dt * self.fish_gain)
+
+
+    def setOpticFlowState(self):
+
+        if self.state == "trial":
+
+            if self.optic_flow == True:
+
+                if self.optic_flow_mode == "trial" and self.optic_flow_state == False:
+                        self.optic_flow_state = True
+
+                if self.optic_flow_mode == "zone":
+                    distance = np.linalg.norm(np.array([self.XPos,self.YPos]) - np.array(self.optic_flow_coord))
+                    if distance <= self.optic_flow_radius:
+                        self.optic_flow_state = True
+                    else:
+                        self.optic_flow_state = False
+        else:
+            self.optic_flow_state = False
 
 
     def setTrigState(self):
@@ -731,6 +784,8 @@ class ZebrafishVirtualReality(ShowBase):
                     else:
                         self.start_2p = True
                     
+
+        self.setOpticFlowState()
 
         self.setTrigState()
 

@@ -6,6 +6,7 @@
             "use_keyboard": true,
             "keyboard_gain": 5.0,
             "keyboard_heading_increment": 20,
+            "fish_gain": 1.0,
             "enable2d": false,
             "displacement_restart": 40,
             "displacement_trial_start": 1.0,
@@ -41,6 +42,16 @@
             "stim_radius": 10.0,
             "stim_onset_time": 2.0,
             "stim_duration": 1.0,
+            "optic_flow": true,
+            "optic_flow_reference_frame": "allocentric",
+            "optic_flow_direction": 90,
+            "optic_flow_velocity": -1.0,
+            "optic_flow_mode": "zone",
+            "optic_flow_coord": [
+                0,
+                15
+            ],
+            "optic_flow_radius": 10.0,
             "show_landmarks": true,
             "mirror_landmarks": [
                 true,
@@ -100,6 +111,7 @@
             "use_keyboard": true,
             "keyboard_gain": 5.0,
             "keyboard_heading_increment": 20,
+            "fish_gain": 1.0,
             "enable2d": false,
             "displacement_restart": 40,
             "displacement_trial_start": 1.0,
@@ -135,6 +147,16 @@
             "stim_radius": 10.0,
             "stim_onset_time": 2.0,
             "stim_duration": 1.0,
+            "optic_flow": true,
+            "optic_flow_reference_frame": "allocentric",
+            "optic_flow_direction": 90,
+            "optic_flow_velocity": -1.0,
+            "optic_flow_mode": "zone",
+            "optic_flow_coord": [
+                0,
+                15
+            ],
+            "optic_flow_radius": 10.0,
             "show_landmarks": true,
             "mirror_landmarks": [
                 true,
@@ -194,6 +216,7 @@
             "use_keyboard": true,
             "keyboard_gain": 5.0,
             "keyboard_heading_increment": 20,
+            "fish_gain": 1.0,
             "enable2d": false,
             "displacement_restart": 40,
             "displacement_trial_start": 1.0,
@@ -229,6 +252,16 @@
             "stim_radius": 10.0,
             "stim_onset_time": 2.0,
             "stim_duration": 1.0,
+            "optic_flow": true,
+            "optic_flow_reference_frame": "allocentric",
+            "optic_flow_direction": 90,
+            "optic_flow_velocity": -1.0,
+            "optic_flow_mode": "zone",
+            "optic_flow_coord": [
+                0,
+                15
+            ],
+            "optic_flow_radius": 10.0,
             "show_landmarks": true,
             "mirror_landmarks": [
                 true,

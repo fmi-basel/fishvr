@@ -7,13 +7,14 @@ Make config file
 ---- Subsequent trials are carried out with the specified number of repeats.
 """
 
-configname = "defaultconfig.json"
+configname = "exp_configs/defaultconfig.json"
 
 paramdict = {"trial_id"                     : "default",
              "repeats"                      : 2,
              "use_keyboard"                 : True,
              "keyboard_gain"                : 5.,
-             "keyboard_heading_increment"   : 20,  
+             "keyboard_heading_increment"   : 20,
+             "fish_gain"                    : 1., # global gain multiplier to apply to fish velocity and heading (use independent gains in tail tracking code for scaling)  
              "enable2d"                     : False,
              "displacement_restart"         : 40,
              "displacement_trial_start"     : 1.,
@@ -27,13 +28,20 @@ paramdict = {"trial_id"                     : "default",
              "continuous2p"                 : False,
              "fade_duration"                : 1.,
              "stimulation"                  : True,
-             "stimulation_mode"             : "crossing",
+             "stimulation_mode"             : "crossing", # location, crossing (x or y direction), zone or time
              "stim_intensity"               : 50,
              "stim_coord"                   : [0,15],
              "crossing_direction"           : "y",
              "stim_radius"                  : 10.,
              "stim_onset_time"              : 2.,
              "stim_duration"                : 1.,
+             "optic_flow"                   : True,
+             "optic_flow_reference_frame"   : "allocentric", # allocentric or egocentric
+             "optic_flow_direction"         : 90, # angle in degrees when allocentric. ignored when egocentric
+             "optic_flow_velocity"          : -1.,
+             "optic_flow_mode"              : "zone", # zone or trial
+             "optic_flow_coord"             : [0,15],
+             "optic_flow_radius"            : 10.,
              "show_landmarks"               : True,
              "mirror_landmarks"             : [True, True],
              "mirror_distance"              : [2.15, 2.5],
