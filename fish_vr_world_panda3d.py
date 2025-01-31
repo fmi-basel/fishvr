@@ -3,6 +3,7 @@ TODO:
 1) DOCUMENTATION
 2) Known limitations:
     a) Only one stimulus trigger can be configured per trial
+    b) Stimulation zones can only be defined as circles of a specified radius 
 
 DONE:
 1) Save trial info ------ json format, add fields as necessary
