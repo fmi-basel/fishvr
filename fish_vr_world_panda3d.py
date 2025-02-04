@@ -138,8 +138,9 @@ class ZebrafishVirtualReality(ShowBase):
             self.datafile = open(logfile, 'w', encoding='utf-8',  newline='')
             self.logger = csv.writer(self.datafile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
             self.logger.writerow(['trial', 'trial index', '2p framecount', 'timestamp',
-                                   'xpos', 'ypos', 'heading', '2p state', 'stim state',
-                                   'stim state pulsed', 'tail tracking framecount'])
+                                   'xpos', 'ypos', 'heading', '2p state', 'optic flow state', 
+                                   'optic flow direction', 'optic flow velocity', 'stim state',
+                                   'stim state pulsed', 'tail tracking framecount', 'vr gain'])
 
         self.trial = 0
         self.repcount = 0
@@ -292,7 +293,7 @@ class ZebrafishVirtualReality(ShowBase):
         self.use_keyboard               = self.trialconfig['use_keyboard']
         self.keyboard_gain              = self.trialconfig['keyboard_gain']
         self.keyboard_heading_increment = self.trialconfig['keyboard_heading_increment']
-        self.fish_gain                  = self.trialconfig['fish_gain']
+        self.vr_gain                  = self.trialconfig['vr_gain']
         self.enable2d                   = self.trialconfig['enable2d']
         self.displacement_restart       = self.trialconfig['displacement_restart']
         self.displacement_trial_start   = self.trialconfig['displacement_trial_start']
@@ -558,20 +559,20 @@ class ZebrafishVirtualReality(ShowBase):
         else:
             self.velocity, self.theta = 0, 0
 
-        builtins.base.camera.setY(builtins.base.camera, self.velocity * self.frame_dt * self.fish_gain)
+        builtins.base.camera.setY(builtins.base.camera, self.velocity * self.frame_dt * self.vr_gain)
         if self.enable2d:
-            builtins.base.camera.setH(builtins.base.camera, self.theta * self.frame_dt * self.fish_gain)
+            builtins.base.camera.setH(builtins.base.camera, self.theta * self.frame_dt * self.vr_gain)
 
         if self.optic_flow_state == True:
 
             if self.optic_flow_reference_frame == 'allocentric':
                 current_h = builtins.base.camera.getH() # get current heading
                 builtins.base.camera.setH(self.optic_flow_direction) # set heading to the desired optic flow direction
-                builtins.base.camera.setY(builtins.base.camera, self.optic_flow_velocity * self.frame_dt * self.fish_gain)
+                builtins.base.camera.setY(builtins.base.camera, self.optic_flow_velocity * self.frame_dt * self.vr_gain)
                 builtins.base.camera.setH(current_h) # reset heading to fish heading
                 
             if self.optic_flow_reference_frame == 'egocentric':    
-                builtins.base.camera.setY(builtins.base.camera, self.optic_flow_velocity * self.frame_dt * self.fish_gain)
+                builtins.base.camera.setY(builtins.base.camera, self.optic_flow_velocity * self.frame_dt * self.vr_gain)
 
 
     def setOpticFlowState(self):
@@ -684,8 +685,9 @@ class ZebrafishVirtualReality(ShowBase):
         """
         if self.save:
             self.logger.writerow([self.trial, self.trial_index, self.framecount_2p, self.frame_onset_time,
-                                  self.XPos, self.YPos, self.heading, self.twopstate, self.stim_state,
-                                  self.stim_state_pulsed, self.tail_tracking_framecount])
+                                  self.XPos, self.YPos, self.heading, self.twopstate, self.optic_flow_state, 
+                                  self.optic_flow_direction, self.optic_flow_velocity, self.stim_state,
+                                  self.stim_state_pulsed, self.tail_tracking_framecount, self.vr_gain])
             
 
     def printTrialInfo(self):

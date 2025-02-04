@@ -14,7 +14,7 @@ paramdict = {"trial_id"                     : "default",
              "use_keyboard"                 : True,
              "keyboard_gain"                : 5.,
              "keyboard_heading_increment"   : 20,
-             "fish_gain"                    : 1., # global gain multiplier to apply to fish velocity and heading (use independent gains in tail tracking code for scaling)  
+             "vr_gain"                      : 1., # global gain multiplier to apply to fish velocity and heading (use independent gains in tail tracking code for scaling)  
              "enable2d"                     : False,
              "displacement_restart"         : 40,
              "displacement_trial_start"     : 1.,
