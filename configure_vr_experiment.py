@@ -1,67 +1,40 @@
 import json
+import random
 
 """
 Make config file
----- The first trial loops infinitely until user input is received. 
+---- The first trial is set to loop infinitely until user input is received, ignoring the number of repeats parameter in the trial configuration  
 ---- Place the fish in VR and set up imaging while the infinite VR loop keeps the fish engaged.
 ---- Subsequent trials are carried out with the specified number of repeats.
 """
 
-configname = "exp_configs/defaultconfig.json"
+def makeconfig(trialfiles, trialrepeats, configfile, randomize_trial_order=False, saveconfig=True):
 
-paramdict = {"trial_id"                     : "default",
-             "repeats"                      : 2,
-             "use_keyboard"                 : True,
-             "keyboard_gain"                : 5.,
-             "keyboard_heading_increment"   : 20,
-             "vr_gain"                      : 1., # global gain multiplier to apply to fish velocity and heading (use independent gains in tail tracking code for scaling)  
-             "enable2d"                     : False,
-             "displacement_restart"         : 40,
-             "displacement_trial_start"     : 1.,
-             "model"                        : "models/1D-Tunnel_naturalistic.bam",
-             "init_position"                : [0.,0.,.2],
-             "init_hpr"                     : [0.,0.,0.],
-             "scale"                        : [.25,.25,.25],
-             "intertrial_duration"          : 5,
-             "max_trial_duration"           : 20.,
-             "do2p"                         : True,
-             "continuous2p"                 : False,
-             "fade_duration"                : 1.,
-             "stimulation"                  : True,
-             "stimulation_mode"             : "crossing", # location, crossing (x or y direction), zone or time
-             "stim_intensity"               : 50,
-             "stim_coord"                   : [0,15],
-             "crossing_direction"           : "y",
-             "stim_radius"                  : 10.,
-             "stim_onset_time"              : 2.,
-             "stim_duration"                : 1.,
-             "optic_flow"                   : True,
-             "optic_flow_reference_frame"   : "allocentric", # allocentric or egocentric
-             "optic_flow_direction"         : 90, # angle in degrees when allocentric. ignored when egocentric
-             "optic_flow_velocity"          : -1.,
-             "optic_flow_mode"              : "zone", # zone or trial
-             "optic_flow_coord"             : [0,15],
-             "optic_flow_radius"            : 10.,
-             "show_landmarks"               : True,
-             "mirror_landmarks"             : [True, True],
-             "mirror_distance"              : [2.15, 2.5],
-             "landmark_number"              : 2,
-             "landmark_position"            : [[-1.45,10,0.25], [-.6,20,0.25]], # landmark coordinates
-             "landmark_hpr"                 : [[90,0,0], [90,0,0]], # landmark orientation
-             "landmarks"                    : ["models/VRE_autoPA_realFish.png", "models/VRE_autoPA_realFish.avi"], # landmark files (image or video)
-             "landmark_flag"                : [True, True], # Show or hide landmarks. Can be updated in spinCameraTask to make landmarks interactive
-             "handle_collisions"            : True,
-             "collision_radius"             : 0.3,
-             "collider_flag"                : ["Floor", "Collider"], #complex collider geometries impact performance significantly
-             "hide_collider"                : [False, True]}
+    trials = []
+    for trialfile, repeats in zip(trialfiles, trialrepeats):
+        for i in range(repeats):
+            with open(trialfile, 'r') as f:
+                trials.append(json.load(f))
 
-configdict = {"trials":[paramdict, paramdict, paramdict]} # include multiple dictionaries separated by commas to program a multi-trial experiment
+    if randomize_trial_order and len(trials) > 2: # keep the first trial in place and randomize the rest
+        first_trial = [trials[0]]
+        trials = trials[1:]
+        random.shuffle(trials)
+        trials = first_trial + trials
 
-# Save config
-with open(configname, 'w', encoding='utf-8') as f:
-    json.dump(configdict, f, ensure_ascii=False, indent=4)
+    configdict = {"trials":trials} # combine trials
 
-# Load config
-# with open(configname, 'r') as f:
-#     print(json.load(f))
+    # Save config
+    if saveconfig:
+        with open(configfile, 'w', encoding='utf-8') as f:
+            json.dump(configdict, f, ensure_ascii=False, indent=4)
 
+
+configfile = "exp_configs/defaultconfig.json"
+saveconfig = True
+
+trialfiles = ["exp_configs/trials/trial_sample1.json", "exp_configs/trials/trial_sample2.json"]
+repeats = [1, 1]
+randomize_trial_order = False # The first trial, which loops infinitely until the expeiriment is begun is kept in place. Subsequent trials are randomized. 
+
+makeconfig(trialfiles, repeats, configfile, randomize_trial_order=randomize_trial_order, saveconfig=saveconfig)

@@ -1,0 +1,89 @@
+import json
+
+"""
+Program a VR trial
+---- Set trial parameters in the dictionary
+---- Save the trial as a json file
+---- Load the trial and save a configuration file to test with the panda3D VR code
+---- The first trial is set to loop infinitely until user input is received, ignoring the number of repeats parameter in the trial configuration 
+"""
+
+trialname = "exp_configs/trials/trial_sample1.json"
+
+configname = "exp_configs/defaultconfig.json"
+
+# multiple saved trials can be loaded and combined into a single configuration file to program a multi-trial experiment
+# refer to configure_vr_experiment.py for how to program a multi-trial experiment
+savetrial = True
+
+# use this configuration file to test whether the trial is executed correctly and the environment is set up as indended
+savetestconfig = True # a test configuration is saved
+
+paramdict = {"trial_id"                     : "default",
+             "repeats"                      : 2,
+             "use_keyboard"                 : True,
+             "keyboard_gain"                : 5.,
+             "keyboard_heading_increment"   : 20,
+             "vr_gain"                      : 1., # global gain multiplier to apply to fish velocity and heading (use independent gains in tail tracking code for scaling)  
+             "enable2d"                     : False,
+             "displacement_restart"         : 40,
+             "displacement_trial_start"     : 1.,
+             "model"                        : "models/1D-Tunnel_naturalistic.bam",
+             "init_position"                : [0.,0.,.2],
+             "init_hpr"                     : [0.,0.,0.],
+             "scale"                        : [.25,.25,.25],
+             "intertrial_duration"          : 5,
+             "max_trial_duration"           : 20.,
+             "do2p"                         : True,
+             "continuous2p"                 : False,
+             "fade_duration"                : 1.,
+             "stimulation"                  : True,
+             "stimulation_mode"             : "crossing", # location, crossing (x or y direction), zone or time
+             "stim_intensity"               : 50,
+             "stim_coord"                   : [0,15],
+             "crossing_direction"           : "y",
+             "stim_radius"                  : 10.,
+             "stim_onset_time"              : 2.,
+             "stim_duration"                : 1.,
+             "optic_flow"                   : True,
+             "optic_flow_reference_frame"   : "allocentric", # allocentric or egocentric
+             "optic_flow_direction"         : 90, # angle in degrees when allocentric. ignored when egocentric
+             "optic_flow_velocity"          : -1.,
+             "optic_flow_mode"              : "zone", # zone or trial
+             "optic_flow_coord"             : [0,15],
+             "optic_flow_radius"            : 10.,
+             "show_landmarks"               : True,
+             "mirror_landmarks"             : [True, True],
+             "mirror_distance"              : [2.15, 2.5],
+             "landmark_number"              : 2,
+             "landmark_position"            : [[-1.45,10,0.25], [-.6,20,0.25]], # landmark coordinates
+             "landmark_hpr"                 : [[90,0,0], [90,0,0]], # landmark orientation
+             "landmarks"                    : ["models/VRE_autoPA_realFish.png", "models/VRE_autoPA_realFish.avi"], # landmark files (image or video)
+             "landmark_flag"                : [True, True], # Show or hide landmarks. Can be updated in spinCameraTask to make landmarks interactive
+             "handle_collisions"            : True,
+             "collision_radius"             : 0.3,
+             "collider_flag"                : ["Floor", "Collider"], #complex collider geometries impact performance significantly
+             "hide_collider"                : [False, True]}
+
+
+# save trial configuration
+if savetrial:
+    with open(trialname, 'w', encoding='utf-8') as f:
+        json.dump(paramdict, f, ensure_ascii=False, indent=4)
+
+
+if savetestconfig:
+
+    # load saved trial configuration
+    with open(trialname, 'r') as f:
+        trial = json.load(f)
+
+    configdict = {"trials":[trial]} # include multiple dictionaries separated by commas to program a multi-trial experiment
+
+    # Save config
+    with open(configname, 'w', encoding='utf-8') as f:
+        json.dump(configdict, f, ensure_ascii=False, indent=4)
+
+    # Load config
+    with open(configname, 'r') as f:
+        print(json.load(f))
