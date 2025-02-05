@@ -46,10 +46,10 @@ paramdict = {"trial_id"                     : "default",
              "mirror_landmarks"             : [True, True],
              "mirror_distance"              : [2.15, 2.5],
              "landmark_number"              : 2,
-             "landmark_position"            : [[-1.45,10,0.25], [-.6,20,0.25]], #expand each element to include x,y,z values
-             "landmark_hpr"                 : [[90,0,0], [90,0,0]],
-             "landmarks"                    : ["models/VRE_autoPA_realFish.png", "models/VRE_autoPA_realFish.avi"],
-             "landmark_flag"                : [True, True],
+             "landmark_position"            : [[-1.45,10,0.25], [-.6,20,0.25]], # landmark coordinates
+             "landmark_hpr"                 : [[90,0,0], [90,0,0]], # landmark orientation
+             "landmarks"                    : ["models/VRE_autoPA_realFish.png", "models/VRE_autoPA_realFish.avi"], # landmark files (image or video)
+             "landmark_flag"                : [True, True], # Show or hide landmarks. Can be updated in spinCameraTask to make landmarks interactive
              "handle_collisions"            : True,
              "collision_radius"             : 0.3,
              "collider_flag"                : ["Floor", "Collider"], #complex collider geometries impact performance significantly
