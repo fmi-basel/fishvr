@@ -77,11 +77,25 @@ syncvideo = False   # Decouple spinCameraTask from monitor refresh (False sets u
 use_timer = False   # Use teensy timer for synchronization
 saveas = "log/date_fishX_sessionY"  # Save data to this directory with the given prefix (replace 'date' with date, X and Y with fish and session numbers)
 
-projection_width = 1040 # combined width of screen across 3 projectors
-projection_height = 260 # height of screen
+projection_width = 1040  # combined width of screen across 3 projectors
+projection_height = 260  # height of screen
 
 window_origin_x = 400   # panda3D window position
 window_origin_y = 100
+
+# Screen splitting parameters
+# Set these parameters based on the geometry of the tank and the width of the projection window
+ncameras = 3
+projector_hpr = [[0,0,0],[60,0,0],[-60,0,0]] # angle, pitch, roll of each projector (measure with angle finder, adjust as needed to fix misalignments)
+projector_fov = 60 # field of view of projectors
+projector_aspect_ratio = (projection_width/ncameras)/projection_height # aspect ratio of each projector
+display_region = [[0.33, 0.66, 0, 1], [0, 0.33, 0, 1], [0.66, 0.99, 0, 1]] # display region for each projector in relative coordinates
+
+# ncameras = 2
+# projector_hpr = [[60,0,0],[-60,0,0]] # angle, pitch, roll of each projector (measure with angle finder, adjust as needed to fix misalignments)
+# projector_fov = 120 # field of view of projectors
+# projector_aspect_ratio = (projection_width/ncameras)/projection_height # aspect ratio of each projector
+# display_region = [[0, 0.5, 0, 1], [0.5, 1, 0, 1]] # display region for each projector in relative coordinates
 
 globalClock = ClockObject.getGlobalClock()
 globalClock.setMode(ClockObject.MLimited)
@@ -101,7 +115,9 @@ class ZebrafishVirtualReality(ShowBase):
 
     def __init__(self, configfile="exp_configs/defaultconfig.json", save=True, saveas=saveas,
                  use_timer=use_timer, serial_port="COM4", serial_timeout=0.004,
-                 udp_ip="127.0.0.1", udp_port=5005, udp_buffer_size=64, udp_timeout=0.001):
+                 udp_ip="127.0.0.1", udp_port=5005, udp_buffer_size=64, udp_timeout=0.001,
+                 ncameras=ncameras, projector_hpr=projector_hpr, projector_fov=projector_fov, 
+                 display_region=display_region):
 
         ShowBase.__init__(self)
 
@@ -240,25 +256,19 @@ class ZebrafishVirtualReality(ShowBase):
 
 
         """
-        ###############################
-        Parameters for Screen-Splitting 
-        ###############################
+        ################
+        Screen-Splitting 
+        ################
         """
-        builtins.base.camLens.setFov(40)  # originally 40
-        builtins.base.camLens.setNear(0.001)  # originally 0.1
-        builtins.base.camLens.setFar(1000)
-        builtins.base.setAspectRatio(1.33)
-        builtins.base.camNode.setActive(0)
-        builtins.base.makeCamera(builtins.base.win, displayRegion=(0.33, 0.66, 0, 1),
-                                lens=builtins.base.camLens)
-        builtins.base.makeCamera(builtins.base.win, displayRegion=(0, 0.33, 0, 1),
-                                lens=builtins.base.camLens)
-        builtins.base.makeCamera(builtins.base.win, displayRegion=(0.66, 0.99, 0, 1),
-                                lens=builtins.base.camLens)
+        builtins.base.camLens.setFov(projector_fov) # originally 40, but tank walls angles indicate projectors are at 60 degrees to each other
+        builtins.base.camLens.setNear(0.1)          # set to distance from fish to screen
+        builtins.base.camLens.setFar(200)
+        builtins.base.setAspectRatio(projector_aspect_ratio)
 
-        builtins.base.camList[1].setH(0)
-        builtins.base.camList[2].setH(40)
-        builtins.base.camList[3].setH(-40)
+        builtins.base.camNode.setActive(0)
+        
+        [builtins.base.makeCamera(builtins.base.win, displayRegion=display_region[i], lens=builtins.base.camLens) for i in range(ncameras)]
+        [builtins.base.camList[i+1].setHpr(*projector_hpr[i]) for i in range(ncameras)]
 
         self.camlist = builtins.base.camList
 
