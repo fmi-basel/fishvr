@@ -35,6 +35,6 @@ saveconfig = True
 
 trialfiles = ["exp_configs/trials/trial_sample1.json", "exp_configs/trials/trial_sample2.json"]
 repeats = [1, 1]
-randomize_trial_order = False # The first trial, which loops infinitely until the expeiriment is begun is kept in place. Subsequent trials are randomized. 
+randomize_trial_order = False # The first trial, which loops infinitely until the experiment is begun is kept in place. Subsequent trials are randomized. 
 
 makeconfig(trialfiles, repeats, configfile, randomize_trial_order=randomize_trial_order, saveconfig=saveconfig)
