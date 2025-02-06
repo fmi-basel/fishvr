@@ -1,7 +1,8 @@
 """
 TODO:
 1) DOCUMENTATION
-2) Known limitations:
+2) Implement screen splitting based on tank geometry to allow different configurations
+3) Known limitations:
     a) Only one stimulus trigger can be configured per trial
     b) Stimulation zones can only be defined as circles of a specified radius 
 
