@@ -1,7 +1,6 @@
 """
 TODO:
 1) DOCUMENTATION
-2) Implement screen splitting based on tank geometry to allow different configurations
 3) Known limitations:
     a) Only one stimulus trigger can be configured per trial
     b) Stimulation zones can only be defined as circles of a specified radius 
@@ -49,6 +48,7 @@ DONE:
                          c) Teensy sync timeout of 0.004 seconds
                          b) UDP timeout of 0.001 seconds and UDP buffer size of 64 bytes
 17) Implement ptic flow stimulus delivery and trialwise gloabal gain setting
+18) Implement screen splitting based on tank geometry to allow different configurations
 """
 
 from pathlib import Path
