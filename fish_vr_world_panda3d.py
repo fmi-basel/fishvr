@@ -306,6 +306,7 @@ class ZebrafishVirtualReality(ShowBase):
         self.keyboard_heading_increment = self.trialconfig['keyboard_heading_increment']
         self.vr_gain                    = self.trialconfig['vr_gain']
         self.enable2d                   = self.trialconfig['enable2d']
+        self.invert_turn_direction      = self.trialconfig['invert_turn_direction']
         self.displacement_restart       = self.trialconfig['displacement_restart']
         self.displacement_trial_start   = self.trialconfig['displacement_trial_start']
         self.model                      = self.trialconfig['model']
@@ -314,6 +315,11 @@ class ZebrafishVirtualReality(ShowBase):
         self.scale                      = self.trialconfig['scale']
         self.intertrial_duration        = self.trialconfig['intertrial_duration']
         self.max_trial_duration         = self.trialconfig['max_trial_duration']
+
+        if self.invert_turn_direction:
+            self.heading_multiplier = -1
+        else:
+            self.heading_multiplier = 1
 
         #imaging triggers
         self.do2p               = self.trialconfig['do2p']
@@ -537,10 +543,10 @@ class ZebrafishVirtualReality(ShowBase):
             builtins.base.camera.setY(builtins.base.camera, -self.keyboard_gain * self.frame_dt)
 
         if self.keyMap["right"]:
-            builtins.base.camera.setH(builtins.base.camera, -self.keyboard_heading_increment * self.frame_dt)
+            builtins.base.camera.setH(builtins.base.camera, -self.keyboard_heading_increment * self.frame_dt * self.heading_multiplier)
 
         elif self.keyMap["left"]:
-            builtins.base.camera.setH(builtins.base.camera, self.keyboard_heading_increment * self.frame_dt)
+            builtins.base.camera.setH(builtins.base.camera, self.keyboard_heading_increment * self.frame_dt * self.heading_multiplier)
 
         if self.optic_flow_state == True:
 
@@ -572,7 +578,7 @@ class ZebrafishVirtualReality(ShowBase):
 
         builtins.base.camera.setY(builtins.base.camera, self.velocity * self.frame_dt * self.vr_gain)
         if self.enable2d:
-            builtins.base.camera.setH(builtins.base.camera, self.theta * self.frame_dt * self.vr_gain)
+            builtins.base.camera.setH(builtins.base.camera, self.theta * self.frame_dt * self.vr_gain * self.heading_multiplier)
 
         if self.optic_flow_state == True:
 

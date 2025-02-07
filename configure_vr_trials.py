@@ -26,6 +26,7 @@ paramdict = {"trial_id"                     : "default",
              "keyboard_heading_increment"   : 20,
              "vr_gain"                      : 1., # global gain multiplier to apply to fish velocity and heading (use independent gains in tail tracking code for scaling)  
              "enable2d"                     : False,
+             "invert_turn_direction"        : True,
              "displacement_restart"         : 40,
              "displacement_trial_start"     : 1.,
              "model"                        : "models/1D-Tunnel_naturalistic.bam",
