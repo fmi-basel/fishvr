@@ -47,7 +47,7 @@ DONE:
                          b) Tail tracking tested with video file. 100-150 fps should work, test with camera
                          c) Teensy sync timeout of 0.004 seconds
                          b) UDP timeout of 0.001 seconds and UDP buffer size of 64 bytes
-17) Implement ptic flow stimulus delivery and trialwise gloabal gain setting
+17) Implement optic flow stimulus delivery and trialwise gloabal gain setting
 18) Implement screen splitting based on tank geometry to allow different configurations
 """
 
