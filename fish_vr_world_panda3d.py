@@ -304,7 +304,7 @@ class ZebrafishVirtualReality(ShowBase):
         self.use_keyboard               = self.trialconfig['use_keyboard']
         self.keyboard_gain              = self.trialconfig['keyboard_gain']
         self.keyboard_heading_increment = self.trialconfig['keyboard_heading_increment']
-        self.vr_gain                  = self.trialconfig['vr_gain']
+        self.vr_gain                    = self.trialconfig['vr_gain']
         self.enable2d                   = self.trialconfig['enable2d']
         self.displacement_restart       = self.trialconfig['displacement_restart']
         self.displacement_trial_start   = self.trialconfig['displacement_trial_start']
