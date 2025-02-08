@@ -114,7 +114,7 @@ loadPrcFileData('', 'threading-model Cull/Draw')
 class ZebrafishVirtualReality(ShowBase):
 
     def __init__(self, configfile="exp_configs/defaultconfig.json", save=True, saveas=saveas,
-                 use_timer=use_timer, serial_port="COM4", serial_timeout=0.004,
+                 use_timer=use_timer, serial_port="COM3", serial_timeout=0.004,
                  udp_ip="127.0.0.1", udp_port=5005, udp_buffer_size=64, udp_timeout=0.001,
                  ncameras=ncameras, projector_hpr=projector_hpr, projector_fov=projector_fov, 
                  display_region=display_region):
