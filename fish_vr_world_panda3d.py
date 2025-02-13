@@ -67,6 +67,11 @@ import numpy as np
 import json
 import csv
 from datetime import datetime
+import tkinter as tk
+from tkinter import filedialog
+root = tk.Tk()
+root.withdraw()
+
 
 ######################
 # Initialize panda3D #
@@ -75,7 +80,8 @@ from datetime import datetime
 framerate = 60      # Will apply only when syncvideo is False
 syncvideo = False   # Decouple spinCameraTask from monitor refresh (False sets user specified fps, True clamps to monitor refresh)
 use_timer = False   # Use teensy timer for synchronization
-saveas = "log/date_fishX_sessionY"  # Save data to this directory with the given prefix (replace 'date' with date, X and Y with fish and session numbers)
+savepath = "log/"   # Save data to this directory. Can be changed in file dialog
+configpath = "exp_configs/" # Path to experiment configuration files. Can be changed in file dialog
 
 projection_width = 1040  # combined width of screen across 3 projectors
 projection_height = 260  # height of screen
@@ -92,8 +98,8 @@ projector_aspect_ratio = (projection_width/ncameras)/projection_height # aspect 
 display_region = [[0.33, 0.66, 0, 1], [0, 0.33, 0, 1], [0.66, 0.99, 0, 1]] # display region for each projector in relative coordinates
 
 # ncameras = 2
-# projector_hpr = [[60,0,0],[-60,0,0]] # angle, pitch, roll of each projector (measure with angle finder, adjust as needed to fix misalignments)
-# projector_fov = 120 # field of view of projectors
+# projector_hpr = [[45,0,0],[-45,0,0]] # angle, pitch, roll of each projector (measure with angle finder, adjust as needed to fix misalignments)
+# projector_fov = 90 # field of view of projectors
 # projector_aspect_ratio = (projection_width/ncameras)/projection_height # aspect ratio of each projector
 # display_region = [[0, 0.5, 0, 1], [0.5, 1, 0, 1]] # display region for each projector in relative coordinates
 
@@ -113,51 +119,43 @@ loadPrcFileData('', 'threading-model Cull/Draw')
 
 class ZebrafishVirtualReality(ShowBase):
 
-    def __init__(self, configfile="exp_configs/defaultconfig.json", save=True, saveas=saveas,
+    def __init__(self, configpath=configpath, save=True, savepath=savepath,
                  use_timer=use_timer, serial_port="COM3", serial_timeout=0.004,
                  udp_ip="127.0.0.1", udp_port=5005, udp_buffer_size=64, udp_timeout=0.001,
                  ncameras=ncameras, projector_hpr=projector_hpr, projector_fov=projector_fov, 
                  display_region=display_region):
 
+        self.configfile = filedialog.askopenfilename(initialdir=configpath, title='Select config file', filetypes=[('JSON files', '*.json')])
+        if len(self.configfile) == 0:
+            print('No configuration selected, session aborted')
+            sys.exit()
+
+        self.save = save
+        self.savepath = savepath
+
+        if self.save:
+
+            logfile = filedialog.asksaveasfilename(initialdir=savepath, title='Save log file as', defaultextension='.csv', filetypes=[('csv files', '*.csv')])
+            if len(logfile) == 0:
+                print('No log file specified, will continue without saving')
+                self.save = False
+            else:
+                jsonfile = logfile.split('.')[0] + '_vrinfo.json'
+            
+                date_and_time = datetime.now().strftime("%y%m%d_%H:%M:%S")
+
+                self.infofile = open(jsonfile, 'w', encoding='utf-8')
+                self.infofile.write("{\"timestamp\": \"%s\",\n" % date_and_time)
+                self.infofile.write("\"trials\":[\n")
+
+                self.datafile = open(logfile, 'w', encoding='utf-8',  newline='')
+                self.logger = csv.writer(self.datafile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+                self.logger.writerow(['trial', 'trial index', '2p framecount', 'timestamp',
+                                    'xpos', 'ypos', 'heading', '2p state', 'optic flow state', 
+                                    'optic flow direction', 'optic flow velocity', 'stim state',
+                                    'stim state pulsed', 'tail tracking framecount', 'vr gain'])
+                
         ShowBase.__init__(self)
-
-        self.configfile = configfile
-        self.save = saveas
-        self.saveas = saveas
-
-        if save:
-
-            jsonfile = self.saveas + "_vrinfo.json"
-            logfile = self.saveas + "_vrlog.csv"
-
-            while True:
-                if Path(logfile).is_file() or Path(jsonfile).is_file():
-                    user_input = input("Filename exists. Enter y/n to overwrite data or quit: ")
-                else:
-                    break
-
-                if user_input.lower() == 'y':
-                    print("Input received, overwriting data")
-                    break
-                elif user_input.lower() == 'n':
-                    print("Input received, aborting experiment")
-                    sys.exit()
-                else:
-                    print("Invalid input, enter y to overwrite or n to abort")
-            
-            
-            date_and_time = datetime.now().strftime("%y%m%d_%H:%M:%S")
-
-            self.infofile = open(jsonfile, 'w', encoding='utf-8')
-            self.infofile.write("{\"timestamp\": \"%s\",\n" % date_and_time)
-            self.infofile.write("\"trials\":[\n")
-
-            self.datafile = open(logfile, 'w', encoding='utf-8',  newline='')
-            self.logger = csv.writer(self.datafile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-            self.logger.writerow(['trial', 'trial index', '2p framecount', 'timestamp',
-                                   'xpos', 'ypos', 'heading', '2p state', 'optic flow state', 
-                                   'optic flow direction', 'optic flow velocity', 'stim state',
-                                   'stim state pulsed', 'tail tracking framecount', 'vr gain'])
 
         self.trial = 0
         self.repcount = 0
@@ -585,11 +583,11 @@ class ZebrafishVirtualReality(ShowBase):
             if self.optic_flow_reference_frame == 'allocentric':
                 current_h = builtins.base.camera.getH() # get current heading
                 builtins.base.camera.setH(self.optic_flow_direction) # set heading to the desired optic flow direction
-                builtins.base.camera.setY(builtins.base.camera, self.optic_flow_velocity * self.frame_dt * self.vr_gain)
+                builtins.base.camera.setY(builtins.base.camera, self.optic_flow_velocity * self.frame_dt)
                 builtins.base.camera.setH(current_h) # reset heading to fish heading
                 
             if self.optic_flow_reference_frame == 'egocentric':    
-                builtins.base.camera.setY(builtins.base.camera, self.optic_flow_velocity * self.frame_dt * self.vr_gain)
+                builtins.base.camera.setY(builtins.base.camera, self.optic_flow_velocity * self.frame_dt)
 
 
     def setOpticFlowState(self):
