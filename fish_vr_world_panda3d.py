@@ -71,6 +71,7 @@ import tkinter as tk
 from tkinter import filedialog
 root = tk.Tk()
 root.withdraw()
+root.update()
 
 
 ######################
@@ -134,7 +135,6 @@ class ZebrafishVirtualReality(ShowBase):
         self.savepath = savepath
 
         if self.save:
-
             logfile = filedialog.asksaveasfilename(initialdir=savepath, title='Save log file as', defaultextension='.csv', filetypes=[('csv files', '*.csv')])
             if len(logfile) == 0:
                 print('No log file specified, will continue without saving')
