@@ -81,7 +81,7 @@ root.update()
 
 setupfile = None
 if setupfile is None:
-    setupfile = filedialog.askopenfilename(initialdir='.', title='Select VR setup file', filetypes=[('INI files', '*.ini')])
+    setupfile = filedialog.askopenfilename(initialdir='setup/', title='Select VR setup file', filetypes=[('INI files', '*.ini')])
 
 setup = configparser.ConfigParser()
 setup.read(setupfile)
@@ -91,6 +91,13 @@ syncvideo = setup.getboolean('params', 'syncvideo')             # Decouple spinC
 use_timer = setup.getboolean('params', 'use_timer')             # Use teensy timer for synchronization
 savepath = setup.get('params', 'savepath')                      # Save data to this directory. Can be changed in file dialog
 configpath = setup.get('params', 'configpath')                  # Path to experiment configuration files. Can be changed in file dialog
+
+serial_port = setup.get('params', 'serial_port')                # Serial port for teensy timer
+serial_timeout = setup.getfloat('params', 'serial_timeout')     # Time to wait for response from teensy
+udp_ip = setup.get('params', 'udp_ip')                          # Address to receive UDP message from tail tracking code
+udp_port = setup.getint('params', 'udp_port')                   # UDP port
+udp_buffer_size = setup.getint('params', 'udp_buffer_size')     # Buffer size for UDP communication. Set large enough to hold multiple values
+udp_timeout = setup.getfloat('params', 'udp_timeout')           # Timeout to listen for a UDP message before proceeding
 
 projection_width = setup.getint('params', 'projection_width')   # combined width of screen across 3 projectors
 projection_height = setup.getint('params', 'projection_height') # height of screen
@@ -131,9 +138,9 @@ loadPrcFileData('', 'threading-model Cull/Draw')
 
 class ZebrafishVirtualReality(ShowBase):
 
-    def __init__(self, configpath=configpath, save=True, savepath=savepath,
-                 use_timer=use_timer, serial_port="COM3", serial_timeout=0.004,
-                 udp_ip="127.0.0.1", udp_port=5005, udp_buffer_size=64, udp_timeout=0.001,
+    def __init__(self, configpath=configpath, save=True, savepath=savepath, use_timer=use_timer, 
+                 serial_port=serial_port, serial_timeout=serial_timeout, udp_ip=udp_ip, 
+                 udp_port=udp_port, udp_buffer_size=udp_buffer_size, udp_timeout=udp_timeout,
                  ncameras=ncameras, projector_hpr=projector_hpr, projector_fov=projector_fov, 
                  display_region=display_region):
 
