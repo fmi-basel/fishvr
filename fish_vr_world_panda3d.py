@@ -67,6 +67,7 @@ import numpy as np
 import json
 import csv
 from datetime import datetime
+import configparser
 import tkinter as tk
 from tkinter import filedialog
 root = tk.Tk()
@@ -78,31 +79,41 @@ root.update()
 # Initialize panda3D #
 ######################
 
-framerate = 60      # Will apply only when syncvideo is False
-syncvideo = False   # Decouple spinCameraTask from monitor refresh (False sets user specified fps, True clamps to monitor refresh)
-use_timer = False   # Use teensy timer for synchronization
-savepath = "log/"   # Save data to this directory. Can be changed in file dialog
-configpath = "exp_configs/" # Path to experiment configuration files. Can be changed in file dialog
+setupfile = None
+if setupfile is None:
+    setupfile = filedialog.askopenfilename(initialdir='.', title='Select VR setup file', filetypes=[('INI files', '*.ini')])
 
-projection_width = 1040  # combined width of screen across 3 projectors
-projection_height = 260  # height of screen
+setup = configparser.ConfigParser()
+setup.read(setupfile)
 
-window_origin_x = 400   # panda3D window position
-window_origin_y = 100
+framerate = setup.getint('params', 'framerate')                 # Will apply only when syncvideo is False
+syncvideo = setup.getboolean('params', 'syncvideo')             # Decouple spinCameraTask from monitor refresh (False sets user specified fps, True clamps to monitor refresh)
+use_timer = setup.getboolean('params', 'use_timer')             # Use teensy timer for synchronization
+savepath = setup.get('params', 'savepath')                      # Save data to this directory. Can be changed in file dialog
+configpath = setup.get('params', 'configpath')                  # Path to experiment configuration files. Can be changed in file dialog
 
-# Screen splitting parameters
-# Set these parameters based on the geometry of the tank and the width of the projection window
-ncameras = 3
-projector_hpr = [[0,0,0],[60,0,0],[-60,0,0]] # angle, pitch, roll of each projector (measure with angle finder, adjust as needed to fix misalignments)
-projector_fov = 60 # field of view of projectors
-projector_aspect_ratio = (projection_width/ncameras)/projection_height # aspect ratio of each projector
-display_region = [[0.33, 0.66, 0, 1], [0, 0.33, 0, 1], [0.66, 0.99, 0, 1]] # display region for each projector in relative coordinates
+projection_width = setup.getint('params', 'projection_width')   # combined width of screen across 3 projectors
+projection_height = setup.getint('params', 'projection_height') # height of screen
+window_origin_x = setup.getint('params', 'window_origin_x')     # panda3D window position
+window_origin_y = setup.getint('params', 'window_origin_y')
 
-# ncameras = 2
-# projector_hpr = [[45,0,0],[-45,0,0]] # angle, pitch, roll of each projector (measure with angle finder, adjust as needed to fix misalignments)
-# projector_fov = 90 # field of view of projectors
-# projector_aspect_ratio = (projection_width/ncameras)/projection_height # aspect ratio of each projector
-# display_region = [[0, 0.5, 0, 1], [0.5, 1, 0, 1]] # display region for each projector in relative coordinates
+ncameras = setup.getint('params', 'ncameras') # number of projectors                   
+projector_aspect_ratio = (projection_width/ncameras)/projection_height
+projector_fov = setup.getfloat('params', 'projector_fov') # field of view of each projector
+projector_hpr = []  # angle, pitch, roll of each projector (measure with angle finder, adjust as needed to fix misalignments)
+display_region = [] # display region for each projector in relative coordinates
+hpr_keys = ['projector{}_hpr'.format(x) for x in range(ncameras)]
+dr_keys = ['display_region{}'.format(x) for x in range(ncameras)]
+
+for i in range(ncameras):
+
+    hpr = setup.get('params', hpr_keys[i]).split(',')
+    hpr = [float(x) for x in hpr]
+    projector_hpr.append(hpr)
+
+    dr = setup.get('params', dr_keys[i]).split(',')
+    dr = [float(x) for x in dr]
+    display_region.append(dr)
 
 globalClock = ClockObject.getGlobalClock()
 globalClock.setMode(ClockObject.MLimited)
