@@ -1,11 +1,11 @@
 """
 TODO:
 1) DOCUMENTATION
+2) Displacement based estimation of trial completion does not work well under all conditions, for example in a VR with optic flow or mazes
+   Use a list of coordinates to determine trial completion. Check minimum distance of fish from end coordinates. 
 3) Known limitations:
     a) Only one stimulus trigger can be configured per trial
     b) Stimulation zones can only be defined as circles of a specified radius
-    c) Displacement based estimation of trial completion does not work well under all conditions, 
-       for example in a VR with optic flow or mazes 
 
 DONE:
 1) Save trial info ------ json format, add fields as necessary
@@ -609,6 +609,11 @@ class ZebrafishVirtualReality(ShowBase):
             if self.optic_flow_reference_frame == 'egocentric':    
                 builtins.base.camera.setY(builtins.base.camera, self.optic_flow_velocity * self.frame_dt)
 
+    
+    def euclidean_distance(self, coordinate1, coordinate2):
+        distance = np.linalg.norm(np.array(coordinate1) - np.array(coordinate2))
+        return distance
+
 
     def setOpticFlowState(self):
 
@@ -620,7 +625,7 @@ class ZebrafishVirtualReality(ShowBase):
                         self.optic_flow_state = True
 
                 if self.optic_flow_mode == "zone":
-                    distance = np.linalg.norm(np.array([self.XPos,self.YPos]) - np.array(self.optic_flow_coord))
+                    distance = self.euclidean_distance([self.XPos,self.YPos], self.optic_flow_coord)
                     if distance <= self.optic_flow_radius:
                         self.optic_flow_state = True
                     else:
@@ -636,8 +641,8 @@ class ZebrafishVirtualReality(ShowBase):
             if self.state == "trial":
 
                 if self.stimulation_mode == "location":
-                    prev_distance = np.linalg.norm(np.array([self.prevX,self.prevY]) - np.array(self.stim_coord)) #euclidean distance between points
-                    distance = np.linalg.norm(np.array([self.XPos,self.YPos]) - np.array(self.stim_coord))
+                    prev_distance = self.euclidean_distance([self.prevX,self.prevY], self.stim_coord)
+                    distance = self.euclidean_distance([self.XPos,self.YPos], self.stim_coord)
                     if prev_distance > self.stim_radius and distance >= self.stim_radius:
                         self.stim_state_pulsed == True
                     else:
@@ -657,7 +662,7 @@ class ZebrafishVirtualReality(ShowBase):
                             self.stim_state_pulsed = False
 
                 elif self.stimulation_mode == "zone":
-                    distance = np.linalg.norm(np.array([self.XPos,self.YPos]) - np.array(self.stim_coord))
+                    distance = self.euclidean_distance([self.XPos,self.YPos], self.stim_coord)
                     if distance <= self.stim_radius:
                         self.stim_state = True
                     else:
@@ -771,7 +776,7 @@ class ZebrafishVirtualReality(ShowBase):
         self.XPos = builtins.base.camera.getX()
         self.ZPos = builtins.base.camera.getZ()
         self.heading = builtins.base.camera.getH()
-        self.trial_displacement = np.linalg.norm(np.array([self.XPos,self.YPos]) - np.array(self.init_position[0:1]))
+        self.trial_displacement = self.euclidean_distance([self.XPos,self.YPos], self.init_position[0:1])
 
         if self.initialized == False:
             self.initialized = True
