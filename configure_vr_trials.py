@@ -16,7 +16,7 @@ configname = "exp_configs/defaultconfig.json"
 # refer to configure_vr_experiment.py for how to program a multi-trial experiment
 savetrial = True
 
-# use this configuration file to test whether the trial is executed correctly and the environment is set up as indended
+# use this configuration file to test whether the trial is executed correctly and the environment is set up as intended
 savetestconfig = True # a test configuration is saved
 
 paramdict = {"trial_id"                     : "default",
