@@ -1,9 +1,7 @@
 """
 TODO:
 1) DOCUMENTATION
-2) Displacement based estimation of trial completion does not work well under all conditions, for example in a VR with optic flow or mazes
-   Use a list of coordinates to determine trial completion. Check minimum distance of fish from end coordinates. 
-3) Known limitations:
+2) Known limitations:
     a) Only one stimulus trigger can be configured per trial
     b) Stimulation zones can only be defined as circles of a specified radius
 
@@ -51,6 +49,8 @@ DONE:
                          b) UDP timeout of 0.001 seconds and UDP buffer size of 64 bytes
 17) Implement optic flow stimulus delivery and trialwise gloabal gain setting
 18) Implement screen splitting based on tank geometry to allow different configurations
+19) Displacement based estimation of trial completion does not work well under all conditions, for example in a VR with optic flow or mazes
+    Use a list of coordinates to determine trial completion. Check minimum distance of fish from end coordinates. 
 """
 
 from pathlib import Path
@@ -176,7 +176,7 @@ class ZebrafishVirtualReality(ShowBase):
                                     'stim state pulsed', 'tail tracking framecount', 'vr gain'])
                 
         ShowBase.__init__(self)
-
+        self.distance_to_nearest_end_point = np.inf
         self.trial = 0
         self.repcount = 0
         self.trial_index = 0
@@ -192,7 +192,6 @@ class ZebrafishVirtualReality(ShowBase):
         self.heading = 0.
         self.prevX = 0.
         self.prevY = 0.
-        self.trial_displacement = 0.
 
         self.use_timer = use_timer
         self.serial_port = serial_port
@@ -203,9 +202,11 @@ class ZebrafishVirtualReality(ShowBase):
             self.teensy.open()
 
         self.state = "intertrial" # "trial" or "intertrial"
+        self.end_trial = False
+        self.trial_end_timer = 0.
+        self.start_trial_end_timer = False
         self.state_onset_time = 0.
         self.initialized = False
-        self.start_trial = False
         self.start_2p = False
         self.end_2p = False
         self.optic_flow_state = False
@@ -325,8 +326,10 @@ class ZebrafishVirtualReality(ShowBase):
         self.vr_gain                    = self.trialconfig['vr_gain']
         self.enable2d                   = self.trialconfig['enable2d']
         self.invert_turn_direction      = self.trialconfig['invert_turn_direction']
-        self.displacement_restart       = self.trialconfig['displacement_restart']
-        self.displacement_trial_start   = self.trialconfig['displacement_trial_start']
+        self.trial_end_coords           = self.trialconfig['trial_end_coords']
+        self.trial_start_coord          = self.trialconfig['trial_start_coord']
+        self.distance_threshold         = self.trialconfig['distance_threshold']
+        self.trial_end_delay            = self.trialconfig['trial_end_delay']
         self.model                      = self.trialconfig['model']
         self.init_position              = self.trialconfig['init_position']
         self.init_hpr                   = self.trialconfig['init_hpr']
@@ -615,6 +618,11 @@ class ZebrafishVirtualReality(ShowBase):
         return distance
 
 
+    def distance_to_nearest_target(self, reference_coordinate, target_coordinates):
+        distance_to_nearest = min([self.euclidean_distance(reference_coordinate, x) for x in target_coordinates])
+        return distance_to_nearest
+    
+
     def setOpticFlowState(self):
 
         if self.state == "trial":
@@ -746,13 +754,16 @@ class ZebrafishVirtualReality(ShowBase):
                 self.force_progress = False
                 self.trial_index += 1
         else:
-            if self.trial_displacement >= self.displacement_restart or self.force_progress:
+            if self.end_trial or self.force_progress:
                 self.force_progress = False                
                 self.repcount += 1
 
                 if self.repcount == self.repeats:
                     self.repcount = 0
                     self.trial_index += 1
+
+        if self.end_trial:
+            self.end_trial = False
 
         if self.trial_index == self.ntrials:
             print("All trials executed. Ending experiment...")
@@ -776,7 +787,6 @@ class ZebrafishVirtualReality(ShowBase):
         self.XPos = builtins.base.camera.getX()
         self.ZPos = builtins.base.camera.getZ()
         self.heading = builtins.base.camera.getH()
-        self.trial_displacement = self.euclidean_distance([self.XPos,self.YPos], self.init_position[0:1])
 
         if self.initialized == False:
             self.initialized = True
@@ -791,8 +801,20 @@ class ZebrafishVirtualReality(ShowBase):
             self.printTrialInfo()
 
         if self.state == "trial":
-            if (self.frame_onset_time - self.state_onset_time >= self.max_trial_duration or 
-                self.trial_displacement >= self.displacement_restart):
+
+            self.distance_to_nearest_end_point = self.distance_to_nearest_target([self.XPos,self.YPos], self.trial_end_coords)
+            
+            if self.distance_to_nearest_end_point <= self.distance_threshold:
+            
+                if self.start_trial_end_timer == False:
+                    self.start_trial_end_timer = True
+                    self.trial_end_timer = self.frame_onset_time
+            
+            if self.start_trial_end_timer and self.frame_onset_time - self.trial_end_timer >= self.trial_end_delay:
+                self.end_trial = True
+                self.start_trial_end_timer = False
+
+            if (self.frame_onset_time - self.state_onset_time >= self.max_trial_duration or self.end_trial):
 
                 self.updateTrialParams()
 
@@ -806,7 +828,9 @@ class ZebrafishVirtualReality(ShowBase):
                 self.fade_in = False
 
         if self.state == "intertrial":
-            
+
+            distance_to_start_point = self.euclidean_distance([self.XPos,self.YPos], self.trial_start_coord)
+
             if self.fade_out == False:
                 LerpColorScaleInterval(self.render, self.fade_duration, (0, 0, 0, 1.0)).start()
                 self.fade_timer = self.frame_onset_time
@@ -818,7 +842,7 @@ class ZebrafishVirtualReality(ShowBase):
                 self.fade_in = True  
 
             if (self.frame_onset_time - self.state_onset_time >= self.intertrial_duration or 
-                self.trial_displacement >= self.displacement_trial_start and self.fade_in == True):
+                distance_to_start_point <= self.distance_threshold and self.fade_in == True):
                 self.state = "trial"
                 self.state_onset_time = self.frame_onset_time
                 if self.do2p:

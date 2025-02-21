@@ -7,8 +7,22 @@
     "vr_gain": 1.0,
     "enable2d": false,
     "invert_turn_direction": true,
-    "displacement_restart": 40,
-    "displacement_trial_start": 1.0,
+    "trial_end_coords": [
+        [
+            0,
+            40
+        ],
+        [
+            15,
+            30
+        ]
+    ],
+    "trial_start_coord": [
+        0,
+        2
+    ],
+    "distance_threshold": 1.0,
+    "trial_end_delay": 2.0,
     "model": "models/1D-Tunnel_naturalistic.bam",
     "init_position": [
         0.0,
