@@ -192,7 +192,6 @@ class ZebrafishVirtualReality(ShowBase):
         self.heading = 0.
         self.prevX = 0.
         self.prevY = 0.
-        self.inactive = False
         self.inactivity_timer = 0.
         self.inactivity_triggered_flow_timer = 0.
         self.inactivity_triggered_flow_state = False
