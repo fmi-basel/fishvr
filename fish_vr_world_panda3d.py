@@ -192,6 +192,7 @@ class ZebrafishVirtualReality(ShowBase):
         self.heading = 0.
         self.prevX = 0.
         self.prevY = 0.
+        self.inactive = False
         self.inactivity_timer = 0.
         self.inactivity_triggered_flow_timer = 0.
         self.inactivity_triggered_flow_state = False
@@ -237,7 +238,7 @@ class ZebrafishVirtualReality(ShowBase):
         self.udp_timeout = udp_timeout #setting this parameter to 0 is equivalent to non-blocking mode
         self.tail_tracking_framecount = 0
 
-        #Variables from tail tracking code
+        #Variables from tail tracking code or keyboard
         self.velocity = 0.
         self.theta = 0.
 
@@ -565,17 +566,24 @@ class ZebrafishVirtualReality(ShowBase):
 
     def updateCameraWithKeyboard(self):
 
+        self.velocity = 0
+        self.theta = 0
+
         if self.keyMap["forward"]:
-            builtins.base.camera.setY(builtins.base.camera, self.keyboard_gain * self.frame_dt)
+            self.velocity = self.keyboard_gain
+            builtins.base.camera.setY(builtins.base.camera, self.velocity * self.frame_dt)
 
         elif self.keyMap["backward"]:
-            builtins.base.camera.setY(builtins.base.camera, -self.keyboard_gain * self.frame_dt)
+            self.velocity = -self.keyboard_gain
+            builtins.base.camera.setY(builtins.base.camera, -self.velocity * self.frame_dt)
 
         if self.keyMap["right"]:
-            builtins.base.camera.setH(builtins.base.camera, -self.keyboard_heading_increment * self.frame_dt * self.heading_multiplier)
+            self.theta = -self.keyboard_heading_increment * self.heading_multiplier
+            builtins.base.camera.setH(builtins.base.camera, self.theta * self.frame_dt)
 
         elif self.keyMap["left"]:
-            builtins.base.camera.setH(builtins.base.camera, self.keyboard_heading_increment * self.frame_dt * self.heading_multiplier)
+            self.theta = self.keyboard_heading_increment * self.heading_multiplier
+            builtins.base.camera.setH(builtins.base.camera, self.theta * self.frame_dt)
 
         if self.optic_flow_state == True:
 
@@ -602,12 +610,14 @@ class ZebrafishVirtualReality(ShowBase):
         
         if data is not None:
             self.velocity, self.theta, self.tail_tracking_framecount = struct.unpack('>ddi', data)
+            self.velocity = self.velocity * self.vr_gain
+            self.theta = self.theta * self.vr_gain * self.heading_multiplier
         else:
             self.velocity, self.theta = 0, 0
 
-        builtins.base.camera.setY(builtins.base.camera, self.velocity * self.frame_dt * self.vr_gain)
+        builtins.base.camera.setY(builtins.base.camera, self.velocity * self.frame_dt)
         if self.enable2d:
-            builtins.base.camera.setH(builtins.base.camera, self.theta * self.frame_dt * self.vr_gain * self.heading_multiplier)
+            builtins.base.camera.setH(builtins.base.camera, self.theta * self.frame_dt)
 
         if self.optic_flow_state == True:
 
@@ -808,11 +818,10 @@ class ZebrafishVirtualReality(ShowBase):
         self.XPos = builtins.base.camera.getX()
         self.ZPos = builtins.base.camera.getZ()
         self.heading = builtins.base.camera.getH()
-
-        ds = self.euclidean_distance([self.XPos,self.YPos], [self.prevX,self.prevY])
-        if ds == self.inactivity_threshold and self.initialized:
+        
+        if self.velocity <= self.inactivity_threshold and self.initialized:
             self.inactivity_timer += self.frame_dt
-        if ds > self.inactivity_threshold and self.inactivity_timer > 0.:
+        if self.velocity > self.inactivity_threshold and self.inactivity_timer > 0.:
             self.inactivity_timer = 0.
 
         if self.initialized == False:
@@ -851,6 +860,7 @@ class ZebrafishVirtualReality(ShowBase):
             if (self.inactivity_triggered_flow_state == True and 
                 self.frame_onset_time - self.inactivity_triggered_flow_timer >= self.inactivity_triggered_flow_duration):
                 self.inactivity_triggered_flow_state = False
+                self.inactivity_timer = 0. # remove this line to continue counting inactivity time after flow is triggered
 
             if self.end_trial:
 
