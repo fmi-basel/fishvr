@@ -192,6 +192,9 @@ class ZebrafishVirtualReality(ShowBase):
         self.heading = 0.
         self.prevX = 0.
         self.prevY = 0.
+        self.inactivity_timer = 0.
+        self.inactivity_triggered_flow_timer = 0.
+        self.inactivity_triggered_flow_state = False
 
         self.use_timer = use_timer
         self.serial_port = serial_port
@@ -202,6 +205,7 @@ class ZebrafishVirtualReality(ShowBase):
             self.teensy.open()
 
         self.state = "intertrial" # "trial" or "intertrial"
+        self.trial_complete = False
         self.end_trial = False
         self.trial_end_timer = 0.
         self.start_trial_end_timer = False
@@ -280,7 +284,7 @@ class ZebrafishVirtualReality(ShowBase):
         ################
         """
         builtins.base.camLens.setFov(projector_fov) # originally 40, but tank walls angles indicate projectors are at 60 degrees to each other
-        builtins.base.camLens.setNear(0.1)          # set to distance from fish to screen
+        builtins.base.camLens.setNear(0.1)
         builtins.base.camLens.setFar(200)
         builtins.base.setAspectRatio(projector_aspect_ratio)
 
@@ -297,7 +301,7 @@ class ZebrafishVirtualReality(ShowBase):
         self.render.setLight(self.mainLightNodePath)
 
         ambientLight = AmbientLight("ambient light")
-        ambientLight.setColor(Vec4(0.6, 0.6, 0.6, 1))  # 0.8, 0.8, 0.8, 1
+        ambientLight.setColor(Vec4(1, 1, 1, 1))  # 0.8, 0.8, 0.8, 1
         self.ambientLightNodePath = self.render.attachNewNode(ambientLight)
         self.render.setLight(self.ambientLightNodePath)
         self.render.setShaderAuto()
@@ -318,24 +322,28 @@ class ZebrafishVirtualReality(ShowBase):
 
         self.trialconfig = self.expconfig['trials'][self.trial_index]
 
-        self.trial_id                   = self.trialconfig['trial_id']
-        self.repeats                    = self.trialconfig['repeats']
-        self.use_keyboard               = self.trialconfig['use_keyboard']
-        self.keyboard_gain              = self.trialconfig['keyboard_gain']
-        self.keyboard_heading_increment = self.trialconfig['keyboard_heading_increment']
-        self.vr_gain                    = self.trialconfig['vr_gain']
-        self.enable2d                   = self.trialconfig['enable2d']
-        self.invert_turn_direction      = self.trialconfig['invert_turn_direction']
-        self.trial_end_coords           = self.trialconfig['trial_end_coords']
-        self.trial_start_coord          = self.trialconfig['trial_start_coord']
-        self.distance_threshold         = self.trialconfig['distance_threshold']
-        self.trial_end_delay            = self.trialconfig['trial_end_delay']
-        self.model                      = self.trialconfig['model']
-        self.init_position              = self.trialconfig['init_position']
-        self.init_hpr                   = self.trialconfig['init_hpr']
-        self.scale                      = self.trialconfig['scale']
-        self.intertrial_duration        = self.trialconfig['intertrial_duration']
-        self.max_trial_duration         = self.trialconfig['max_trial_duration']
+        self.trial_id                           = self.trialconfig['trial_id']
+        self.repeats                            = self.trialconfig['repeats']
+        self.use_keyboard                       = self.trialconfig['use_keyboard']
+        self.keyboard_gain                      = self.trialconfig['keyboard_gain']
+        self.keyboard_heading_increment         = self.trialconfig['keyboard_heading_increment']
+        self.vr_gain                            = self.trialconfig['vr_gain']
+        self.enable2d                           = self.trialconfig['enable2d']
+        self.invert_turn_direction              = self.trialconfig['invert_turn_direction']
+        self.trial_end_coords                   = self.trialconfig['trial_end_coords']
+        self.trial_start_coord                  = self.trialconfig['trial_start_coord']
+        self.distance_threshold                 = self.trialconfig['distance_threshold']
+        self.trial_end_delay                    = self.trialconfig['trial_end_delay']
+        self.model                              = self.trialconfig['model']
+        self.init_position                      = self.trialconfig['init_position']
+        self.init_hpr                           = self.trialconfig['init_hpr']
+        self.scale                              = self.trialconfig['scale']
+        self.intertrial_duration                = self.trialconfig['intertrial_duration']
+        self.max_trial_duration                 = self.trialconfig['max_trial_duration']
+        self.inactivity_threshold               = self.trialconfig['inactivity_threshold']
+        self.max_inactive_duration              = self.trialconfig['max_inactive_duration']
+        self.inactivity_leads_to                = self.trialconfig['inactivity_leads_to']
+        self.inactivity_triggered_flow_duration = self.trialconfig['inactivity_triggered_flow_duration']
 
         if self.invert_turn_direction:
             self.heading_multiplier = -1
@@ -638,6 +646,13 @@ class ZebrafishVirtualReality(ShowBase):
                         self.optic_flow_state = True
                     else:
                         self.optic_flow_state = False
+
+            if self.inactivity_leads_to == "flow":
+                if self.inactivity_triggered_flow_state == True:
+                    self.optic_flow_state = True
+                else:
+                    self.optic_flow_state = False
+
         else:
             self.optic_flow_state = False
 
@@ -721,7 +736,7 @@ class ZebrafishVirtualReality(ShowBase):
                 self.teensy.trig_2p_end = True
                 self.teensy.trig_stim = False
                 self.teensy.trig_stim_pulsed = False
-                self.teensy.sync()
+                self.teensy.sync()    
 
             self.framecount_2p = self.teensy.frameclock
 
@@ -751,19 +766,25 @@ class ZebrafishVirtualReality(ShowBase):
 
         if self.trial_index == 0:
             if self.force_progress == True:
-                self.force_progress = False
                 self.trial_index += 1
         else:
-            if self.end_trial or self.force_progress:
-                self.force_progress = False                
+            if self.trial_complete or self.force_progress:
                 self.repcount += 1
 
                 if self.repcount == self.repeats:
                     self.repcount = 0
                     self.trial_index += 1
 
-        if self.end_trial:
-            self.end_trial = False
+        self.trial_complete = False
+        self.force_progress = False
+        self.end_trial = False
+
+        if self.do2p and self.twopstate and not self.continuous2p:
+            self.end_2p = True
+        self.fade_out = False
+        self.fade_in = False
+        self.inactivity_timer = 0.
+        self.inactivity_triggered_flow_state = False
 
         if self.trial_index == self.ntrials:
             print("All trials executed. Ending experiment...")
@@ -788,6 +809,12 @@ class ZebrafishVirtualReality(ShowBase):
         self.ZPos = builtins.base.camera.getZ()
         self.heading = builtins.base.camera.getH()
 
+        ds = self.euclidean_distance([self.XPos,self.YPos], [self.prevX,self.prevY])
+        if ds == self.inactivity_threshold and self.initialized:
+            self.inactivity_timer += self.frame_dt
+        if ds > self.inactivity_threshold and self.inactivity_timer > 0.:
+            self.inactivity_timer = 0.
+
         if self.initialized == False:
             self.initialized = True
             self.state_onset_time = self.frame_onset_time
@@ -807,14 +834,25 @@ class ZebrafishVirtualReality(ShowBase):
             if self.distance_to_nearest_end_point <= self.distance_threshold:
             
                 if self.start_trial_end_timer == False:
+                    self.trial_complete = True
                     self.start_trial_end_timer = True
                     self.trial_end_timer = self.frame_onset_time
             
-            if self.start_trial_end_timer and self.frame_onset_time - self.trial_end_timer >= self.trial_end_delay:
+            if ((self.start_trial_end_timer and self.frame_onset_time - self.trial_end_timer >= self.trial_end_delay) or 
+                (self.frame_onset_time - self.state_onset_time >= self.max_trial_duration) or 
+                (self.inactivity_timer >= self.max_inactive_duration and self.inactivity_leads_to == "reset")):
                 self.end_trial = True
                 self.start_trial_end_timer = False
 
-            if (self.frame_onset_time - self.state_onset_time >= self.max_trial_duration or self.end_trial):
+            if self.inactivity_timer >= self.max_inactive_duration and self.inactivity_leads_to == "flow" and self.inactivity_triggered_flow_state == False:
+                self.inactivity_triggered_flow_timer = self.frame_onset_time
+                self.inactivity_triggered_flow_state = True
+
+            if (self.inactivity_triggered_flow_state == True and 
+                self.frame_onset_time - self.inactivity_triggered_flow_timer >= self.inactivity_triggered_flow_duration):
+                self.inactivity_triggered_flow_state = False
+
+            if self.end_trial:
 
                 self.updateTrialParams()
 
@@ -822,10 +860,6 @@ class ZebrafishVirtualReality(ShowBase):
 
                 self.state = "intertrial"
                 self.state_onset_time = self.frame_onset_time
-                if self.do2p and not self.continuous2p:
-                    self.end_2p = True
-                self.fade_out = False
-                self.fade_in = False
 
         if self.state == "intertrial":
 

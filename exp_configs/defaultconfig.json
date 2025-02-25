@@ -16,7 +16,7 @@
                 ],
                 [
                     15,
-                    30
+                    45
                 ]
             ],
             "trial_start_coord": [
@@ -43,6 +43,10 @@
             ],
             "intertrial_duration": 5,
             "max_trial_duration": 20.0,
+            "inactivity_threshold": 0.0,
+            "max_inactive_duration": 5.0,
+            "inactivity_leads_to": "flow",
+            "inactivity_triggered_flow_duration": 2.0,
             "do2p": true,
             "continuous2p": false,
             "fade_duration": 1.0,
@@ -57,9 +61,9 @@
             "stim_radius": 10.0,
             "stim_onset_time": 2.0,
             "stim_duration": 1.0,
-            "optic_flow": true,
+            "optic_flow": false,
             "optic_flow_reference_frame": "allocentric",
-            "optic_flow_direction": 90,
+            "optic_flow_direction": 0,
             "optic_flow_velocity": -1.0,
             "optic_flow_mode": "zone",
             "optic_flow_coord": [
@@ -136,7 +140,7 @@
                 ],
                 [
                     15,
-                    30
+                    45
                 ]
             ],
             "trial_start_coord": [
@@ -163,6 +167,10 @@
             ],
             "intertrial_duration": 5,
             "max_trial_duration": 20.0,
+            "inactivity_threshold": 0.0,
+            "max_inactive_duration": 5.0,
+            "inactivity_leads_to": "flow",
+            "inactivity_triggered_flow_duration": 2.0,
             "do2p": true,
             "continuous2p": false,
             "fade_duration": 1.0,
@@ -177,9 +185,9 @@
             "stim_radius": 10.0,
             "stim_onset_time": 2.0,
             "stim_duration": 1.0,
-            "optic_flow": true,
+            "optic_flow": false,
             "optic_flow_reference_frame": "allocentric",
-            "optic_flow_direction": 90,
+            "optic_flow_direction": 0,
             "optic_flow_velocity": -1.0,
             "optic_flow_mode": "zone",
             "optic_flow_coord": [

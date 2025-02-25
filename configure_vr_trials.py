@@ -19,54 +19,58 @@ savetrial = True
 # use this configuration file to test whether the trial is executed correctly and the environment is set up as intended
 savetestconfig = True # a test configuration is saved
 
-paramdict = {"trial_id"                     : "default",
-             "repeats"                      : 2,
-             "use_keyboard"                 : True,
-             "keyboard_gain"                : 5.,
-             "keyboard_heading_increment"   : 20,
-             "vr_gain"                      : 1., # global gain multiplier to apply to fish velocity and heading (use independent gains in tail tracking code for scaling)  
-             "enable2d"                     : False,
-             "invert_turn_direction"        : True,
-             "trial_end_coords"             : [[0,40], [15,30]],
-             "trial_start_coord"            : [0,2],
-             "distance_threshold"           : 1.,
-             "trial_end_delay"              : 2.,
-             "model"                        : "models/1D-Tunnel_naturalistic.bam",
-             "init_position"                : [0.,0.,.2],
-             "init_hpr"                     : [0.,0.,0.],
-             "scale"                        : [.25,.25,.25],
-             "intertrial_duration"          : 5,
-             "max_trial_duration"           : 20.,
-             "do2p"                         : True,
-             "continuous2p"                 : False,
-             "fade_duration"                : 1.,
-             "stimulation"                  : True,
-             "stimulation_mode"             : "crossing", # location, crossing (x or y direction), zone or time
-             "stim_intensity"               : 50,
-             "stim_coord"                   : [0,15],
-             "crossing_direction"           : "y",
-             "stim_radius"                  : 10.,
-             "stim_onset_time"              : 2.,
-             "stim_duration"                : 1.,
-             "optic_flow"                   : True,
-             "optic_flow_reference_frame"   : "allocentric", # allocentric or egocentric
-             "optic_flow_direction"         : 90, # angle in degrees when allocentric. ignored when egocentric
-             "optic_flow_velocity"          : -1.,
-             "optic_flow_mode"              : "zone", # zone or trial
-             "optic_flow_coord"             : [0,15],
-             "optic_flow_radius"            : 10.,
-             "show_landmarks"               : True,
-             "mirror_landmarks"             : [True, True],
-             "mirror_distance"              : [2.15, 2.5],
-             "landmark_number"              : 2,
-             "landmark_position"            : [[-1.45,10,0.25], [-.6,20,0.25]], # landmark coordinates
-             "landmark_hpr"                 : [[90,0,0], [90,0,0]], # landmark orientation
-             "landmarks"                    : ["models/VRE_autoPA_realFish.png", "models/VRE_autoPA_realFish.avi"], # landmark files (image or video)
-             "landmark_flag"                : [True, True], # Show or hide landmarks. Can be updated in spinCameraTask to make landmarks interactive
-             "handle_collisions"            : True,
-             "collision_radius"             : 0.3,
-             "collider_flag"                : ["Floor", "Collider"], #complex collider geometries impact performance significantly
-             "hide_collider"                : [False, True]}
+paramdict = {"trial_id"                             : "default",
+             "repeats"                              : 2,
+             "use_keyboard"                         : True,
+             "keyboard_gain"                        : 5.,
+             "keyboard_heading_increment"           : 20,
+             "vr_gain"                              : 1., # global gain multiplier to apply to fish velocity and heading (use independent gains in tail tracking code for scaling)  
+             "enable2d"                             : False,
+             "invert_turn_direction"                : True,
+             "trial_end_coords"                     : [[0,40], [15,45]],
+             "trial_start_coord"                    : [0,2],
+             "distance_threshold"                   : 1.,
+             "trial_end_delay"                      : 2.,
+             "model"                                : "models/1D-Tunnel_naturalistic.bam",
+             "init_position"                        : [0.,0.,.2],
+             "init_hpr"                             : [0.,0.,0.],
+             "scale"                                : [.25,.25,.25],
+             "intertrial_duration"                  : 5,
+             "max_trial_duration"                   : 20.,
+             "inactivity_threshold"                 : 0.,
+             "max_inactive_duration"                : 5.,
+             "inactivity_leads_to"                  : "flow", # "reset" or "flow"
+             "inactivity_triggered_flow_duration"   : 2.,  
+             "do2p"                                 : True,
+             "continuous2p"                         : False,
+             "fade_duration"                        : 1.,
+             "stimulation"                          : True,
+             "stimulation_mode"                     : "crossing", # location, crossing (x or y direction), zone or time
+             "stim_intensity"                       : 50,
+             "stim_coord"                           : [0,15],
+             "crossing_direction"                   : "y",
+             "stim_radius"                          : 10.,
+             "stim_onset_time"                      : 2.,
+             "stim_duration"                        : 1.,
+             "optic_flow"                           : False,
+             "optic_flow_reference_frame"           : "allocentric", # allocentric or egocentric
+             "optic_flow_direction"                 : 0, # angle in degrees when allocentric. ignored when egocentric
+             "optic_flow_velocity"                  : -1.,
+             "optic_flow_mode"                      : "zone", # zone or trial
+             "optic_flow_coord"                     : [0,15],
+             "optic_flow_radius"                    : 10.,
+             "show_landmarks"                       : True,
+             "mirror_landmarks"                     : [True, True],
+             "mirror_distance"                      : [2.15, 2.5],
+             "landmark_number"                      : 2,
+             "landmark_position"                    : [[-1.45,10,0.25], [-.6,20,0.25]], # landmark coordinates
+             "landmark_hpr"                         : [[90,0,0], [90,0,0]], # landmark orientation
+             "landmarks"                            : ["models/VRE_autoPA_realFish.png", "models/VRE_autoPA_realFish.avi"], # landmark files (image or video)
+             "landmark_flag"                        : [True, True], # Show or hide landmarks. Can be updated in spinCameraTask to make landmarks interactive
+             "handle_collisions"                    : True,
+             "collision_radius"                     : 0.3,
+             "collider_flag"                        : ["Floor", "Collider"], #complex collider geometries impact performance significantly
+             "hide_collider"                        : [False, True]}
 
 
 # save trial configuration
