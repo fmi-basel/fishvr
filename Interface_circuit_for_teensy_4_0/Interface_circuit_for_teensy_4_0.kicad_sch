@@ -7,9 +7,9 @@
 	(title_block
 		(title "Interface circuit for projector gating and VR timing")
 		(date "2025-02-25")
-		(comment 1 "Choose R5, 6 and 7 values based on the impedance of the input device.")
+		(comment 1 "Consider adding buffers to the output to match impedances better.")
 		(comment 2 "Higher values give a cleaner pulse with slower rise and decay times.")
-		(comment 3 "Consider adding buffers to the output to match impedances better.")
+		(comment 3 "Choose R5, 6 and 7 values based on the impedance of the input device.")
 	)
 	(lib_symbols
 		(symbol "74xx:74HCT541"
@@ -3466,7 +3466,7 @@
 			(uuid "12f5eb75-874f-4197-b343-ef0e7f832025")
 		)
 		(instances
-			(project "SetupC_Teensy4_level_shifting"
+			(project "Interface_circuit_for_teensy_4_0"
 				(path "/f8fa425c-112c-499e-892f-0a1c2e808c84"
 					(reference "U2")
 					(unit 1)
@@ -3536,7 +3536,7 @@
 			(uuid "560897c9-b9cf-4c03-b86b-946b112920c3")
 		)
 		(instances
-			(project "SetupC_Teensy4_level_shifting"
+			(project "Interface_circuit_for_teensy_4_0"
 				(path "/f8fa425c-112c-499e-892f-0a1c2e808c84"
 					(reference "R3")
 					(unit 1)
@@ -3605,7 +3605,7 @@
 			(uuid "8d196c9a-3c16-44e2-9890-38b9c71dcc00")
 		)
 		(instances
-			(project "SetupC_Teensy4_level_shifting"
+			(project "Interface_circuit_for_teensy_4_0"
 				(path "/f8fa425c-112c-499e-892f-0a1c2e808c84"
 					(reference "R6")
 					(unit 1)
@@ -3675,7 +3675,7 @@
 			(uuid "fff464e6-cfbc-462a-b553-01675a2074a1")
 		)
 		(instances
-			(project "SetupC_Teensy4_level_shifting"
+			(project "Interface_circuit_for_teensy_4_0"
 				(path "/f8fa425c-112c-499e-892f-0a1c2e808c84"
 					(reference "J5")
 					(unit 1)
@@ -3745,7 +3745,7 @@
 			(uuid "ccf41c48-0258-42ba-ac3c-83b0e3d9cf52")
 		)
 		(instances
-			(project "SetupC_Teensy4_level_shifting"
+			(project "Interface_circuit_for_teensy_4_0"
 				(path "/f8fa425c-112c-499e-892f-0a1c2e808c84"
 					(reference "J3")
 					(unit 1)
@@ -3815,7 +3815,7 @@
 			(uuid "e4abb40b-8239-4bc7-9593-ea22aecd664a")
 		)
 		(instances
-			(project "SetupC_Teensy4_level_shifting"
+			(project "Interface_circuit_for_teensy_4_0"
 				(path "/f8fa425c-112c-499e-892f-0a1c2e808c84"
 					(reference "C1")
 					(unit 1)
@@ -3885,7 +3885,7 @@
 			(uuid "025cccc8-6f89-44d5-9528-1b814defa828")
 		)
 		(instances
-			(project "SetupC_Teensy4_level_shifting"
+			(project "Interface_circuit_for_teensy_4_0"
 				(path "/f8fa425c-112c-499e-892f-0a1c2e808c84"
 					(reference "R1")
 					(unit 1)
@@ -3955,7 +3955,7 @@
 			(uuid "684b43dc-4f5b-42b6-be58-9d321184344b")
 		)
 		(instances
-			(project "SetupC_Teensy4_level_shifting"
+			(project "Interface_circuit_for_teensy_4_0"
 				(path "/f8fa425c-112c-499e-892f-0a1c2e808c84"
 					(reference "R2")
 					(unit 1)
@@ -4025,7 +4025,7 @@
 			(uuid "5b4ec366-e387-4bb1-97bb-6c92c722598f")
 		)
 		(instances
-			(project "SetupC_Teensy4_level_shifting"
+			(project "Interface_circuit_for_teensy_4_0"
 				(path "/f8fa425c-112c-499e-892f-0a1c2e808c84"
 					(reference "J6")
 					(unit 1)
@@ -4094,7 +4094,7 @@
 			(uuid "de2f56af-70b7-4f70-8b6e-bc1b8fc5d009")
 		)
 		(instances
-			(project "SetupC_Teensy4_level_shifting"
+			(project "Interface_circuit_for_teensy_4_0"
 				(path "/f8fa425c-112c-499e-892f-0a1c2e808c84"
 					(reference "R7")
 					(unit 1)
@@ -4164,7 +4164,7 @@
 			(uuid "81e49292-5d54-41a5-8bae-1aaa14bee15c")
 		)
 		(instances
-			(project "SetupC_Teensy4_level_shifting"
+			(project "Interface_circuit_for_teensy_4_0"
 				(path "/f8fa425c-112c-499e-892f-0a1c2e808c84"
 					(reference "J2")
 					(unit 1)
@@ -4234,7 +4234,7 @@
 			(uuid "f4017cc1-af64-42c1-931b-de29a6d5c79b")
 		)
 		(instances
-			(project "SetupC_Teensy4_level_shifting"
+			(project "Interface_circuit_for_teensy_4_0"
 				(path "/f8fa425c-112c-499e-892f-0a1c2e808c84"
 					(reference "J1")
 					(unit 1)
@@ -4301,7 +4301,7 @@
 			(uuid "c8905a76-41a8-4fcd-97f3-c3e400fd7a70")
 		)
 		(instances
-			(project "SetupC_Teensy4_level_shifting"
+			(project "Interface_circuit_for_teensy_4_0"
 				(path "/f8fa425c-112c-499e-892f-0a1c2e808c84"
 					(reference "R8")
 					(unit 1)
@@ -4370,7 +4370,7 @@
 			(uuid "985f8856-0fc4-42fb-8dc7-3c8eec3c46b6")
 		)
 		(instances
-			(project "SetupC_Teensy4_level_shifting"
+			(project "Interface_circuit_for_teensy_4_0"
 				(path "/f8fa425c-112c-499e-892f-0a1c2e808c84"
 					(reference "R5")
 					(unit 1)
@@ -4594,7 +4594,7 @@
 			(uuid "5b3e24a0-d422-4246-93d9-a1defe5a7660")
 		)
 		(instances
-			(project "SetupC_Teensy4_level_shifting"
+			(project "Interface_circuit_for_teensy_4_0"
 				(path "/f8fa425c-112c-499e-892f-0a1c2e808c84"
 					(reference "U1")
 					(unit 1)
@@ -4664,7 +4664,7 @@
 			(uuid "4445d71c-46a7-4673-86c7-49b7b7266a1b")
 		)
 		(instances
-			(project "SetupC_Teensy4_level_shifting"
+			(project "Interface_circuit_for_teensy_4_0"
 				(path "/f8fa425c-112c-499e-892f-0a1c2e808c84"
 					(reference "J4")
 					(unit 1)
@@ -4734,7 +4734,7 @@
 			(uuid "1be6e056-3a9b-4f29-9146-55505463d3b2")
 		)
 		(instances
-			(project "SetupC_Teensy4_level_shifting"
+			(project "Interface_circuit_for_teensy_4_0"
 				(path "/f8fa425c-112c-499e-892f-0a1c2e808c84"
 					(reference "R4")
 					(unit 1)
