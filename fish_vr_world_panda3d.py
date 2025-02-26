@@ -574,7 +574,7 @@ class ZebrafishVirtualReality(ShowBase):
 
         elif self.keyMap["backward"]:
             self.velocity = -self.keyboard_gain
-            builtins.base.camera.setY(builtins.base.camera, -self.velocity * self.frame_dt)
+            builtins.base.camera.setY(builtins.base.camera, self.velocity * self.frame_dt)
 
         if self.keyMap["right"]:
             self.theta = -self.keyboard_heading_increment * self.heading_multiplier
