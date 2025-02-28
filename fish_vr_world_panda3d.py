@@ -1,7 +1,8 @@
 """
 TODO:
 1) DOCUMENTATION
-2) Known limitations:
+2) Add velocity, heading and inactivity flag to log file
+3) Known limitations:
     a) Only one stimulus trigger can be configured per trial
     b) Stimulation zones can only be defined as circles of a specified radius
 
@@ -214,6 +215,7 @@ class ZebrafishVirtualReality(ShowBase):
         self.start_2p = False
         self.end_2p = False
         self.optic_flow_state = False
+        self.flow_in_world = False
         self.stim_state = False
         self.stim_state_pulsed = False
         self.framecount_2p = 0.
@@ -653,15 +655,18 @@ class ZebrafishVirtualReality(ShowBase):
 
                 if self.optic_flow_mode == "trial" and self.optic_flow_state == False:
                         self.optic_flow_state = True
+                        self.flow_in_world = True
 
                 if self.optic_flow_mode == "zone":
                     distance = self.euclidean_distance([self.XPos,self.YPos], self.optic_flow_coord)
                     if distance <= self.optic_flow_radius:
                         self.optic_flow_state = True
+                        self.flow_in_world = True
                     else:
                         self.optic_flow_state = False
+                        self.flow_in_world = False
 
-            if self.inactivity_leads_to == "flow":
+            if self.inactivity_leads_to == "flow" and self.flow_in_world == False:
                 if self.inactivity_triggered_flow_state == True:
                     self.optic_flow_state = True
                 else:
