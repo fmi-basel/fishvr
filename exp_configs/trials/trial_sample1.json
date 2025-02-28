@@ -41,6 +41,7 @@
     ],
     "intertrial_duration": 5,
     "max_trial_duration": 20.0,
+    "repeat_incomplete_trials": false,
     "inactivity_threshold": 0.0,
     "max_inactive_duration": 5.0,
     "inactivity_leads_to": "flow",

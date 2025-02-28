@@ -37,9 +37,10 @@ paramdict = {"trial_id"                             : "default",
              "scale"                                : [.25,.25,.25],
              "intertrial_duration"                  : 5,
              "max_trial_duration"                   : 20.,
+             "repeat_incomplete_trials"             : False, # first trial loops until user input is received, irrespective of this parameter 
              "inactivity_threshold"                 : 0.,
              "max_inactive_duration"                : 5.,
-             "inactivity_leads_to"                  : "flow", # "reset" or "flow"
+             "inactivity_leads_to"                  : "flow", # "reset", "flow" or "nothing"
              "inactivity_triggered_flow_duration"   : 2.,  
              "do2p"                                 : True,
              "continuous2p"                         : False,

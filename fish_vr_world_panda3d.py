@@ -340,6 +340,7 @@ class ZebrafishVirtualReality(ShowBase):
         self.scale                              = self.trialconfig['scale']
         self.intertrial_duration                = self.trialconfig['intertrial_duration']
         self.max_trial_duration                 = self.trialconfig['max_trial_duration']
+        self.repeat_incomplete_trials           = self.trialconfig['repeat_incomplete_trials']
         self.inactivity_threshold               = self.trialconfig['inactivity_threshold']
         self.max_inactive_duration              = self.trialconfig['max_inactive_duration']
         self.inactivity_leads_to                = self.trialconfig['inactivity_leads_to']
@@ -561,6 +562,10 @@ class ZebrafishVirtualReality(ShowBase):
             if keyname == 's':
                 self.force_progress = False
                 print("Will progress only if trial completed")
+            if keyname == 'e':
+                self.end_trial = True
+                self.force_progress = True
+                print('Progressing to the next trial')
 
 
     def updateCameraWithKeyboard(self):
@@ -777,12 +782,15 @@ class ZebrafishVirtualReality(ShowBase):
             if self.force_progress == True:
                 self.trial_index += 1
         else:
-            if self.trial_complete or self.force_progress:
+            if self.repeat_incomplete_trials:
+                if self.trial_complete or self.force_progress:
+                    self.repcount += 1
+            else:
                 self.repcount += 1
 
-                if self.repcount == self.repeats:
-                    self.repcount = 0
-                    self.trial_index += 1
+            if self.repcount == self.repeats:
+                self.repcount = 0
+                self.trial_index += 1
 
         self.trial_complete = False
         self.force_progress = False
@@ -888,7 +896,7 @@ class ZebrafishVirtualReality(ShowBase):
                 distance_to_start_point <= self.distance_threshold and self.fade_in == True):
                 self.state = "trial"
                 self.state_onset_time = self.frame_onset_time
-                if self.do2p:
+                if self.do2p and self.trial_index > 0:
                     if self.continuous2p and self.twopstate == False:
                         self.start_2p = True
                     else:
