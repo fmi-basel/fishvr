@@ -107,6 +107,10 @@ projection_height = setup.getint('params', 'projection_height') # height of scre
 window_origin_x = setup.getint('params', 'window_origin_x')     # panda3D window position
 window_origin_y = setup.getint('params', 'window_origin_y')
 
+mainlight_rgba = [float(x) for x in setup.get('params', 'mainlight_rgba').split(',')]
+mainlight_hpr = [float(x) for x in setup.get('params', 'mainlight_hpr').split(',')]
+ambient_rgba = [float(x) for x in setup.get('params', 'ambient_rgba').split(',')]
+
 ncameras = setup.getint('params', 'ncameras') # number of projectors                   
 projector_aspect_ratio = (projection_width/ncameras)/projection_height
 projector_fov = setup.getfloat('params', 'projector_fov') # field of view of each projector
@@ -145,7 +149,8 @@ class ZebrafishVirtualReality(ShowBase):
                  serial_port=serial_port, serial_timeout=serial_timeout, udp_ip=udp_ip, 
                  udp_port=udp_port, udp_buffer_size=udp_buffer_size, udp_timeout=udp_timeout,
                  ncameras=ncameras, projector_hpr=projector_hpr, projector_fov=projector_fov, 
-                 display_region=display_region):
+                 display_region=display_region, mainlight_rgba=mainlight_rgba, mainlight_hpr=mainlight_hpr,
+                 ambient_rgba=ambient_rgba):
 
         self.configfile = filedialog.askopenfilename(initialdir=configpath, title='Select config file', filetypes=[('JSON files', '*.json')])
         if len(self.configfile) == 0:
@@ -162,7 +167,6 @@ class ZebrafishVirtualReality(ShowBase):
                 self.save = False
             else:
                 jsonfile = logfile.split('.')[0] + '_vrinfo.json'
-                print(jsonfile, logfile)
                 date_and_time = datetime.now().strftime("%y%m%d_%H:%M:%S")
 
                 self.infofile = open(jsonfile, 'w', encoding='utf-8')
@@ -297,12 +301,13 @@ class ZebrafishVirtualReality(ShowBase):
         self.camlist = builtins.base.camList
 
         mainLight = DirectionalLight("main light")
+        mainLight.setColor(Vec4(*mainlight_rgba))
         self.mainLightNodePath = self.render.attachNewNode(mainLight)
-        self.mainLightNodePath.setHpr(0, 0, -90)
+        self.mainLightNodePath.setHpr(*mainlight_hpr)
         self.render.setLight(self.mainLightNodePath)
 
         ambientLight = AmbientLight("ambient light")
-        ambientLight.setColor(Vec4(1, 1, 1, 1))  # 0.8, 0.8, 0.8, 1
+        ambientLight.setColor(Vec4(*ambient_rgba))
         self.ambientLightNodePath = self.render.attachNewNode(ambientLight)
         self.render.setLight(self.ambientLightNodePath)
         self.render.setShaderAuto()
