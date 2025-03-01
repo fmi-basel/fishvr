@@ -1,8 +1,7 @@
 """
 TODO:
 1) DOCUMENTATION
-2) Add velocity, heading and inactivity flag to log file
-3) Known limitations:
+2) Known limitations:
     a) Only one stimulus trigger can be configured per trial
     b) Stimulation zones can only be defined as circles of a specified radius
 
@@ -48,10 +47,11 @@ DONE:
                          b) Tail tracking tested with video file. 100-150 fps should work, test with camera
                          c) Teensy sync timeout of 0.004 seconds
                          b) UDP timeout of 0.001 seconds and UDP buffer size of 64 bytes
-17) Implement optic flow stimulus delivery and trialwise gloabal gain setting
+17) Implement optic flow stimulus delivery and trialwise global gain setting
 18) Implement screen splitting based on tank geometry to allow different configurations
 19) Displacement based estimation of trial completion does not work well under all conditions, for example in a VR with optic flow or mazes
     Use a list of coordinates to determine trial completion. Check minimum distance of fish from end coordinates. 
+20) Add velocity, heading and inactivity flag to log file
 """
 
 from pathlib import Path
@@ -156,13 +156,13 @@ class ZebrafishVirtualReality(ShowBase):
         self.savepath = savepath
 
         if self.save:
-            logfile = filedialog.asksaveasfilename(initialdir=savepath, title='Save log file as', defaultextension='.csv', filetypes=[('csv files', '*.csv')])
+            logfile = filedialog.asksaveasfilename(initialdir=savepath, initialfile='_vrlog', title='Save log file as', defaultextension='.csv', filetypes=[('csv files', '*.csv')])
             if len(logfile) == 0:
                 print('No log file specified, will continue without saving')
                 self.save = False
             else:
                 jsonfile = logfile.split('.')[0] + '_vrinfo.json'
-            
+                print(jsonfile, logfile)
                 date_and_time = datetime.now().strftime("%y%m%d_%H:%M:%S")
 
                 self.infofile = open(jsonfile, 'w', encoding='utf-8')
@@ -171,10 +171,9 @@ class ZebrafishVirtualReality(ShowBase):
 
                 self.datafile = open(logfile, 'w', encoding='utf-8',  newline='')
                 self.logger = csv.writer(self.datafile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-                self.logger.writerow(['trial', 'trial index', '2p framecount', 'timestamp',
-                                    'xpos', 'ypos', 'heading', '2p state', 'optic flow state', 
-                                    'optic flow direction', 'optic flow velocity', 'stim state',
-                                    'stim state pulsed', 'tail tracking framecount', 'vr gain'])
+                self.logger.writerow(['trial', 'trial index', '2p framecount', 'timestamp', 'xpos', 'ypos', 'heading', 'velocity', 'dheading',
+                                      '2p state', 'optic flow state', 'optic flow direction', 'optic flow velocity', 'stim state', 
+                                      'stim state pulsed', 'tail tracking framecount', 'vr gain', 'inactivity timer'])
                 
         ShowBase.__init__(self)
         self.distance_to_nearest_end_point = np.inf
@@ -767,9 +766,10 @@ class ZebrafishVirtualReality(ShowBase):
         """
         if self.save:
             self.logger.writerow([self.trial, self.trial_index, self.framecount_2p, self.frame_onset_time,
-                                  self.XPos, self.YPos, self.heading, self.twopstate, self.optic_flow_state, 
-                                  self.optic_flow_direction, self.optic_flow_velocity, self.stim_state,
-                                  self.stim_state_pulsed, self.tail_tracking_framecount, self.vr_gain])
+                                  self.XPos, self.YPos, self.heading, self.velocity, self.theta, self.twopstate,
+                                  self.optic_flow_state, self.optic_flow_direction, self.optic_flow_velocity, 
+                                  self.stim_state, self.stim_state_pulsed, self.tail_tracking_framecount, 
+                                  self.vr_gain, self.inactivity_timer])
             
 
     def printTrialInfo(self):
