@@ -456,18 +456,19 @@ class ZebrafishVirtualReality(ShowBase):
         #This can be used to introduce closed-loop contigencies for implementing learning assays
         #Hint: 1) use a function to check what to do with landmarks in each loop of spinCameraTask
         #      2) redraw landmarks when they need to be changed
-        cm = CardMaker('card')
-        self.landmark_nodes = []
-        self.landmark_nodes_mirrored = []
-        self.textures = []
-        for i in range(self.landmark_number):
-            
-            tex, lm, lm2 = self.initializeLandmarkNode(cm, self.landmarks[i], self.landmark_flag[i], self.landmark_position[i], 
-                                                       self.landmark_hpr[i], self.mirror_landmarks[i], self.mirror_distance[i])
+        if self.show_landmarks:
+            cm = CardMaker('card')
+            self.landmark_nodes = []
+            self.landmark_nodes_mirrored = []
+            self.textures = []
+            for i in range(self.landmark_number):
+                
+                tex, lm, lm2 = self.initializeLandmarkNode(cm, self.landmarks[i], self.landmark_flag[i], self.landmark_position[i], 
+                                                        self.landmark_hpr[i], self.mirror_landmarks[i], self.mirror_distance[i])
 
-            self.textures.append(tex)
-            self.landmark_nodes.append(lm)
-            self.landmark_nodes_mirrored.append(lm2)
+                self.textures.append(tex)
+                self.landmark_nodes.append(lm)
+                self.landmark_nodes_mirrored.append(lm2)
 
 
     def initializeLandmarkNode(self, cardmaker, texture_file, flag, position, hpr, mirror=False, mirror_distance=0):
