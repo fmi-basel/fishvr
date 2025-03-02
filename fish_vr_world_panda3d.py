@@ -54,7 +54,6 @@ DONE:
 20) Add velocity, heading and inactivity flag to log file
 """
 
-from pathlib import Path
 import sys
 import socket
 import struct
