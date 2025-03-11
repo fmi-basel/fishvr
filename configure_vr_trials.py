@@ -8,7 +8,7 @@ Program a VR trial
 ---- The first trial is set to loop infinitely until user input is received, ignoring the number of repeats parameter in the trial configuration 
 """
 
-trialname = "exp_configs/trials/trial_sample1.json"
+trialname = "exp_configs/trial_sample1.json"
 
 configname = "exp_configs/defaultconfig.json"
 
