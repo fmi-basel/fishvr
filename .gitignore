@@ -1,6 +1,8 @@
 # exclude all files in the models directory
-models/*
-log/*
+models/**
+log/**
+exp_configs/**
 # keep empty folder in git by including the .gitkeep file
 !models/.gitkeep
 !log/.gitkeep
+!exp_configs/.gitkeep
