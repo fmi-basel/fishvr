@@ -15,5 +15,5 @@ dependencies:
         - pyqtgraph==0.12.0
         - pyserial
         - opencv-python
-        - panda3d==0.10.14
+        - panda3d
         - panda3d-gltf
