@@ -779,7 +779,7 @@ class ZebrafishVirtualReality(ShowBase):
 
     def printTrialInfo(self):
         if self.trial_index == 0:
-            print("Starting trial: {}, index: {}, id: {}, repeat: until user presses w".format(self.trial, self.trial_index, self.trial_id))
+            print("Starting trial: {}, index: {}, id: {}, repeat: until user presses w or e".format(self.trial, self.trial_index, self.trial_id))
         else:
             print("Starting trial: {}, index: {}, id: {}, repeat: {} of {}".format(self.trial, self.trial_index, self.trial_id, self.repcount, self.repeats-1))
 

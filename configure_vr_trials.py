@@ -8,9 +8,11 @@ Program a VR trial
 ---- The first trial is set to loop infinitely until user input is received, ignoring the number of repeats parameter in the trial configuration 
 """
 
-trialname = "exp_configs/trial_sample1.json"
+savepath = "exp_configs/" # path to save trial and corresponding config files (if savetestconfig is True)
 
-configname = "exp_configs/defaultconfig.json"
+trialname = "trial_sample1"
+
+configname = "defaultconfig"
 
 # multiple saved trials can be loaded and combined into a single configuration file to program a multi-trial experiment
 # refer to configure_vr_experiment.py for how to program a multi-trial experiment
@@ -19,7 +21,7 @@ savetrial = True
 # use this configuration file to test whether the trial is executed correctly and the environment is set up as intended
 savetestconfig = True # a test configuration is saved
 
-paramdict = {"trial_id"                             : "default",
+paramdict = {"trial_id"                             : trialname,
              "repeats"                              : 2,
              "use_keyboard"                         : True,
              "keyboard_gain"                        : 5.,
@@ -76,22 +78,24 @@ paramdict = {"trial_id"                             : "default",
 
 # save trial configuration
 if savetrial:
-    with open(trialname, 'w', encoding='utf-8') as f:
+    trialpath = savepath + trialname + '.json'
+    with open(trialpath, 'w', encoding='utf-8') as f:
         json.dump(paramdict, f, ensure_ascii=False, indent=4)
 
 
 if savetestconfig:
 
     # load saved trial configuration
-    with open(trialname, 'r') as f:
+    with open(trialpath, 'r') as f:
         trial = json.load(f)
 
     configdict = {"trials":[trial]} # include multiple dictionaries separated by commas to program a multi-trial experiment
 
     # Save config
-    with open(configname, 'w', encoding='utf-8') as f:
+    configpath = savepath + configname + '.json'
+    with open(configpath, 'w', encoding='utf-8') as f:
         json.dump(configdict, f, ensure_ascii=False, indent=4)
 
     # Load config
-    with open(configname, 'r') as f:
+    with open(configpath, 'r') as f:
         print(json.load(f))
