@@ -15,6 +15,7 @@ class ExperimentConfigurationApp:
         self.root.title("Experiment Configuration App")
         self.width = 500
         self.height = 100
+        self.maxwidth = 350
         self.root.geometry(f"{self.width}x{self.height}")  # Initial size
         
         self.file_list = []
@@ -26,7 +27,7 @@ class ExperimentConfigurationApp:
         self.button_frame = tk.Frame(self.root)
         self.button_frame.pack(pady=5)
         
-        self.add_button = tk.Button(self.button_frame, text="Add File", command=self.add_file)
+        self.add_button = tk.Button(self.button_frame, text="Add Trial", command=self.add_file)
         self.add_button.pack(side="left", padx=5)
         
         self.randomize_var = tk.BooleanVar()
@@ -35,6 +36,9 @@ class ExperimentConfigurationApp:
         
         self.save_button = tk.Button(self.button_frame, text="Save Configuration", command=self.save_configuration)
         self.save_button.pack(side="left", padx=5)
+
+        self.update_display()
+        self.adjust_window_size()
     
 
     def add_file(self):
@@ -77,6 +81,8 @@ class ExperimentConfigurationApp:
         
         spacer = tk.Label(header_frame, text=" ", width=10)  # Empty label for alignment
         spacer.pack(side="right")
+
+        widths = []
         
         for i, file_path in enumerate(self.file_list):
             file_frame = tk.Frame(self.frame)
@@ -90,11 +96,19 @@ class ExperimentConfigurationApp:
             
             remove_button = tk.Button(file_frame, text="Remove", command=lambda idx=i: self.remove_file(idx))
             remove_button.pack(side="right")
+
+            widths.append(label.winfo_reqwidth())
+
+        if len(widths) > 0:
+            self.maxwidth = max(widths)
+        else:
+            self.maxwidth = 350
     
 
     def adjust_window_size(self):
         new_height = max(100, 100 + len(self.file_list) * 25)
-        self.root.geometry(f"{self.width}x{new_height}")
+        new_width = self.maxwidth + 150
+        self.root.geometry(f"{new_width}x{new_height}")
 
 
     def makeconfig(self, saveas):
