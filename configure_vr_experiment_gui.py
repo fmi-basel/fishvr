@@ -4,15 +4,15 @@ import json
 import random
 
 """
-Experiment configuration app made using ChatGPT with minor modifications. USE WITH CAUTION
+Experiment configuration GUI made using ChatGPT with minor modifications. USE WITH CAUTION
 User interface wrapper around the makeconfig function in configure_vr_experiment.py
 Functionality should be identical to configure_vr_experiment.py 
 """
 
-class ExperimentConfigurationApp:
+class ExperimentConfigurationGUI:
     def __init__(self, root):
         self.root = root
-        self.root.title("Experiment Configuration App")
+        self.root.title("Experiment Configuration")
         self.width = 500
         self.height = 100
         self.maxwidth = 350
@@ -138,5 +138,5 @@ class ExperimentConfigurationApp:
 
 if __name__ == "__main__":
     root = tk.Tk()
-    app = ExperimentConfigurationApp(root)
+    app = ExperimentConfigurationGUI(root)
     root.mainloop()
