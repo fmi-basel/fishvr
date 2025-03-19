@@ -414,18 +414,20 @@ class ZebrafishVirtualReality(ShowBase):
 
         self.drawLandmarks() # this function can be called dynamically to toggle landmark visibility using flags    
 
+        # set up collision handling
+        # doing this before updating position from origin seems to be important
+        # collision detection fails if initial position is updated before setting up collision handling
+        if self.trial == 0:
+            self.initializeColliderObject()
+
+        self.updateCollisionPushers()
+
         # self.scene.setPos(*self.init_position)  
         builtins.base.camera.setPos(*self.init_position)
         builtins.base.camera.setHpr(*self.init_hpr)
         self.YPos = builtins.base.camera.getY()
         self.XPos = builtins.base.camera.getX()
         self.heading = builtins.base.camera.getH()
-
-        # set up collision handling
-        if self.trial == 0:
-            self.initializeColliderObject()
-
-        self.updateCollisionPushers()
 
         self.formatTrialInfo()
 
@@ -835,6 +837,8 @@ class ZebrafishVirtualReality(ShowBase):
         self.XPos = builtins.base.camera.getX()
         self.ZPos = builtins.base.camera.getZ()
         self.heading = builtins.base.camera.getH()
+
+        # print(self.XPos, self.YPos, self.heading)
         
         if self.velocity <= self.inactivity_threshold and self.initialized:
             self.inactivity_timer += self.frame_dt
