@@ -120,7 +120,10 @@ class TrialEditor(tk.Tk):
 
             keys.append(key)
 
-            raw_text = entry.get()
+            raw_text = entry.get().strip()
+            if not raw_text:
+                values.append(None)
+                continue
 
             # Try parsing as boolean
             if raw_text.lower() in ('true', 'false'):
