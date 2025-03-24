@@ -8,7 +8,9 @@ import numpy as np
 1) Set Panda3D scale to a known value, say [1.,1.,1.]
 2) Measure the size of a calibration object on the projection screen when it is placed in VR at a known distance from the observer.
    For example, what is the size on screen of a 1m sized object in VR placed 2m from the observer?
-3) Enter the values for scale used (step 1) and measurements made (step 2) in the calculation below to get the adjusted scale value to use
+3) Enter the values for scale used (step 1) and measurements made (step 2) in the calculation below to get the adjusted scale value to use in Panda3D.
+4) Take this scaling into account while determining position and coordinates in the VR environment. 
+   For example, stimulation zones and coordinates triggering other events in the VR world should be scaled accordingly from the Blender units.
 """
 
 calibrationscale = [1.,1.,1.]   # scale parameter in Panda3d used for calibration step 2 
