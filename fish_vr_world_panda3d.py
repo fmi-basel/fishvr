@@ -52,6 +52,7 @@ DONE:
 19) Displacement based estimation of trial completion does not work well under all conditions, for example in a VR with optic flow or mazes
     Use a list of coordinates to determine trial completion. Check minimum distance of fish from end coordinates. 
 20) Add velocity, heading and inactivity flag to log file
+21) Velocity and distances are scaled based on the scale parameter estimated using the calibration protocol (see scale_calibration.py)
 """
 
 import sys
@@ -398,6 +399,24 @@ class ZebrafishVirtualReality(ShowBase):
         self.collider_flag      = self.trialconfig['collider_flag']  
         self.hide_collider      = self.trialconfig['hide_collider']
 
+        self.scaleParams()
+
+    
+    def scaleParams(self):
+        self.trial_end_coords = [[x*self.scale for x in y] for y in self.trial_end_coords]
+        self.trial_start_coord = [x*self.scale for x in self.trial_start_coord]
+        self.distance_threshold *= self.scale
+        self.init_position = [x*self.scale for x in self.init_position]
+        self.inactivity_threshold *= self.scale
+        self.stim_coord = [x*self.scale for x in self.stim_coord]
+        self.stim_radius *= self.scale
+        self.optic_flow_velocity *= self.scale
+        self.optic_flow_coord = [x*self.scale for x in self.optic_flow_coord]
+        self.optic_flow_radius *= self.scale
+        self.mirror_distance = [x*self.scale for x in self.mirror_distance]
+        self.landmark_position = [[x*self.scale for x in y] for y in self.landmark_position]
+        self.collision_radius *= self.scale
+
 
     def setupScene(self):
     
@@ -409,10 +428,18 @@ class ZebrafishVirtualReality(ShowBase):
         # Reparent the model to render.
         self.scene.reparentTo(self.render)
         # Apply scale and position transforms on the model.
-        self.scene.setScale(*self.scale)
+        self.scene.setScale(self.scale, self.scale, self.scale)
         self.scene.setTwoSided(True)  # rendering related. mostly has no consequence
 
         self.drawLandmarks() # this function can be called dynamically to toggle landmark visibility using flags    
+
+        # set up collision handling
+        # doing this before updating position from origin seems to be important
+        # collision detection fails if initial position is updated before setting up collision handling
+        if self.trial == 0:
+            self.initializeColliderObject()
+
+        self.updateCollisionPushers()
 
         # self.scene.setPos(*self.init_position)  
         builtins.base.camera.setPos(*self.init_position)
@@ -420,12 +447,6 @@ class ZebrafishVirtualReality(ShowBase):
         self.YPos = builtins.base.camera.getY()
         self.XPos = builtins.base.camera.getX()
         self.heading = builtins.base.camera.getH()
-
-        # set up collision handling
-        if self.trial == 0:
-            self.initializeColliderObject()
-
-        self.updateCollisionPushers()
 
         self.formatTrialInfo()
 
@@ -580,11 +601,11 @@ class ZebrafishVirtualReality(ShowBase):
         self.theta = 0
 
         if self.keyMap["forward"]:
-            self.velocity = self.keyboard_gain
+            self.velocity = self.keyboard_gain * self.scale
             builtins.base.camera.setY(builtins.base.camera, self.velocity * self.frame_dt)
 
         elif self.keyMap["backward"]:
-            self.velocity = -self.keyboard_gain
+            self.velocity = -self.keyboard_gain * self.scale
             builtins.base.camera.setY(builtins.base.camera, self.velocity * self.frame_dt)
 
         if self.keyMap["right"]:
@@ -620,7 +641,7 @@ class ZebrafishVirtualReality(ShowBase):
         
         if data is not None:
             self.velocity, self.theta, self.tail_tracking_framecount = struct.unpack('>ddi', data)
-            self.velocity = self.velocity * self.vr_gain
+            self.velocity = self.velocity * self.vr_gain * self.scale
             self.theta = self.theta * self.vr_gain * self.heading_multiplier
         else:
             self.velocity, self.theta = 0, 0
@@ -779,7 +800,7 @@ class ZebrafishVirtualReality(ShowBase):
 
     def printTrialInfo(self):
         if self.trial_index == 0:
-            print("Starting trial: {}, index: {}, id: {}, repeat: until user presses w".format(self.trial, self.trial_index, self.trial_id))
+            print("Starting trial: {}, index: {}, id: {}, repeat: until user presses w or e".format(self.trial, self.trial_index, self.trial_id))
         else:
             print("Starting trial: {}, index: {}, id: {}, repeat: {} of {}".format(self.trial, self.trial_index, self.trial_id, self.repcount, self.repeats-1))
 
@@ -835,6 +856,8 @@ class ZebrafishVirtualReality(ShowBase):
         self.XPos = builtins.base.camera.getX()
         self.ZPos = builtins.base.camera.getZ()
         self.heading = builtins.base.camera.getH()
+
+        # print(self.XPos, self.YPos, self.heading)
         
         if self.velocity <= self.inactivity_threshold and self.initialized:
             self.inactivity_timer += self.frame_dt
