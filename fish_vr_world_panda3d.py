@@ -409,7 +409,7 @@ class ZebrafishVirtualReality(ShowBase):
         # Reparent the model to render.
         self.scene.reparentTo(self.render)
         # Apply scale and position transforms on the model.
-        self.scene.setScale(*self.scale)
+        self.scene.setScale(self.scale, self.scale, self.scale)
         self.scene.setTwoSided(True)  # rendering related. mostly has no consequence
 
         self.drawLandmarks() # this function can be called dynamically to toggle landmark visibility using flags    

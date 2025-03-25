@@ -25,7 +25,7 @@ paramdict = {
     "model": "models/1D-Tunnel_naturalistic.bam",
     "init_position": [0.0, 0.0, 0.2],
     "init_hpr": [0.0, 0.0, 0.0],
-    "scale": [0.25, 0.25, 0.25],
+    "scale": 0.25,
     "intertrial_duration": 5,
     "max_trial_duration": 20.0,
     "repeat_incomplete_trials": False,
