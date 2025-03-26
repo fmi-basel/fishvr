@@ -52,7 +52,7 @@ DONE:
 19) Displacement based estimation of trial completion does not work well under all conditions, for example in a VR with optic flow or mazes
     Use a list of coordinates to determine trial completion. Check minimum distance of fish from end coordinates. 
 20) Add velocity, heading and inactivity flag to log file
-21) Velocity and distances are scaled based on the scale parameter estimated using the calibration protocol (see scale_calibration.py)
+21) Distances are scaled based on the scale parameter estimated using the calibration protocol (see scale_calibration.py)
 """
 
 import sys
@@ -289,7 +289,7 @@ class ZebrafishVirtualReality(ShowBase):
         ################
         """
         builtins.base.camLens.setFov(projector_fov) # originally 40, but tank walls angles indicate projectors are at 60 degrees to each other
-        builtins.base.camLens.setNear(0.1)
+        builtins.base.camLens.setNear(0.001)
         builtins.base.camLens.setFar(200)
         builtins.base.setAspectRatio(projector_aspect_ratio)
 
@@ -410,12 +410,11 @@ class ZebrafishVirtualReality(ShowBase):
         self.inactivity_threshold *= self.scale
         self.stim_coord = [x*self.scale for x in self.stim_coord]
         self.stim_radius *= self.scale
-        self.optic_flow_velocity *= self.scale
         self.optic_flow_coord = [x*self.scale for x in self.optic_flow_coord]
         self.optic_flow_radius *= self.scale
         self.mirror_distance = [x*self.scale for x in self.mirror_distance]
         self.landmark_position = [[x*self.scale for x in y] for y in self.landmark_position]
-        self.collision_radius *= self.scale
+        self.collision_radius = min(0.1, self.collision_radius * self.scale)
 
 
     def setupScene(self):
@@ -425,11 +424,15 @@ class ZebrafishVirtualReality(ShowBase):
 
         # Load the environment model.
         self.scene = self.loader.loadModel(self.model)
+        
+        # Apply scale and position transforms on the model.
+        self.scene.setScale(self.scale)
+        
+        # rendering related. mostly has no consequence
+        self.scene.setTwoSided(True)
+
         # Reparent the model to render.
         self.scene.reparentTo(self.render)
-        # Apply scale and position transforms on the model.
-        self.scene.setScale(self.scale, self.scale, self.scale)
-        self.scene.setTwoSided(True)  # rendering related. mostly has no consequence
 
         self.drawLandmarks() # this function can be called dynamically to toggle landmark visibility using flags    
 
@@ -593,6 +596,8 @@ class ZebrafishVirtualReality(ShowBase):
                 self.end_trial = True
                 self.force_progress = True
                 print('Progressing to the next trial')
+            if keyname == 'p':
+                print(self.XPos, self.YPos, self.heading)
 
 
     def updateCameraWithKeyboard(self):
@@ -601,11 +606,11 @@ class ZebrafishVirtualReality(ShowBase):
         self.theta = 0
 
         if self.keyMap["forward"]:
-            self.velocity = self.keyboard_gain * self.scale
+            self.velocity = self.keyboard_gain
             builtins.base.camera.setY(builtins.base.camera, self.velocity * self.frame_dt)
 
         elif self.keyMap["backward"]:
-            self.velocity = -self.keyboard_gain * self.scale
+            self.velocity = -self.keyboard_gain
             builtins.base.camera.setY(builtins.base.camera, self.velocity * self.frame_dt)
 
         if self.keyMap["right"]:
@@ -641,7 +646,7 @@ class ZebrafishVirtualReality(ShowBase):
         
         if data is not None:
             self.velocity, self.theta, self.tail_tracking_framecount = struct.unpack('>ddi', data)
-            self.velocity = self.velocity * self.vr_gain * self.scale
+            self.velocity = self.velocity * self.vr_gain
             self.theta = self.theta * self.vr_gain * self.heading_multiplier
         else:
             self.velocity, self.theta = 0, 0
