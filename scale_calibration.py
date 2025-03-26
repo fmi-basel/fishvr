@@ -13,20 +13,20 @@ import numpy as np
    For example, stimulation zones and coordinates triggering other events in the VR world should be scaled accordingly from the Blender units.
 """
 
-calibrationscale = [1.,1.,1.]   # scale parameter in Panda3d used for calibration step 2 
-calobjectsize = 1.0             # size of the calibration object in metres
-calobjectvrdistance = 2.0       # distance of observer from the calibration object in metres
+calibrationscale = 1.           # scale parameter in Panda3d used for calibration step 2 
+calobjectsize = 2.0             # size of the calibration object in metres
+calobjectvrdistance = 2.5       # distance of observer from the calibration object in metres
 d_screen_to_observer = 0.095    # distance of observer from the VR projection screen in metres
-calobject_size_on_screen = 0.04 # measured size of calibration object on the VR projection screen in metres
+calobject_size_on_screen = 0.076 # measured size of calibration object on the VR projection screen in metres
 
 calobject_halfangularsize = np.rad2deg(np.arctan(calobjectsize/(2*calobjectvrdistance)))
 
 calobject_target_size = np.tan(np.deg2rad(calobject_halfangularsize)) * d_screen_to_observer * 2
 
-target_scale = np.array(calibrationscale) * calobject_target_size / calobject_size_on_screen
+target_scale = calibrationscale * calobject_target_size / calobject_size_on_screen
 
 print("angle subtended by calibration object = {} degrees".format(np.round(2*calobject_halfangularsize,2)))
-print("size of calibration object on screen = {} metres".format(np.round(calobject_target_size,3)))
+print("target size of calibration object on screen = {} metres".format(np.round(calobject_target_size,3)))
 print("VR scale = {}" .format(target_scale))
 
 

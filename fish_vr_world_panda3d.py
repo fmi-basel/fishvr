@@ -414,7 +414,7 @@ class ZebrafishVirtualReality(ShowBase):
         self.optic_flow_radius *= self.scale
         self.mirror_distance = [x*self.scale for x in self.mirror_distance]
         self.landmark_position = [[x*self.scale for x in y] for y in self.landmark_position]
-        self.collision_radius = min(0.02, self.collision_radius * self.scale)
+        self.collision_radius = min(0.1, self.collision_radius * self.scale)
 
 
     def setupScene(self):
@@ -596,6 +596,8 @@ class ZebrafishVirtualReality(ShowBase):
                 self.end_trial = True
                 self.force_progress = True
                 print('Progressing to the next trial')
+            if keyname == 'p':
+                print(self.XPos, self.YPos, self.heading)
 
 
     def updateCameraWithKeyboard(self):
