@@ -289,7 +289,11 @@ class ZebrafishVirtualReality(ShowBase):
         ################
         """
         builtins.base.camLens.setFov(projector_fov) # originally 40, but tank walls angles indicate projectors are at 60 degrees to each other
+<<<<<<< HEAD
         builtins.base.camLens.setNear(0.001)
+=======
+        builtins.base.camLens.setNear(0.01)
+>>>>>>> 3caaa6f961f8ba4cf3bf16f300cae876cff13638
         builtins.base.camLens.setFar(200)
         builtins.base.setAspectRatio(projector_aspect_ratio)
 
@@ -433,6 +437,12 @@ class ZebrafishVirtualReality(ShowBase):
 
         # Reparent the model to render.
         self.scene.reparentTo(self.render)
+<<<<<<< HEAD
+=======
+        # Apply scale and position transforms on the model.
+        self.scene.setScale(self.scale)
+        self.scene.setTwoSided(True)  # rendering related. mostly has no consequence
+>>>>>>> 3caaa6f961f8ba4cf3bf16f300cae876cff13638
 
         self.drawLandmarks() # this function can be called dynamically to toggle landmark visibility using flags    
 
