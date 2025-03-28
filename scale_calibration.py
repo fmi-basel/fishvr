@@ -14,10 +14,10 @@ import numpy as np
 """
 
 calibrationscale = 1.           # scale parameter in Panda3d used for calibration step 2 
-calobjectsize = 2.0             # size of the calibration object in metres
-calobjectvrdistance = 2.5       # distance of observer from the calibration object in metres
-d_screen_to_observer = 0.095    # distance of observer from the VR projection screen in metres
-calobject_size_on_screen = 0.076 # measured size of calibration object on the VR projection screen in metres
+calobjectsize = 1.0             # size of the calibration object in metres
+calobjectvrdistance = 3.0       # distance of observer from the calibration object in metres
+d_screen_to_observer = 0.08     # distance of observer from the VR projection screen in metres
+calobject_size_on_screen = 0.033 # measured size of calibration object on the VR projection screen in metres
 
 calobject_halfangularsize = np.rad2deg(np.arctan(calobjectsize/(2*calobjectvrdistance)))
 
