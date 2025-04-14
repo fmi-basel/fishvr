@@ -621,17 +621,6 @@ class ZebrafishVirtualReality(ShowBase):
             self.theta = self.keyboard_heading_increment * self.heading_multiplier
             builtins.base.camera.setH(builtins.base.camera, self.theta * self.frame_dt)
 
-        if self.optic_flow_state == True:
-
-            if self.optic_flow_reference_frame == 'allocentric':
-                current_h = builtins.base.camera.getH() # get current heading
-                builtins.base.camera.setH(self.optic_flow_direction) # set heading to the desired optic flow direction
-                builtins.base.camera.setY(builtins.base.camera, self.optic_flow_velocity * self.frame_dt)
-                builtins.base.camera.setH(current_h) # reset heading to fish heading
-
-            if self.optic_flow_reference_frame == 'egocentric':
-                builtins.base.camera.setY(builtins.base.camera, self.optic_flow_velocity * self.frame_dt)
-
 
     def updateCameraWithTailTracking(self):
         data, addr = None, None
@@ -655,6 +644,9 @@ class ZebrafishVirtualReality(ShowBase):
         if self.enable2d:
             builtins.base.camera.setH(builtins.base.camera, self.theta * self.frame_dt)
 
+
+    def updateCameraWithOpticFlow(self):
+
         if self.optic_flow_state == True:
 
             if self.optic_flow_reference_frame == 'allocentric':
@@ -664,7 +656,7 @@ class ZebrafishVirtualReality(ShowBase):
                 builtins.base.camera.setH(current_h) # reset heading to fish heading
                 
             if self.optic_flow_reference_frame == 'egocentric':    
-                builtins.base.camera.setY(builtins.base.camera, self.optic_flow_velocity * self.frame_dt)
+                builtins.base.camera.setY(builtins.base.camera, self.optic_flow_velocity * self.frame_dt)        
 
     
     def euclidean_distance(self, coordinate1, coordinate2):
@@ -856,14 +848,14 @@ class ZebrafishVirtualReality(ShowBase):
             self.updateCameraWithKeyboard()
         else:
             self.updateCameraWithTailTracking()
+        
+        self.updateCameraWithOpticFlow()
 
         self.YPos = builtins.base.camera.getY()
         self.XPos = builtins.base.camera.getX()
         self.ZPos = builtins.base.camera.getZ()
         self.heading = builtins.base.camera.getH()
 
-        # print(self.XPos, self.YPos, self.heading)
-        
         if self.velocity <= self.inactivity_threshold and self.initialized:
             self.inactivity_timer += self.frame_dt
         if self.velocity > self.inactivity_threshold and self.inactivity_timer > 0.:
