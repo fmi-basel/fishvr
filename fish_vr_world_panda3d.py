@@ -779,7 +779,8 @@ class ZebrafishVirtualReality(ShowBase):
                 self.teensy.trig_stim_pulsed = False
                 self.teensy.sync()    
 
-            self.framecount_2p = self.teensy.frameclock
+            # self.framecount_2p = self.teensy.frameclock # framecount is the number of 2P frames that have occurred since the previous sync event
+            self.framecount_2p += self.teensy.frameclock # framecount is the index of the mose recent 2P frame
 
     
     def logData(self):
