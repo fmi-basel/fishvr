@@ -52,6 +52,7 @@ paramdict = {
     "optic_flow_coord": [0, 15],
     "optic_flow_radius": 10.0,
     "show_landmarks": True,
+    "landmark_scale": 0.08,
     "mirror_landmarks": [True, True],
     "mirror_distance": [2.15, 2.5],
     "landmark_number": 2,
@@ -74,7 +75,7 @@ class TrialEditor(tk.Tk):
         self.title("Trial Editor")
         self.geometry("950x680")
         self.entries = {}
-        nrows = 28
+        nrows = 29
 
         # Create entry fields for and fill them with default values
         row = 0
