@@ -384,6 +384,7 @@ class ZebrafishVirtualReality(ShowBase):
         self.optic_flow_radius          = self.trialconfig['optic_flow_radius']
 
         #Cue cards for showing landmarks and displaying video
+        self.landmark_scale     = self.trialconfig['landmark_scale']
         self.show_landmarks     = self.trialconfig['show_landmarks']
         self.mirror_landmarks   = self.trialconfig['mirror_landmarks']
         self.mirror_distance    = self.trialconfig['mirror_distance']
@@ -480,6 +481,8 @@ class ZebrafishVirtualReality(ShowBase):
         #Hint: 1) use a function to check what to do with landmarks in each loop of spinCameraTask
         #      2) redraw landmarks when they need to be changed
         if self.show_landmarks:
+            [x.removeNode() for x in self.landmark_nodes if x is not None]
+            [x.removeNode() for x in self.landmark_nodes_mirrored if x is not None]
             cm = CardMaker('card')
             self.landmark_nodes = []
             self.landmark_nodes_mirrored = []
@@ -506,7 +509,7 @@ class ZebrafishVirtualReality(ShowBase):
             lmnode.setColor(Vec4(1, 1, 1, 1))
             lmnode.setPos(tuple(position))
             lmnode.setHpr(tuple(hpr))
-            lmnode.setScale(1, 1, 1)
+            lmnode.setScale(self.landmark_scale)
             lmnode.setTexture(lmtex, 1)
 
             if mirror:
@@ -520,11 +523,12 @@ class ZebrafishVirtualReality(ShowBase):
                 lmnode2.setColor(Vec4(1, 1, 1, 1))
                 lmnode2.setPos(tuple(pos_mirror))
                 lmnode2.setHpr(tuple(h_mirror))
-                lmnode2.setScale(1, 1, 1)
+                lmnode2.setScale(self.landmark_scale)
                 lmnode2.setTexScale(TextureStage.getDefault(),-1,1)
                 lmnode2.setTexture(lmtex, 1)
 
             if texture_file.split('.')[-1] in ['avi','mov','mp4']:
+                lmtex.setLoop(True)
                 lmtex.play()
 
         return lmtex, lmnode, lmnode2
