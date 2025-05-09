@@ -60,7 +60,7 @@ class ExperimentConfigurationGUI:
 
     def save_configuration(self):
 
-        saveas = filedialog.asksaveasfilename(initialdir='.', title='Save configuration', defaultextension='.csv', filetypes=[('JSON files', '*.json')])
+        saveas = filedialog.asksaveasfilename(title='Save configuration', defaultextension='.csv', filetypes=[('JSON files', '*.json')])
 
         if saveas is not None and len(saveas) > 0:
             self.makeconfig(saveas=saveas)
