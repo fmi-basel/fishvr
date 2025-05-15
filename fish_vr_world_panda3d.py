@@ -825,6 +825,7 @@ class ZebrafishVirtualReality(ShowBase):
                 self.repcount = 0
                 self.trial_index += 1
 
+        self.start_trial_end_timer = False
         self.trial_complete = False
         self.force_progress = False
         self.end_trial = False
