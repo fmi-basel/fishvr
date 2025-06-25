@@ -57,7 +57,7 @@ void setup() {
   clearSerialInBuffer();  
 
   analogWriteFrequency(analog_pin, 500000);
-  analogWrite(analog_pin, int(255*(intensity/100)));
+  analogWrite(analog_pin, int(255*(intensity/100.0)));
 
   attachInterrupt(digitalPinToInterrupt(fc_in_pin), fc_in_ISR, RISING);
   attachInterrupt(digitalPinToInterrupt(acq_in_pin), acq_in_ISR_RISING, RISING);
@@ -133,7 +133,7 @@ void loop() {
 
         if (intensity_temp != intensity) {
             intensity = intensity_temp;
-            analogWrite(analog_pin, int(255*(intensity/100)));
+            analogWrite(analog_pin, int(255*(intensity/100.0)));
         }
       }
       
