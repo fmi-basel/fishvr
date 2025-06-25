@@ -8,7 +8,7 @@ import json
 Trial editor GUI made using ChatGPT. USE WITH CAUTION
 """
 
-# Initial dictionary
+# default trial parameters
 paramdict = {
     "trial_id": "default",
     "repeats": 2,
@@ -52,6 +52,7 @@ paramdict = {
     "optic_flow_coord": [0, 15],
     "optic_flow_radius": 10.0,
     "show_landmarks": True,
+    "landmark_scale": 0.08,
     "mirror_landmarks": [True, True],
     "mirror_distance": [2.15, 2.5],
     "landmark_number": 2,
@@ -67,18 +68,19 @@ paramdict = {
 
 
 class TrialEditor(tk.Tk):
-    def __init__(self):
+    def __init__(self, paramdict=paramdict):
         super().__init__()
 
+        self.paramdict = paramdict
         self.title("Trial Editor")
-        self.geometry("950x640")
+        self.geometry("950x680")
         self.entries = {}
-        nrows = 27
+        nrows = 29
 
-        # Create input fields for the dictionary
+        # Create entry fields for and fill them with default values
         row = 0
         col = 0
-        for key, value in paramdict.items():
+        for key, value in self.paramdict.items():
             label = tk.Label(self, text=key)
             label.grid(row=row, column=col, sticky="w", padx=20,pady=1)
 
@@ -92,10 +94,46 @@ class TrialEditor(tk.Tk):
                 row = 0
                 col += 2
 
-        # Save edited paramdict button
-        save_button = tk.Button(self, text="Save Trial", command=self.save_trial, width=35)
-        save_button.grid(row=row, column=col+1, columnspan=3, sticky="w", padx=0, pady=2)
+        # Load trial from JSON file
         row += 1
+        load_button = tk.Button(self, text="Load Trial", command=self.load_trial, width=35)
+        load_button.grid(row=row, column=col+1, columnspan=3, sticky="w", padx=0, pady=1)
+        row += 1
+
+        # Save trial to JSON file
+        save_button = tk.Button(self, text="Save Trial", command=self.save_trial, width=35)
+        save_button.grid(row=row, column=col+1, columnspan=3, sticky="w", padx=0, pady=1)
+        row += 1
+
+
+    def compare_dict_keys(self):
+        keys1 = set(self.paramdict.keys())
+        keys2 = set(self.entries.keys())
+
+        if keys1 == keys2:
+            print("Parameters in the loaded trial and the GUI are identical. Values will be updated")
+        else:
+            only_in_loaded = keys1 - keys2
+            only_in_gui = keys2 - keys1
+
+            if only_in_loaded:
+                print("Parameters only in loaded file:", only_in_loaded)
+            if only_in_gui:
+                print("Parameters only in gui:", only_in_gui)
+
+            print("Parameters in the loaded trial and the GUI are not identical. Only parameters found in both will be updated")
+    
+
+    def update_entries(self):
+
+        self.compare_dict_keys()
+
+        for key, value in self.paramdict.items():
+            try:
+                self.entries[key].delete(0, tk.END)  # Clear the current entry
+                self.entries[key].insert(0, str(value))
+            except KeyError:
+                pass
 
 
     def parse_entry(self):
@@ -162,6 +200,17 @@ class TrialEditor(tk.Tk):
         return dict(zip(keys, values))
 
 
+    def load_trial(self):
+        # Save the updated dictionary to a JSON file
+        file_path = filedialog.askopenfilename(defaultextension=".json", filetypes=[("JSON Files", "*.json")])
+        if file_path:
+            with open(file_path, 'r') as f:
+                self.paramdict = json.load(f)        
+            f.close()
+
+            self.update_entries()
+
+
     def save_trial(self):
 
         paramdict = self.parse_entry()
@@ -171,7 +220,7 @@ class TrialEditor(tk.Tk):
         if file_path:
             with open(file_path, "w") as f:
                 json.dump(paramdict, f, indent=4)
-
+            f.close()
             print(f"Trial saved to {file_path}")
 
 

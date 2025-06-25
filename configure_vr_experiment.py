@@ -14,8 +14,14 @@ def makeconfig(trialfiles, trialrepeats, configfile, randomize_trial_order=False
     for trialfile, repeats in zip(trialfiles, trialrepeats):
         for i in range(repeats):
             with open(trialfile, 'r') as f:
-                trials.append(json.load(f))
-
+                temp = json.load(f)
+                # unpack and append individual trials if the file selected is an experiment configuration with one or more trials
+                if len(temp) == 1:
+                    [trials.append(x) for x in temp['trials']]
+                # append trial to the current experiment
+                else:
+                    trials.append(temp)
+                    
     if randomize_trial_order and len(trials) > 2: # keep the first trial in place and randomize the rest
         first_trial = [trials[0]]
         trials = trials[1:]

@@ -60,7 +60,7 @@ class ExperimentConfigurationGUI:
 
     def save_configuration(self):
 
-        saveas = filedialog.asksaveasfilename(initialdir='.', title='Save configuration', defaultextension='.csv', filetypes=[('JSON files', '*.json')])
+        saveas = filedialog.asksaveasfilename(title='Save configuration', defaultextension='.csv', filetypes=[('JSON files', '*.json')])
 
         if saveas is not None and len(saveas) > 0:
             self.makeconfig(saveas=saveas)
@@ -121,7 +121,13 @@ class ExperimentConfigurationGUI:
         for trialfile, repeats in zip(trialfiles, trialrepeats):
             for i in range(repeats):
                 with open(trialfile, 'r') as f:
-                    trials.append(json.load(f))
+                    temp = json.load(f)
+                    # unpack and append individual trials if the file selected is an experiment configuration with one or more trials
+                    if len(temp) == 1:
+                        [trials.append(x) for x in temp['trials']]
+                    # append trial to the current experiment
+                    else:
+                        trials.append(temp)
 
         if randomize_trial_order and len(trials) > 2: # keep the first trial in place and randomize the rest
             first_trial = [trials[0]]
