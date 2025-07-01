@@ -13,7 +13,7 @@ class TeensyTimer():
         self.trig_mode_pulsed = [False] * 8 # 0 or 1 to indicate continuous or pulsed stimulation mode
         self.trig_stim_float = self.bools_to_float(self.trig_stim)
         self.trig_mode_pulsed_float = self.bools_to_float(self.trig_mode_pulsed) # it is assumed that the stimulation mode for a given output channel is not changed within a trial.
-        self.stim_duration = 0.5 # in seconds, duration of the stimulation pulse
+        self.stim_duration = 0. # in seconds, duration of the stimulation pulse
         self.stim_intensity = 0.
         self.frameclock = 0.
 
