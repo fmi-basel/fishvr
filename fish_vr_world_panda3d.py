@@ -2,8 +2,7 @@
 TODO:
 1) DOCUMENTATION
 2) Known limitations:
-    a) Only one stimulus trigger can be configured per trial
-    b) Stimulation zones can only be defined as circles of a specified radius
+    a) Stimulation zones can only be defined as circles of a specified radius
 
 DONE:
 1) Save trial info ------ json format, add fields as necessary
@@ -53,6 +52,7 @@ DONE:
     Use a list of coordinates to determine trial completion. Check minimum distance of fish from end coordinates. 
 20) Add velocity, heading and inactivity flag to log file
 21) Distances are scaled based on the scale parameter estimated using the calibration protocol (see scale_calibration.py)
+22) Added multichannel stimulation support for upto 8 digital outputs
 """
 
 import sys
@@ -177,7 +177,7 @@ class ZebrafishVirtualReality(ShowBase):
                 self.logger = csv.writer(self.datafile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
                 self.logger.writerow(['trial', 'trial index', '2p framecount', 'timestamp', 'xpos', 'ypos', 'heading', 'velocity', 'dheading',
                                       '2p state', 'optic flow state', 'optic flow direction', 'optic flow velocity', 'stim state', 
-                                      'stim state pulsed', 'tail tracking framecount', 'vr gain', 'inactivity timer'])
+                                      'stim mode pulsed', 'tail tracking framecount', 'vr gain', 'inactivity timer'])
                 
         ShowBase.__init__(self)
         self.distance_to_nearest_end_point = np.inf
@@ -219,8 +219,6 @@ class ZebrafishVirtualReality(ShowBase):
         self.end_2p = False
         self.optic_flow_state = False
         self.flow_in_world = False
-        self.stim_state = False
-        self.stim_state_pulsed = False
         self.framecount_2p = 0.
         self.twopstate = False
         self.end_vr = False
@@ -365,14 +363,58 @@ class ZebrafishVirtualReality(ShowBase):
         self.fade_duration      = self.trialconfig['fade_duration']
 
         #Stimulation triggers
-        self.stimulation        = self.trialconfig['stimulation']
-        self.stimulation_mode   = self.trialconfig['stimulation_mode']
-        self.stim_intensitiy    = self.trialconfig['stim_intensity']
-        self.stim_coord         = self.trialconfig['stim_coord']
-        self.crossing_direction = self.trialconfig['crossing_direction']
-        self.stim_radius        = self.trialconfig['stim_radius']
-        self.stim_onset_time    = self.trialconfig['stim_onset_time']
-        self.stim_duration      = self.trialconfig['stim_duration']
+        self.stimulation            = self.trialconfig['stimulation']
+        self.nstimchannels          = self.trialconfig['nstimchannels']
+        self.stim_channel_active    = self.trialconfig['stim_channel_active']
+        self.stimulation_mode       = self.trialconfig['stimulation_mode']
+        self.stim_intensitiy        = self.trialconfig['stim_intensity']
+        self.stim_coord             = self.trialconfig['stim_coord']
+        self.crossing_direction     = self.trialconfig['crossing_direction']
+        self.stim_radius            = self.trialconfig['stim_radius']
+        self.stim_onset_time        = self.trialconfig['stim_onset_time']
+        self.stim_duration          = self.trialconfig['stim_duration']
+        self.stim_pulse_duration    = self.trialconfig['stim_pulse_duration']
+
+        if self.stimulation:
+
+            # 8 channel stimulation
+            self.stim_state = [False]*self.nstimchannels
+            self.stim_mode_pulsed = [False]*self.nstimchannels
+            self.stim_onset_time_log = [0.]*self.nstimchannels # log of stimulus onset time for each channel for software timing
+
+            if isinstance(self.stimulation_mode, str):
+                self.stimulation_mode = [self.stimulation_mode] * self.nstimchannels
+            
+            if not isinstance(self.stim_coord[0], list):
+                self.stim_coord = [self.stim_coord] * self.nstimchannels
+            
+            if isinstance(self.crossing_direction, str):
+                self.crossing_direction = [self.crossing_direction] * self.nstimchannels
+            
+            if isinstance(self.stim_radius, int) or isinstance(self.stim_radius, float):
+                self.stim_radius = [self.stim_radius] * self.nstimchannels
+
+            if isinstance(self.stim_onset_time, int) or isinstance(self.stim_onset_time, float):
+                self.stim_onset_time = [self.stim_onset_time] * self.nstimchannels
+
+            if isinstance(self.stim_duration, int) or isinstance(self.stim_duration, float):
+                self.stim_duration = [self.stim_duration] * self.nstimchannels
+
+
+            for i in range(self.nstimchannels):
+                if self.stimulation_mode[i] == 'location':
+                    self.stim_mode_pulsed[i] = True
+                elif self.stimulation_mode[i] == 'location_software_timed':
+                    self.stim_mode_pulsed[i] = False
+                elif self.stimulation_mode[i] == 'crossing':
+                    self.stim_mode_pulsed[i] = True
+                elif self.stimulation_mode[i] == 'crossing_software_timed':
+                    self.stim_mode_pulsed[i] = False
+                elif self.stimulation_mode[i] == 'zone':
+                    self.stim_mode_pulsed[i] = False
+                elif self.stimulation_mode[i] == 'time':
+                    self.stim_mode_pulsed[i] = False
+
 
         #Optic flow
         self.optic_flow                 = self.trialconfig['optic_flow']
@@ -409,13 +451,21 @@ class ZebrafishVirtualReality(ShowBase):
         self.distance_threshold *= self.scale
         self.init_position = [x*self.scale for x in self.init_position]
         self.inactivity_threshold *= self.scale
-        self.stim_coord = [x*self.scale for x in self.stim_coord]
-        self.stim_radius *= self.scale
         self.optic_flow_coord = [x*self.scale for x in self.optic_flow_coord]
         self.optic_flow_radius *= self.scale
         self.mirror_distance = [x*self.scale for x in self.mirror_distance]
         self.landmark_position = [[x*self.scale for x in y] for y in self.landmark_position]
         self.collision_radius = self.collision_radius * self.scale
+
+        if isinstance(self.stim_coord[0], list):
+            self.stim_coord = [[x*self.scale for x in y] for y in self.stim_coord]
+        else:
+            self.stim_coord = [x*self.scale for x in self.stim_coord]
+
+        if isinstance(self.stim_radius, list):
+            self.stim_radius = [x*self.scale for x in self.stim_radius]
+        else:
+            self.stim_radius *= self.scale
 
 
     def setupScene(self):
@@ -702,66 +752,98 @@ class ZebrafishVirtualReality(ShowBase):
             self.optic_flow_state = False
 
 
+    def updateStimState(self):
+        
+        if self.state == "trial":
+
+            for i in range(self.nstimchannels):
+
+                if self.stimulation_mode[i] == "location":
+                    prev_distance = self.euclidean_distance([self.prevX,self.prevY], self.stim_coord[i])
+                    distance = self.euclidean_distance([self.XPos,self.YPos], self.stim_coord[i])
+                    if prev_distance > self.stim_radius[i] and distance <= self.stim_radius[i]:
+                        self.stim_state[i] = True
+                    else:
+                        self.stim_state[i] = False
+
+
+                elif self.stimulation_mode[i] == "location_software_timed":
+                    prev_distance = self.euclidean_distance([self.prevX,self.prevY], self.stim_coord[i])
+                    distance = self.euclidean_distance([self.XPos,self.YPos], self.stim_coord[i])
+                    if prev_distance > self.stim_radius[i] and distance <= self.stim_radius[i]:
+                        if not self.stim_state[i]:
+                            self.stim_onset_time_log[i] = self.frame_onset_time
+                            self.stim_state[i] = True
+                        if self.stim_state[i] and (self.frame_onset_time - self.stim_onset_time_log[i] >= self.stim_duration[i]):
+                            self.stim_state[i] = False
+                        
+
+                elif self.stimulation_mode[i] == "crossing":
+                    if self.crossing_direction[i] == "x":
+                        if self.prevX < self.stim_coord[i][0] and self.XPos >= self.stim_coord[i][0]:
+                            self.stim_state[i] = True
+                        else:
+                            self.stim_state[i] = False
+
+                    elif self.crossing_direction[i] == "y":
+                        if self.prevY < self.stim_coord[i][1] and self.YPos >= self.stim_coord[i][1]:
+                            self.stim_state[i] = True
+                        else:
+                            self.stim_state[i] = False
+
+
+                elif self.stimulation_mode[i] == "crossing_software_timed":
+                    if self.crossing_direction[i] == "x":
+                        if self.prevX < self.stim_coord[i][0] and self.XPos >= self.stim_coord[i][0]:
+                            if not self.stim_state[i]:
+                                self.stim_onset_time_log[i] = self.frame_onset_time
+                                self.stim_state[i] = True
+                        if self.stim_state[i] and (self.frame_onset_time - self.stim_onset_time_log[i] >= self.stim_duration[i]):
+                            self.stim_state[i] = False
+
+                    elif self.crossing_direction[i] == "y":
+                        if self.prevY < self.stim_coord[i][1] and self.YPos >= self.stim_coord[i][1]:
+                            if not self.stim_state[i]:
+                                self.stim_onset_time_log[i] = self.frame_onset_time
+                                self.stim_state[i] = True
+                        if self.stim_state[i] and (self.frame_onset_time - self.stim_onset_time_log[i] >= self.stim_duration[i]):
+                            self.stim_state[i] = False
+
+
+                elif self.stimulation_mode[i] == "zone":
+                    distance = self.euclidean_distance([self.XPos,self.YPos], self.stim_coord[i])
+                    if distance <= self.stim_radius[i]:
+                        self.stim_state[i] = True
+                    else:
+                        self.stim_state[i] = False
+
+
+                elif self.stimulation_mode[i] == "time":
+                    if (self.frame_onset_time - self.state_onset_time >= self.stim_onset_time[i] and 
+                        (self.frame_onset_time - (self.state_onset_time + self.stim_onset_time[i]) <= 
+                         (self.stim_duration[i]))):
+                        self.stim_state[i] = True
+                    else:
+                        self.stim_state[i] = False
+
+        else:
+            self.stim_state = [False]*self.nstimchannels
+            self.stim_mode_pulsed = [False]*self.nstimchannels
+
+
     def setTrigState(self):
 
         if self.stimulation:
-
-            if self.state == "trial":
-
-                if self.stimulation_mode == "location":
-                    prev_distance = self.euclidean_distance([self.prevX,self.prevY], self.stim_coord)
-                    distance = self.euclidean_distance([self.XPos,self.YPos], self.stim_coord)
-                    if prev_distance > self.stim_radius and distance >= self.stim_radius:
-                        self.stim_state_pulsed == True
-                    else:
-                        self.stim_state_pulsed == False
-                
-                if self.stimulation_mode == "crossing":
-                    if self.crossing_direction == "x":
-                        if self.prevX <= self.stim_coord[0] and self.XPos >= self.stim_coord[0]:
-                            self.stim_state_pulsed = True
-                        else:
-                            self.stim_state_pulsed = False
-
-                    if self.crossing_direction == "y":
-                        if self.prevY <= self.stim_coord[1] and self.YPos >= self.stim_coord[1]:
-                            self.stim_state_pulsed = True
-                        else:
-                            self.stim_state_pulsed = False
-
-                elif self.stimulation_mode == "zone":
-                    distance = self.euclidean_distance([self.XPos,self.YPos], self.stim_coord)
-                    if distance <= self.stim_radius:
-                        self.stim_state = True
-                    else:
-                        self.stim_state = False
-
-                elif self.stimulation_mode == "time":
-                    if (self.frame_onset_time - self.state_onset_time >= self.stim_onset_time and 
-                        self.frame_onset_time - self.stim_onset_time - self.state_onset_time <= self.stim_duration):
-                        self.stim_state = True
-                    else:
-                        self.stim_state = False
-
-            else:
-                self.stim_state = False
-                self.stim_state_pulsed = False
-
-        else:
-            self.stim_state = False
-            self.stim_state_pulsed = False
+            self.updateStimState()
 
         if self.use_timer:
-            self.teensy.stim_duration = self.stim_duration
+            self.teensy.stim_duration = self.stim_pulse_duration
             self.teensy.stim_intensity = self.stim_intensitiy
-            self.teensy.trig_stim = self.stim_state
-            self.teensy.trig_stim_pulsed = self.stim_state_pulsed
+            if self.stimulation:
+                self.teensy.trig_stim[0:self.nstimchannels] = self.stim_state
+                self.teensy.trig_mode_pulsed[0:self.nstimchannels] = self.stim_mode_pulsed
             self.teensy.trig_2p_start = self.start_2p
             self.teensy.trig_2p_end = self.end_2p
-            if self.stimulation_mode == "crossing" or self.stimulation_mode == "location":
-                self.teensy.stim_mode = 1
-            else:
-                self.teensy.stim_mode = 0
 
         if self.start_2p:
             self.twopstate = True
@@ -779,12 +861,13 @@ class ZebrafishVirtualReality(ShowBase):
             else:
                 self.teensy.trig_2p_start = False
                 self.teensy.trig_2p_end = True
-                self.teensy.trig_stim = False
-                self.teensy.trig_stim_pulsed = False
+                self.teensy.trig_stim = [False]*8
+                self.teensy.trig_mode_pulsed = [False]*8
                 self.teensy.sync()    
 
-            # self.framecount_2p = self.teensy.frameclock # framecount is the number of 2P frames that have occurred since the previous sync event
-            self.framecount_2p += self.teensy.frameclock # framecount is the index of the mose recent 2P frame
+            self.framecount_2p = self.teensy.frameclock # framecount is the number of 2P frames that have occurred since the previous sync event
+            # if self.teensy.frameclock is not None:
+            #     self.framecount_2p += self.teensy.frameclock # framecount is the index of the most recent 2P frame
 
     
     def logData(self):
@@ -796,7 +879,7 @@ class ZebrafishVirtualReality(ShowBase):
             self.logger.writerow([self.trial, self.trial_index, self.framecount_2p, self.frame_onset_time,
                                   self.XPos, self.YPos, self.heading, self.velocity, self.theta, self.twopstate,
                                   self.optic_flow_state, self.optic_flow_direction, self.optic_flow_velocity, 
-                                  self.stim_state, self.stim_state_pulsed, self.tail_tracking_framecount, 
+                                  self.teensy.trig_stim_float, self.teensy.trig_mode_pulsed_float, self.tail_tracking_framecount, 
                                   self.vr_gain, self.inactivity_timer])
             
 

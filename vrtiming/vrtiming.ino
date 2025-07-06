@@ -30,7 +30,7 @@ elapsedMillis stimulusTimers[nstimouts];
 //serial transmission
 const int nPars = 6;           // expected number of parameters from panda3D
 const int pollInterval = 200;  // microseconds, polling interval for serial port communication. Determine limits experimentally.
-const int timeout = 1000;      // milliseconds to reset parameter index to zero if no update is received. Failsafe against non-ideal termination of serial transmission from the PC.
+const int timeout = 10;       // milliseconds to reset parameter index to zero if no update is received. Failsafe against non-ideal termination of serial transmission from the PC.
 elapsedMicros p0 = 0;          // microseconds, time since last polling interval ended
 elapsedMicros p1 = 0;          // timer used to clear all parameters if unusual interval between serial inputs is detected
 elapsedMillis pto = 0;         // timer used to reset parameter index. Useful in case panda 3D terminates in between transmission.

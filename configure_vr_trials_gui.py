@@ -37,13 +37,16 @@ paramdict = {
     "continuous2p": False,
     "fade_duration": 1.0,
     "stimulation": True,
+    "nstimchannels": 8,
+    "stim_channel_active" : [True, True, True, True, True, True, True, True],
     "stimulation_mode": "crossing",
     "stim_intensity": 50,
-    "stim_coord": [0, 15],
-    "crossing_direction": "y",
-    "stim_radius": 10.0,
-    "stim_onset_time": 2.0,
-    "stim_duration": 1.0,
+    "stim_coord": [[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1]],
+    "crossing_direction": ["y","y","y","y","y","y","y","y"],
+    "stim_radius": [1.,1.,1.,1.,1.,1.,1.,1.],
+    "stim_onset_time": [1.,1.,1.,1.,1.,1.,1.,1.],
+    "stim_duration": [1.,1.,1.,1.,1.,1.,1.,1.],
+    "stim_pulse_duration" : 0.05,
     "optic_flow": False,
     "optic_flow_reference_frame": "allocentric",
     "optic_flow_direction": 0,
@@ -73,9 +76,9 @@ class TrialEditor(tk.Tk):
 
         self.paramdict = paramdict
         self.title("Trial Editor")
-        self.geometry("950x680")
+        self.geometry("980x710")
         self.entries = {}
-        nrows = 29
+        nrows = 30
 
         # Create entry fields for and fill them with default values
         row = 0
@@ -84,7 +87,7 @@ class TrialEditor(tk.Tk):
             label = tk.Label(self, text=key)
             label.grid(row=row, column=col, sticky="w", padx=20,pady=1)
 
-            entry = tk.Entry(self, width=42)
+            entry = tk.Entry(self, width=45)
             entry.insert(0, str(value))
             entry.grid(row=row, column=col+1, sticky="w")
             
@@ -95,7 +98,7 @@ class TrialEditor(tk.Tk):
                 col += 2
 
         # Load trial from JSON file
-        row += 1
+        # row += 1
         load_button = tk.Button(self, text="Load Trial", command=self.load_trial, width=35)
         load_button.grid(row=row, column=col+1, columnspan=3, sticky="w", padx=0, pady=1)
         row += 1
