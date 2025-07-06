@@ -457,15 +457,16 @@ class ZebrafishVirtualReality(ShowBase):
         self.landmark_position = [[x*self.scale for x in y] for y in self.landmark_position]
         self.collision_radius = self.collision_radius * self.scale
 
-        if isinstance(self.stim_coord[0], list):
-            self.stim_coord = [[x*self.scale for x in y] for y in self.stim_coord]
-        else:
-            self.stim_coord = [x*self.scale for x in self.stim_coord]
+        if self.stimulation:
+            if isinstance(self.stim_coord[0], list):
+                self.stim_coord = [[x*self.scale for x in y] for y in self.stim_coord]
+            else:
+                self.stim_coord = [x*self.scale for x in self.stim_coord]
 
-        if isinstance(self.stim_radius, list):
-            self.stim_radius = [x*self.scale for x in self.stim_radius]
-        else:
-            self.stim_radius *= self.scale
+            if isinstance(self.stim_radius, list):
+                self.stim_radius = [x*self.scale for x in self.stim_radius]
+            else:
+                self.stim_radius *= self.scale
 
 
     def setupScene(self):
@@ -837,9 +838,9 @@ class ZebrafishVirtualReality(ShowBase):
             self.updateStimState()
 
         if self.use_timer:
-            self.teensy.stim_duration = self.stim_pulse_duration
-            self.teensy.stim_intensity = self.stim_intensitiy
             if self.stimulation:
+                self.teensy.stim_duration = self.stim_pulse_duration
+                self.teensy.stim_intensity = self.stim_intensitiy
                 self.teensy.trig_stim[0:self.nstimchannels] = self.stim_state
                 self.teensy.trig_mode_pulsed[0:self.nstimchannels] = self.stim_mode_pulsed
             self.teensy.trig_2p_start = self.start_2p
