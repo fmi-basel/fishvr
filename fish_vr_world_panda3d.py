@@ -450,11 +450,13 @@ class ZebrafishVirtualReality(ShowBase):
         self.distance_threshold *= self.scale
         self.init_position = [x*self.scale for x in self.init_position]
         self.inactivity_threshold *= self.scale
-        self.optic_flow_coord = [x*self.scale for x in self.optic_flow_coord]
-        self.optic_flow_radius *= self.scale
         self.mirror_distance = [x*self.scale for x in self.mirror_distance]
         self.landmark_position = [[x*self.scale for x in y] for y in self.landmark_position]
         self.collision_radius = self.collision_radius * self.scale
+
+        if self.optic_flow:
+            self.optic_flow_coord = [x*self.scale for x in self.optic_flow_coord]
+            self.optic_flow_radius *= self.scale
 
         if self.stimulation:
             if isinstance(self.stim_coord[0], list):
@@ -749,7 +751,10 @@ class ZebrafishVirtualReality(ShowBase):
                     self.optic_flow_state = False
 
         else:
-            self.optic_flow_state = False
+            if self.optic_flow_state:
+                self.optic_flow_state = False
+            if self.flow_in_world:
+                self.flow_in_world = False
 
 
     def updateStimState(self):
@@ -827,8 +832,9 @@ class ZebrafishVirtualReality(ShowBase):
                         self.stim_state[i] = False
 
         else:
-            self.stim_state = [False]*self.nstimchannels
-            self.stim_mode_pulsed = [False]*self.nstimchannels
+            if sum(self.stim_state) > 0 or sum(self.stim_mode_pulsed) > 0:
+                self.stim_state = [False]*self.nstimchannels
+                self.stim_mode_pulsed = [False]*self.nstimchannels
 
 
     def setTrigState(self):
@@ -938,7 +944,8 @@ class ZebrafishVirtualReality(ShowBase):
         else:
             self.updateCameraWithTailTracking()
         
-        self.updateCameraWithOpticFlow()
+        if self.optic_flow or self.inactivity_leads_to == "flow":
+            self.updateCameraWithOpticFlow()
 
         self.YPos = builtins.base.camera.getY()
         self.XPos = builtins.base.camera.getX()
