@@ -3,6 +3,8 @@ TODO:
 1) DOCUMENTATION
 2) Known limitations:
     a) Stimulation zones can only be defined as circles of a specified radius
+3) NOTE: Scaling of coordinates and distances for optic flow and stimulation outputs
+   is not done when they are not used (i.e. when self.optic_flow or self.stimulation is False)
 
 DONE:
 1) Save trial info ------ json format, add fields as necessary
