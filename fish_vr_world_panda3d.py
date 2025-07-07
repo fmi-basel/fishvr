@@ -365,7 +365,6 @@ class ZebrafishVirtualReality(ShowBase):
         #Stimulation triggers
         self.stimulation            = self.trialconfig['stimulation']
         self.nstimchannels          = self.trialconfig['nstimchannels']
-        self.stim_channel_active    = self.trialconfig['stim_channel_active']
         self.stimulation_mode       = self.trialconfig['stimulation_mode']
         self.stim_intensitiy        = self.trialconfig['stim_intensity']
         self.stim_coord             = self.trialconfig['stim_coord']

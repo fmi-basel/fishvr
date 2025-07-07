@@ -48,8 +48,7 @@ paramdict = {"trial_id"                             : trialname,
              "continuous2p"                         : False,
              "fade_duration"                        : 1.,
              "stimulation"                          : True,
-             "nstimchannels"                        : 8, # number of channels used out of 8 available
-             "stim_channel_active"                  : [True, True, True, True, True, True, True, True], # stimulation channels to use
+             "nstimchannels"                        : 8, # number of channels used out of 8 available. channels are assigned in sequential order
              "stimulation_mode"                     : "crossing", # location, crossing (x or y direction), zone or time
              "stim_intensity"                       : 50, # only one intensity per trial for all stimulus channels
              "stim_coord"                           : [[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1]], # Placeholder values must be set for all stiumulus channels, even if not used

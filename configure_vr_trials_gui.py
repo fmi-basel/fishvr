@@ -38,7 +38,6 @@ paramdict = {
     "fade_duration": 1.0,
     "stimulation": True,
     "nstimchannels": 8,
-    "stim_channel_active" : [True, True, True, True, True, True, True, True],
     "stimulation_mode": "crossing",
     "stim_intensity": 50,
     "stim_coord": [[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1]],
