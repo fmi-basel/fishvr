@@ -452,9 +452,14 @@ class ZebrafishVirtualReality(ShowBase):
         self.distance_threshold *= self.scale
         self.init_position = [x*self.scale for x in self.init_position]
         self.inactivity_threshold *= self.scale
-        self.mirror_distance = [x*self.scale for x in self.mirror_distance]
-        self.landmark_position = [[x*self.scale for x in y] for y in self.landmark_position]
-        self.collision_radius = self.collision_radius * self.scale
+
+        if self.show_landmarks:
+            self.landmark_position = [[x*self.scale for x in y] for y in self.landmark_position]
+            if isinstance(self.mirror_distance, list):
+                self.mirror_distance = [x*self.scale for x in self.mirror_distance]
+
+        if self.handle_collisions:
+            self.collision_radius = self.collision_radius * self.scale
 
         if self.optic_flow:
             self.optic_flow_coord = [x*self.scale for x in self.optic_flow_coord]
@@ -601,13 +606,17 @@ class ZebrafishVirtualReality(ShowBase):
         return newnode
     
 
-    def initializeColliderObject(self):
+    def initializeColliderObject(self, radius=0.):
+
+        print(self.collision_radius)
+        if self.collision_radius is not None:
+            radius = self.collision_radius
 
         self.cTrav = CollisionTraverser()
 
         self.collider_node = CollisionNode("fish")
 
-        self.collider_node.addSolid(CollisionSphere(self.XPos, self.YPos, self.init_position[2], self.collision_radius))
+        self.collider_node.addSolid(CollisionSphere(self.XPos, self.YPos, self.init_position[2], radius))
         self.collider_node.setCollideMask(BitMask32.bit(0))
         self.collider_object = builtins.base.camera.attachNewNode(self.collider_node)
 

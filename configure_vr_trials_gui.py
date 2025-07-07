@@ -77,7 +77,7 @@ class TrialEditor(tk.Tk):
         self.title("Trial Editor")
         self.geometry("980x710")
         self.entries = {}
-        nrows = 30
+        nrows = 29
 
         # Create entry fields for and fill them with default values
         row = 0
@@ -97,7 +97,7 @@ class TrialEditor(tk.Tk):
                 col += 2
 
         # Load trial from JSON file
-        # row += 1
+        row += 1
         load_button = tk.Button(self, text="Load Trial", command=self.load_trial, width=35)
         load_button.grid(row=row, column=col+1, columnspan=3, sticky="w", padx=0, pady=1)
         row += 1
