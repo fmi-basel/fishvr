@@ -133,7 +133,8 @@ class TrialEditor(tk.Tk):
         for key, value in self.paramdict.items():
             try:
                 self.entries[key].delete(0, tk.END)  # Clear the current entry
-                self.entries[key].insert(0, str(value))
+                if value is not None:
+                    self.entries[key].insert(0, str(value))
             except KeyError:
                 pass
 
