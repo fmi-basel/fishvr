@@ -224,8 +224,8 @@ class ZebrafishVirtualReality(ShowBase):
         self.framecount_2p = 0.
         self.twopstate = False
         self.end_vr = False
-        self.stim_state_code = 0.
-        self.stim_mode_pulsed_code = 0.
+        self.stim_state_8bitcode = 0.
+        self.stim_mode_pulsed_8bitcode = 0.
 
         #Fade in and out while teleporting
         self.fade_timer = 0.
@@ -883,8 +883,8 @@ class ZebrafishVirtualReality(ShowBase):
                 self.teensy.trig_stim = [False]*8
                 self.teensy.trig_mode_pulsed = [False]*8
                 self.teensy.sync()    
-            self.stim_state_code = self.teensy.trig_stim_float
-            self.stim_mode_pulsed_code = self.teensy.trig_mode_pulsed_float
+            self.stim_state_8bitcode = self.teensy.trig_stim_float
+            self.stim_mode_pulsed_8bitcode = self.teensy.trig_mode_pulsed_float
 
             self.framecount_2p = self.teensy.frameclock # framecount is the number of 2P frames that have occurred since the previous sync event
             # if self.teensy.frameclock is not None:
@@ -900,7 +900,7 @@ class ZebrafishVirtualReality(ShowBase):
             self.logger.writerow([self.trial, self.trial_index, self.framecount_2p, self.frame_onset_time,
                                   self.XPos, self.YPos, self.heading, self.velocity, self.theta, self.twopstate,
                                   self.optic_flow_state, self.optic_flow_direction, self.optic_flow_velocity, 
-                                  self.stim_state_code, self.stim_mode_pulsed_code, self.tail_tracking_framecount, 
+                                  self.stim_state_8bitcode, self.stim_mode_pulsed_8bitcode, self.tail_tracking_framecount, 
                                   self.vr_gain, self.inactivity_timer])
             
 
