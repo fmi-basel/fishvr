@@ -139,6 +139,7 @@ loadPrcFileData('', 'win-size {} {}'.format(projection_width, projection_height)
 loadPrcFileData('', 'win-origin {} {}'.format(window_origin_x, window_origin_y))
 loadPrcFileData('', 'sync-video {}'.format(syncvideo))
 loadPrcFileData('', 'threading-model Cull/Draw')
+loadPrcFileData('', "background-color 0 0 0")
 
 ######################
 #        END         #
@@ -377,6 +378,7 @@ class ZebrafishVirtualReality(ShowBase):
         self.stim_onset_time        = self.trialconfig['stim_onset_time']
         self.stim_duration          = self.trialconfig['stim_duration']
         self.stim_pulse_duration    = self.trialconfig['stim_pulse_duration']
+        self.use_channel            = self.trialconfig['use_channel']
 
         if self.stimulation:
 
@@ -384,6 +386,9 @@ class ZebrafishVirtualReality(ShowBase):
             self.stim_state = [False]*self.nstimchannels
             self.stim_mode_pulsed = [False]*self.nstimchannels
             self.stim_onset_time_log = [0.]*self.nstimchannels # log of stimulus onset time for each channel for software timing
+
+            if isinstance(self.use_channel, str):
+                self.stimulation_mode = [self.use_channel] * self.nstimchannels
 
             if isinstance(self.stimulation_mode, str):
                 self.stimulation_mode = [self.stimulation_mode] * self.nstimchannels
@@ -776,6 +781,10 @@ class ZebrafishVirtualReality(ShowBase):
 
             for i in range(self.nstimchannels):
 
+                if not self.use_channel[i]:
+                    self.stim_state[i] = False
+                    continue
+
                 if self.stimulation_mode[i] == "location":
                     prev_distance = self.euclidean_distance([self.prevX,self.prevY], self.stim_coord[i])
                     distance = self.euclidean_distance([self.XPos,self.YPos], self.stim_coord[i])
@@ -847,7 +856,6 @@ class ZebrafishVirtualReality(ShowBase):
         else:
             if sum(self.stim_state) > 0 or sum(self.stim_mode_pulsed) > 0:
                 self.stim_state = [False]*self.nstimchannels
-                self.stim_mode_pulsed = [False]*self.nstimchannels
 
 
     def setTrigState(self):

@@ -38,6 +38,7 @@ paramdict = {
     "fade_duration": 1.0,
     "stimulation": True,
     "nstimchannels": 8,
+    "use_channel": [False, False, False, False, False, False, False, False],
     "stimulation_mode": "crossing",
     "stim_intensity": 50,
     "stim_coord": [[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1]],
@@ -97,7 +98,7 @@ class TrialEditor(tk.Tk):
                 col += 2
 
         # Load trial from JSON file
-        row += 1
+        # row += 1
         load_button = tk.Button(self, text="Load Trial", command=self.load_trial, width=35)
         load_button.grid(row=row, column=col+1, columnspan=3, sticky="w", padx=0, pady=1)
         row += 1
