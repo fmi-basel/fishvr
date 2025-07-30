@@ -387,8 +387,8 @@ class ZebrafishVirtualReality(ShowBase):
             self.stim_mode_pulsed = [False]*self.nstimchannels
             self.stim_onset_time_log = [0.]*self.nstimchannels # log of stimulus onset time for each channel for software timing
 
-            if isinstance(self.use_channel, str):
-                self.stimulation_mode = [self.use_channel] * self.nstimchannels
+            if not isinstance(self.use_channel, list):
+                self.use_channel = [self.use_channel] * self.nstimchannels
 
             if isinstance(self.stimulation_mode, str):
                 self.stimulation_mode = [self.stimulation_mode] * self.nstimchannels
