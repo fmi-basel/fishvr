@@ -1,6 +1,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
+.vscode/
 # exclude all files in the models directory
 models/**
 log/**
