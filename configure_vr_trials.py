@@ -74,6 +74,10 @@ paramdict = {"trial_id"                             : trialname,
              "landmark_hpr"                         : [[90,0,0], [90,0,0]], # landmark orientation
              "landmarks"                            : ["models/VRE_autoPA_realFish.png", "models/VRE_autoPA_realFish.avi"], # landmark files (image or video)
              "landmark_flag"                        : [True, True], # Show or hide landmarks. Can be updated in spinCameraTask to make landmarks interactive
+             "hide_movie"                           : False, # if true, all movie textures will be covered by a background texture and revealed when the distance to observer is within threshold
+             "background_texture"                   : [False, False], # which of the landmark textures are background textures to remove to reveal a hidden movie
+             "movie_onset_distance"                 : 0.075,
+             "movie_onset_delay"                    : 0.0,
              "handle_collisions"                    : True,
              "collision_radius"                     : 0.3,
              "collider_flag"                        : ["Floor", "Collider"], #complex collider geometries impact performance significantly

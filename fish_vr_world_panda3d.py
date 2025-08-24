@@ -434,15 +434,19 @@ class ZebrafishVirtualReality(ShowBase):
         self.optic_flow_radius          = self.trialconfig['optic_flow_radius']
 
         #Cue cards for showing landmarks and displaying video
-        self.landmark_scale     = self.trialconfig['landmark_scale']
-        self.show_landmarks     = self.trialconfig['show_landmarks']
-        self.mirror_landmarks   = self.trialconfig['mirror_landmarks']
-        self.mirror_distance    = self.trialconfig['mirror_distance']
-        self.landmark_number    = self.trialconfig['landmark_number']
-        self.landmark_position  = self.trialconfig['landmark_position']
-        self.landmark_hpr       = self.trialconfig['landmark_hpr']
-        self.landmarks          = self.trialconfig['landmarks']
-        self.landmark_flag      = self.trialconfig['landmark_flag']
+        self.landmark_scale         = self.trialconfig['landmark_scale']
+        self.show_landmarks         = self.trialconfig['show_landmarks']
+        self.mirror_landmarks       = self.trialconfig['mirror_landmarks']
+        self.mirror_distance        = self.trialconfig['mirror_distance']
+        self.landmark_number        = self.trialconfig['landmark_number']
+        self.landmark_position      = self.trialconfig['landmark_position']
+        self.landmark_hpr           = self.trialconfig['landmark_hpr']
+        self.landmarks              = self.trialconfig['landmarks']
+        self.landmark_flag          = self.trialconfig['landmark_flag']
+        self.hide_movie             = self.trialconfig['hide_movie']
+        self.movie_onset_distance   = self.trialconfig['movie_onset_distance']
+        self.movie_onset_delay      = self.trialconfig['movie_onset_delay']
+        self.background_texture     = self.trialconfig['background_texture']
 
         #Collision handling
         self.handle_collisions  = self.trialconfig['handle_collisions']
@@ -547,6 +551,9 @@ class ZebrafishVirtualReality(ShowBase):
         #Hint: 1) use a function to check what to do with landmarks in each loop of spinCameraTask
         #      2) redraw landmarks when they need to be changed
         if self.show_landmarks:
+            self.movie_revealed = [False]*self.landmark_number
+            self.movie_timer_started = [False]*self.landmark_number
+            self.movie_trigger_time = [None]*self.landmark_number
             [x.removeNode() for x in self.landmark_nodes if x is not None]
             [x.removeNode() for x in self.landmark_nodes_mirrored if x is not None]
             cm = CardMaker('card')
@@ -594,8 +601,8 @@ class ZebrafishVirtualReality(ShowBase):
                 lmnode2.setTexture(lmtex, 1)
 
             if texture_file.split('.')[-1] in ['avi','mov','mp4']:
-                lmtex.setLoop(True)
                 lmtex.play()
+                lmtex.setLoop(True)
 
         return lmtex, lmnode, lmnode2
     
@@ -1059,6 +1066,25 @@ class ZebrafishVirtualReality(ShowBase):
         self.syncTimer()
 
         self.logData()
+
+        if self.show_landmarks and self.hide_movie:
+            for i in range(self.landmark_number):
+                if self.landmark_flag[i] and self.background_texture[i]:
+                    if self.euclidean_distance([self.XPos, self.YPos], self.landmark_position[i][0:2]) <= self.movie_onset_distance*self.scale:
+                        
+                        if not self.movie_timer_started[i]:
+                            self.movie_timer_started[i] = True
+                            self.movie_trigger_time[i] = self.frame_onset_time
+                            print('movie triggered at {}s'.format(round(self.frame_onset_time,2)))
+
+                        if self.movie_timer_started[i] and self.frame_onset_time - self.movie_trigger_time[i] >=self.movie_onset_delay and not self.movie_revealed[i]:
+                            if self.landmark_nodes[i] is not None or str(self.landmark_nodes[i]) != '**removed**':
+                                self.landmark_nodes[i].removeNode()
+                                if self.mirror_landmarks[i]:
+                                    self.landmark_nodes_mirrored[i].removeNode()
+                                self.movie_revealed[i] = True
+                                print('movie revealed at {}s'.format(round(self.frame_onset_time,2)))
+
 
         self.prevX = self.XPos
         self.prevY = self.YPos

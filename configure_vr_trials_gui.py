@@ -63,6 +63,10 @@ paramdict = {
     "landmark_hpr": [[90, 0, 0], [90, 0, 0]],
     "landmarks": ["models/VRE_autoPA_realFish.png", "models/VRE_autoPA_realFish.avi"],
     "landmark_flag": [True, True],
+    "hide_movie": False,
+    "background_texture": [False, False],
+    "movie_onset_distance": 0.075,
+    "movie_onset_delay": 0.0,
     "handle_collisions": True,
     "collision_radius": 0.3,
     "collider_flag": ["Floor", "Collider"],
@@ -76,9 +80,9 @@ class TrialEditor(tk.Tk):
 
         self.paramdict = paramdict
         self.title("Trial Editor")
-        self.geometry("980x710")
+        self.geometry("1150x620+50+50")
         self.entries = {}
-        nrows = 29
+        nrows = 26
 
         # Create entry fields for and fill them with default values
         row = 0
@@ -87,7 +91,7 @@ class TrialEditor(tk.Tk):
             label = tk.Label(self, text=key)
             label.grid(row=row, column=col, sticky="w", padx=20,pady=1)
 
-            entry = tk.Entry(self, width=45)
+            entry = tk.Entry(self, width=30)
             entry.insert(0, str(value))
             entry.grid(row=row, column=col+1, sticky="w")
             
@@ -99,12 +103,12 @@ class TrialEditor(tk.Tk):
 
         # Load trial from JSON file
         # row += 1
-        load_button = tk.Button(self, text="Load Trial", command=self.load_trial, width=35)
+        load_button = tk.Button(self, text="Load Trial", command=self.load_trial, width=25)
         load_button.grid(row=row, column=col+1, columnspan=3, sticky="w", padx=0, pady=1)
         row += 1
 
         # Save trial to JSON file
-        save_button = tk.Button(self, text="Save Trial", command=self.save_trial, width=35)
+        save_button = tk.Button(self, text="Save Trial", command=self.save_trial, width=25)
         save_button.grid(row=row, column=col+1, columnspan=3, sticky="w", padx=0, pady=1)
         row += 1
 
