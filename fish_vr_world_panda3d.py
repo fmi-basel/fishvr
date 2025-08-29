@@ -462,12 +462,13 @@ class ZebrafishVirtualReality(ShowBase):
         self.trial_start_coord = [x*self.scale for x in self.trial_start_coord]
         self.distance_threshold *= self.scale
         self.init_position = [x*self.scale for x in self.init_position]
-        self.inactivity_threshold *= self.scale
 
         if self.show_landmarks:
             self.landmark_position = [[x*self.scale for x in y] for y in self.landmark_position]
             if isinstance(self.mirror_distance, list):
                 self.mirror_distance = [x*self.scale for x in self.mirror_distance]
+            if self.hide_movie:
+                self.movie_onset_distance *= self.scale
 
         if self.handle_collisions:
             self.collision_radius = self.collision_radius * self.scale
@@ -1070,21 +1071,23 @@ class ZebrafishVirtualReality(ShowBase):
         if self.show_landmarks and self.hide_movie:
             for i in range(self.landmark_number):
                 if self.landmark_flag[i] and self.background_texture[i]:
-                    if self.euclidean_distance([self.XPos, self.YPos], self.landmark_position[i][0:2]) <= self.movie_onset_distance*self.scale:
+                    if self.euclidean_distance([self.XPos, self.YPos], self.landmark_position[i][0:2]) <= self.movie_onset_distance:
                         
                         if not self.movie_timer_started[i]:
                             self.movie_timer_started[i] = True
                             self.movie_trigger_time[i] = self.frame_onset_time
-                            print('movie triggered at {}s'.format(round(self.frame_onset_time,2)))
+                            print('movie triggered at %.2fs at X: %.2f, Y: %.2f' %(self.frame_onset_time, self.XPos, self.YPos))
 
                         if self.movie_timer_started[i] and self.frame_onset_time - self.movie_trigger_time[i] >=self.movie_onset_delay and not self.movie_revealed[i]:
                             if self.landmark_nodes[i] is not None or str(self.landmark_nodes[i]) != '**removed**':
-                                self.landmark_nodes[i].removeNode()
-                                if self.mirror_landmarks[i]:
-                                    self.landmark_nodes_mirrored[i].removeNode()
-                                self.movie_revealed[i] = True
-                                print('movie revealed at {}s'.format(round(self.frame_onset_time,2)))
-
+                                try:
+                                    self.landmark_nodes[i].removeNode()
+                                    if self.mirror_landmarks[i]:
+                                        self.landmark_nodes_mirrored[i].removeNode()
+                                    self.movie_revealed[i] = True
+                                    print('movie revealed at %.2fs at X: %.2f, Y: %.2f' %(self.frame_onset_time, self.XPos, self.YPos))
+                                except:
+                                    print('background texture does not exist')
 
         self.prevX = self.XPos
         self.prevY = self.YPos
