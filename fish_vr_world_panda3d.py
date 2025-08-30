@@ -178,13 +178,14 @@ class ZebrafishVirtualReality(ShowBase):
 
                 self.datafile = open(logfile, 'w', encoding='utf-8',  newline='')
                 self.logger = csv.writer(self.datafile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-                self.logger.writerow(['trial', 'trial index', '2p framecount', 'timestamp', 'xpos', 'ypos', 'heading', 'velocity', 'dheading',
+                self.logger.writerow(['trial', 'trial index', 'trial onset counter', '2p framecount', 'timestamp', 'xpos', 'ypos', 'heading', 'velocity', 'dheading',
                                       '2p state', 'optic flow state', 'optic flow direction', 'optic flow velocity', 'stim state', 
                                       'stim mode pulsed', 'tail tracking framecount', 'vr gain', 'inactivity timer'])
                 
         ShowBase.__init__(self)
         self.distance_to_nearest_end_point = np.inf
         self.trial = 0
+        self.trial_onset_counter = 0
         self.repcount = 0
         self.trial_index = 0
         self.force_progress = False
@@ -913,7 +914,7 @@ class ZebrafishVirtualReality(ShowBase):
         Write data in the same order as row headers (see above)
         """
         if self.save:
-            self.logger.writerow([self.trial, self.trial_index, self.framecount_2p, self.frame_onset_time,
+            self.logger.writerow([self.trial, self.trial_index, self.trial_onset_counter, self.framecount_2p, self.frame_onset_time,
                                   self.XPos, self.YPos, self.heading, self.velocity, self.theta, self.twopstate,
                                   self.optic_flow_state, self.optic_flow_direction, self.optic_flow_velocity, 
                                   self.stim_state_8bitcode, self.stim_mode_pulsed_8bitcode, self.tail_tracking_framecount, 
@@ -1053,6 +1054,7 @@ class ZebrafishVirtualReality(ShowBase):
                 distance_to_start_point <= self.distance_threshold and self.fade_in == True):
                 self.state = "trial"
                 self.state_onset_time = self.frame_onset_time
+                self.trial_onset_counter += 1
                 if self.do2p and self.trial_index > 0:
                     if self.continuous2p and self.twopstate == False:
                         self.start_2p = True
@@ -1068,7 +1070,7 @@ class ZebrafishVirtualReality(ShowBase):
 
         self.logData()
 
-        if self.show_landmarks and self.hide_movie:
+        if self.show_landmarks and self.hide_movie and self.state == "trial":
             for i in range(self.landmark_number):
                 if self.landmark_flag[i] and self.background_texture[i]:
                     if self.euclidean_distance([self.XPos, self.YPos], self.landmark_position[i][0:2]) <= self.movie_onset_distance:
