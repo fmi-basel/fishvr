@@ -55,6 +55,13 @@ DONE:
 20) Add velocity, heading and inactivity flag to log file
 21) Distances are scaled based on the scale parameter estimated using the calibration protocol (see scale_calibration.py)
 22) Added multichannel stimulation support for upto 8 digital outputs
+23) Update VR position and heading only when fish is swimming, as detected by the tail tracking code. 
+        a) self.update_only_if_swimming must be set to True or False in this code, not in the config file. True by default
+        b) 'Swimming' status is received from the tail tracking code via UDP along with velocity and heading
+        c) Set curvature threshold correctly in the tail tracking code
+        d) Appears to work better than thresholding velocity and heading. 
+            - In practice, set the threshold values in the tail tracking code to 0. and set the
+              curvature threshold such that swimming is detected correctly, as indicated in the gui 
 """
 
 import sys
@@ -180,7 +187,7 @@ class ZebrafishVirtualReality(ShowBase):
                 self.logger = csv.writer(self.datafile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
                 self.logger.writerow(['trial', 'trial index', 'trial onset counter', '2p framecount', 'timestamp', 'xpos', 'ypos', 'heading', 'velocity', 'dheading',
                                       '2p state', 'optic flow state', 'optic flow direction', 'optic flow velocity', 'stim state', 
-                                      'stim mode pulsed', 'tail tracking framecount', 'vr gain', 'inactivity timer'])
+                                      'stim mode pulsed', 'tail tracking framecount', 'vr gain', 'inactivity timer', 'is swimming'])
                 
         ShowBase.__init__(self)
         self.distance_to_nearest_end_point = np.inf
@@ -249,6 +256,9 @@ class ZebrafishVirtualReality(ShowBase):
         #Variables from tail tracking code or keyboard
         self.velocity = 0.
         self.theta = 0.
+        self.is_swimming = False
+        self.update_only_if_swimming = True # set to True to update VR position and heading only when fish is considered to be swimming as per the tail tracking code
+                                            # this parameter is not in the setup file or config file and must be set here in the code
 
         """
         ######################
@@ -717,9 +727,12 @@ class ZebrafishVirtualReality(ShowBase):
                 break
         
         if data is not None:
-            self.velocity, self.theta, self.tail_tracking_framecount = struct.unpack('>ddi', data)
+            self.velocity, self.theta, self.is_swimming, self.tail_tracking_framecount = struct.unpack('>dd?i', data)
             self.velocity = self.velocity * self.vr_gain
             self.theta = self.theta * self.vr_gain * self.heading_multiplier
+            if self.update_only_if_swimming:
+                self.velocity = self.velocity * self.is_swimming
+                self.theta = self.theta * self.is_swimming
         else:
             self.velocity, self.theta = 0, 0
 
@@ -918,7 +931,7 @@ class ZebrafishVirtualReality(ShowBase):
                                   self.XPos, self.YPos, self.heading, self.velocity, self.theta, self.twopstate,
                                   self.optic_flow_state, self.optic_flow_direction, self.optic_flow_velocity, 
                                   self.stim_state_8bitcode, self.stim_mode_pulsed_8bitcode, self.tail_tracking_framecount, 
-                                  self.vr_gain, self.inactivity_timer])
+                                  self.vr_gain, self.inactivity_timer, self.is_swimming])
             
 
     def printTrialInfo(self):
