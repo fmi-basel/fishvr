@@ -11,7 +11,7 @@ root.update()
 
 file = filedialog.askopenfilename(title='Select config file', filetypes=[('JSON files', '*.json')])
 
-params_to_update = {'use_keyboard':False, 'scale':1.0}
+params_to_update = {'use_keyboard':False, 'scale':0.98}
 
 with open(file) as f:
     config = json.load(f)
