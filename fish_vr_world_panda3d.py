@@ -61,7 +61,11 @@ DONE:
         c) Set curvature threshold correctly in the tail tracking code
         d) Appears to work better than thresholding velocity and heading. 
             - In practice, set the threshold values in the tail tracking code to 0. and set the
-              curvature threshold such that swimming is detected correctly, as indicated in the gui 
+              curvature threshold such that swimming is detected correctly, as indicated in the gui
+24) Movie onset and start of delay timer are saved to the log encoded as an integer. 
+    - Use the function included in this code to decode to a boolean list.
+    - The booleans are associated with the background texture which is removed to reveal the movie.
+      The indices therefore correspond to the indices of the background textures and not the movie texture itself. 
 """
 
 import sys
@@ -185,9 +189,10 @@ class ZebrafishVirtualReality(ShowBase):
 
                 self.datafile = open(logfile, 'w', encoding='utf-8',  newline='')
                 self.logger = csv.writer(self.datafile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-                self.logger.writerow(['trial', 'trial index', 'trial onset counter', '2p framecount', 'timestamp', 'xpos', 'ypos', 'heading', 'velocity', 'dheading',
-                                      '2p state', 'optic flow state', 'optic flow direction', 'optic flow velocity', 'stim state', 
-                                      'stim mode pulsed', 'tail tracking framecount', 'vr gain', 'inactivity timer', 'is swimming'])
+                self.logger.writerow(['trial', 'trial index', 'trial onset counter', '2p framecount', 'timestamp', 'xpos', 'ypos', 'heading', 
+                                      'velocity', 'dheading', '2p state', 'optic flow state', 'optic flow direction', 'optic flow velocity', 
+                                      'stim state', 'stim mode pulsed', 'tail tracking framecount', 'vr gain', 'inactivity timer', 'is swimming',
+                                      'movie timer started', 'movie revealed'])
                 
         ShowBase.__init__(self)
         self.distance_to_nearest_end_point = np.inf
@@ -671,6 +676,19 @@ class ZebrafishVirtualReality(ShowBase):
             [self.collider_node_list[x].hide() for x in range(len(self.collider_node_list)) if hide[x]]
 
 
+    def int_to_bools(self, n: int, length: int) -> list[bool]:
+        """Convert integer to list of bools (MSB first)."""
+        """Use this to invert the bools_to_int function for interpreting the logged data"""
+        return [(n >> i) & 1 == 1 for i in range(length - 1, -1, -1)]
+
+    
+    def bools_to_int(self, bools):
+        result = 0
+        for b in bools:
+            result = (result << 1) | b
+        return result
+    
+
     def setKey(self, key, value):
         self.keyMap[key] = value
 
@@ -931,7 +949,8 @@ class ZebrafishVirtualReality(ShowBase):
                                   self.XPos, self.YPos, self.heading, self.velocity, self.theta, self.twopstate,
                                   self.optic_flow_state, self.optic_flow_direction, self.optic_flow_velocity, 
                                   self.stim_state_8bitcode, self.stim_mode_pulsed_8bitcode, self.tail_tracking_framecount, 
-                                  self.vr_gain, self.inactivity_timer, self.is_swimming])
+                                  self.vr_gain, self.inactivity_timer, self.is_swimming, self.bools_to_int(self.movie_timer_started), 
+                                  self.bools_to_int(self.movie_revealed)])
             
 
     def printTrialInfo(self):
@@ -1075,14 +1094,6 @@ class ZebrafishVirtualReality(ShowBase):
                         self.start_2p = True
                     
 
-        self.setOpticFlowState()
-
-        self.setTrigState()
-
-        self.syncTimer()
-
-        self.logData()
-
         if self.show_landmarks and self.hide_movie and self.state == "trial":
             for i in range(self.landmark_number):
                 if self.landmark_flag[i] and self.background_texture[i]:
@@ -1103,6 +1114,15 @@ class ZebrafishVirtualReality(ShowBase):
                                     print('movie revealed at %.2fs at X: %.2f, Y: %.2f' %(self.frame_onset_time, self.XPos, self.YPos))
                                 except:
                                     print('background texture does not exist')
+
+
+        self.setOpticFlowState()
+
+        self.setTrigState()
+
+        self.syncTimer()
+
+        self.logData()
 
         self.prevX = self.XPos
         self.prevY = self.YPos
