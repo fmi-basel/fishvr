@@ -65,7 +65,11 @@ DONE:
 24) Movie onset and start of delay timer are saved to the log encoded as an integer. 
     - Use the function included in this code to decode to a boolean list.
     - The booleans are associated with the background texture which is removed to reveal the movie.
-      The indices therefore correspond to the indices of the background textures and not the movie texture itself. 
+      The indices therefore correspond to the indices of the background textures and not the movie texture itself.
+25) Added a manual 2p acquisition start trigger. Press 't' to trigger acquisition. 
+    - Can be used in the event that acquisition needed to be stopped and restarted manually within a VR experiment.
+    - Generating the trigger manually does not affect trial progression.
+26) Log UDP sync failures to csv file 
 """
 
 import sys
@@ -192,7 +196,7 @@ class ZebrafishVirtualReality(ShowBase):
                 self.logger.writerow(['trial', 'trial index', 'trial onset counter', '2p framecount', 'timestamp', 'xpos', 'ypos', 'heading', 
                                       'velocity', 'dheading', '2p state', 'optic flow state', 'optic flow direction', 'optic flow velocity', 
                                       'stim state', 'stim mode pulsed', 'tail tracking framecount', 'vr gain', 'inactivity timer', 'is swimming',
-                                      'movie timer started', 'movie revealed'])
+                                      'movie timer started', 'movie revealed', 'udp sync failed'])
                 
         ShowBase.__init__(self)
         self.distance_to_nearest_end_point = np.inf
@@ -257,6 +261,7 @@ class ZebrafishVirtualReality(ShowBase):
         self.udp_buffer_size = udp_buffer_size
         self.udp_timeout = udp_timeout #setting this parameter to 0 is equivalent to non-blocking mode
         self.tail_tracking_framecount = 0
+        self.udpfailed = False
 
         #Variables from tail tracking code or keyboard
         self.velocity = 0.
@@ -737,7 +742,7 @@ class ZebrafishVirtualReality(ShowBase):
 
 
     def updateCameraWithTailTracking(self):
-        data, addr = None, None
+        data, addr, self.udpfailed = None, None, False
 
         # Read all data in the buffer and clear it out. Most recent values will be used for updating VR
         # Number of packets stuck in the buffer can be minimized by setting a broadcast rate close to the framerate of panda3D
@@ -755,7 +760,7 @@ class ZebrafishVirtualReality(ShowBase):
                 self.velocity = self.velocity * self.is_swimming
                 self.theta = self.theta * self.is_swimming
         else:
-            self.velocity, self.theta = 0, 0
+            self.velocity, self.theta, self.udpfailed = 0, 0, True
 
         builtins.base.camera.setY(builtins.base.camera, self.velocity * self.frame_dt)
         if self.enable2d:
@@ -953,7 +958,7 @@ class ZebrafishVirtualReality(ShowBase):
                                   self.optic_flow_state, self.optic_flow_direction, self.optic_flow_velocity, 
                                   self.stim_state_8bitcode, self.stim_mode_pulsed_8bitcode, self.tail_tracking_framecount, 
                                   self.vr_gain, self.inactivity_timer, self.is_swimming, self.bools_to_int(self.movie_timer_started), 
-                                  self.bools_to_int(self.movie_revealed)])
+                                  self.bools_to_int(self.movie_revealed), self.udpfailed])
             
 
     def printTrialInfo(self):
