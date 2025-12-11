@@ -709,6 +709,9 @@ class ZebrafishVirtualReality(ShowBase):
                 print('Progressing to the next trial')
             if keyname == 'p':
                 print(self.XPos, self.YPos, self.heading)
+            if keyname == 't':
+                self.start_2p = True
+                print('2p imaging triggered manually')
 
 
     def updateCameraWithKeyboard(self):
