@@ -267,7 +267,7 @@ class ZebrafishVirtualReality(ShowBase):
         self.velocity = 0.
         self.theta = 0.
         self.is_swimming = False
-        self.update_only_if_swimming = True # set to True to update VR position and heading only when fish is considered to be swimming as per the tail tracking code
+        self.update_only_if_swimming = False # set to True to update VR position and heading only when fish is considered to be swimming as per the tail tracking code
                                             # this parameter is not in the setup file or config file and must be set here in the code
 
         """
