@@ -644,7 +644,6 @@ class ZebrafishVirtualReality(ShowBase):
 
     def initializeColliderObject(self, radius=0.):
 
-        print(self.collision_radius)
         if self.collision_radius is not None:
             radius = self.collision_radius
 
