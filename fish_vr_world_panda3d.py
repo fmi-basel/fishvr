@@ -485,6 +485,7 @@ class ZebrafishVirtualReality(ShowBase):
         self.init_position = [x*self.scale for x in self.init_position]
 
         if self.show_landmarks:
+            self.landmark_scale *= self.scale
             self.landmark_position = [[x*self.scale for x in y] for y in self.landmark_position]
             if isinstance(self.mirror_distance, list):
                 self.mirror_distance = [x*self.scale for x in self.mirror_distance]
@@ -497,6 +498,7 @@ class ZebrafishVirtualReality(ShowBase):
         if self.optic_flow:
             self.optic_flow_coord = [x*self.scale for x in self.optic_flow_coord]
             self.optic_flow_radius *= self.scale
+            self.optic_flow_velocity *= self.scale
 
         if self.stimulation:
             if isinstance(self.stim_coord[0], list):
@@ -726,11 +728,11 @@ class ZebrafishVirtualReality(ShowBase):
 
         if self.keyMap["forward"]:
             self.velocity = self.keyboard_gain
-            builtins.base.camera.setY(builtins.base.camera, self.velocity * self.frame_dt)
+            builtins.base.camera.setY(builtins.base.camera, self.velocity * self.frame_dt * self.scale)
 
         elif self.keyMap["backward"]:
             self.velocity = -self.keyboard_gain
-            builtins.base.camera.setY(builtins.base.camera, self.velocity * self.frame_dt)
+            builtins.base.camera.setY(builtins.base.camera, self.velocity * self.frame_dt * self.scale)
 
         if self.keyMap["right"]:
             self.theta = -self.keyboard_heading_increment * self.heading_multiplier
@@ -762,9 +764,9 @@ class ZebrafishVirtualReality(ShowBase):
         else:
             self.velocity, self.theta, self.udpfailed = 0, 0, True
 
-        builtins.base.camera.setY(builtins.base.camera, self.velocity * self.frame_dt)
+        builtins.base.camera.setY(builtins.base.camera, self.velocity * self.frame_dt * self.scale)
         if self.enable2d:
-            builtins.base.camera.setH(builtins.base.camera, self.theta * self.frame_dt)
+            builtins.base.camera.setH(builtins.base.camera, self.theta * self.frame_dt * self.scale)
 
 
     def updateCameraWithOpticFlow(self):
