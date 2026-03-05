@@ -254,6 +254,8 @@ class ZebrafishVirtualReality(ShowBase):
         self.landmark_nodes = [] #container to hold all landmark nodes
         self.landmark_nodes_mirrored = [] #container to hold mirrored copies of landmarks on the other side of a corridor
         self.textures = []
+        self.movie_revealed = [False]
+        self.movie_timer_started = [False]
 
         #UDP port and socket for communicating with tail tracking code
         self.udp_ip = udp_ip
@@ -728,11 +730,11 @@ class ZebrafishVirtualReality(ShowBase):
 
         if self.keyMap["forward"]:
             self.velocity = self.keyboard_gain
-            builtins.base.camera.setY(builtins.base.camera, self.velocity * self.frame_dt * self.scale)
+            builtins.base.camera.setY(builtins.base.camera, self.velocity * self.frame_dt)
 
         elif self.keyMap["backward"]:
             self.velocity = -self.keyboard_gain
-            builtins.base.camera.setY(builtins.base.camera, self.velocity * self.frame_dt * self.scale)
+            builtins.base.camera.setY(builtins.base.camera, self.velocity * self.frame_dt)
 
         if self.keyMap["right"]:
             self.theta = -self.keyboard_heading_increment * self.heading_multiplier
@@ -764,9 +766,9 @@ class ZebrafishVirtualReality(ShowBase):
         else:
             self.velocity, self.theta, self.udpfailed = 0, 0, True
 
-        builtins.base.camera.setY(builtins.base.camera, self.velocity * self.frame_dt * self.scale)
+        builtins.base.camera.setY(builtins.base.camera, self.velocity * self.frame_dt)
         if self.enable2d:
-            builtins.base.camera.setH(builtins.base.camera, self.theta * self.frame_dt * self.scale)
+            builtins.base.camera.setH(builtins.base.camera, self.theta * self.frame_dt)
 
 
     def updateCameraWithOpticFlow(self):
