@@ -719,8 +719,12 @@ class ZebrafishVirtualReality(ShowBase):
             if keyname == 'p':
                 print(self.XPos, self.YPos, self.heading)
             if keyname == 't':
-                self.start_2p = True
-                print('2p imaging triggered manually')
+                if self.twopstate == False:
+                    self.start_2p = True
+                    print('2p imaging triggered manually')
+                if self.twopstate == True:
+                    self.end_2p = True
+                    print('2p imaging stopped manually')
 
 
     def updateCameraWithKeyboard(self):
