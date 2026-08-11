@@ -531,6 +531,10 @@ class ZebrafishVirtualReality(ShowBase):
         # Reparent the model to render.
         self.scene.reparentTo(self.render)
 
+        # clear existing landmark nodes if present before drawing new ones
+        [x.removeNode() for x in self.landmark_nodes if x is not None]
+        [x.removeNode() for x in self.landmark_nodes_mirrored if x is not None]
+
         self.drawLandmarks() # this function can be called dynamically to toggle landmark visibility using flags    
 
         # set up collision handling
@@ -580,8 +584,6 @@ class ZebrafishVirtualReality(ShowBase):
             self.movie_revealed = [False]*self.landmark_number
             self.movie_timer_started = [False]*self.landmark_number
             self.movie_trigger_time = [None]*self.landmark_number
-            [x.removeNode() for x in self.landmark_nodes if x is not None]
-            [x.removeNode() for x in self.landmark_nodes_mirrored if x is not None]
             cm = CardMaker('card')
             self.landmark_nodes = []
             self.landmark_nodes_mirrored = []
