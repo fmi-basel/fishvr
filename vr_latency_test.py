@@ -192,13 +192,13 @@ class ZebrafishVirtualReality(ShowBase):
         if self.use_timer:
             if not self.end_vr:
                 self.teensy.sync()
+                self.framecount_2p = self.teensy.frameclock
             else:
                 self.teensy.trig_2p_start = False
                 self.teensy.trig_2p_end = True
                 self.teensy.trig_stim = [False]*8
                 self.teensy.trig_mode_pulsed = [False]*8
                 self.teensy.sync()    
-                self.framecount_2p = self.teensy.frameclock
             self.stim_state_8bitcode = self.teensy.trig_stim_float
             self.stim_mode_pulsed_8bitcode = self.teensy.trig_mode_pulsed_float
 
@@ -235,7 +235,9 @@ class ZebrafishVirtualReality(ShowBase):
     def exitVR(self):
         
         self.end_vr = True
-        self.datafile.close()
+
+        if self.save:
+            self.datafile.close()
 
         if self.use_timer:
             self.syncTimer()
