@@ -21,8 +21,8 @@ link to short user manual
 docstring thing
 
 ## Hardware
-A Teensy 4.0 microcontroller was used for the timing and triggers control.
-The adult zebrafish were mounted with a headbar in a 4 sided tank. The VR was projected on the front and sides of the tank with three VOPLLS N3 projectors.
+A Teensy 4.0 microcontroller was used for the timing and triggers control.  
+The adult zebrafish were mounted with a headbar in a 4 sided tank. The VR was projected on the front and sides of the tank with three VOPLLS N3 projectors.  
 For the odour delivery, the 3.3V Teensy output was bumped to 5V with a 74ACT541. Pull-down resistors were used before the VR Timing Teensy and after the 74ACT541to prevent channels from floating causing rapid switching between ON/OFF states.  
 An Automate Scientific ValveLink8.2/ 8.3 controller and valve system and odour manifold were used to deliver the odour compounds. [LINK](https://www.autom8.com/shop/perfusion-equipment/perfusion-accessories/micro-manifold-8-into-1-with-flow-control-ptfe-inert/)
 
