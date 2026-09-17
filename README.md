@@ -1,6 +1,7 @@
 # Virtual reality software for headfixed (zebra) fish 
 
-This software package is linked to the publication 'supercoolfish VR behavior' [LINK]
+This software package is linked to the publication 'supercoolfish VR behavior' [LINK].  
+If you use use this code for your publication, please cite us.
 
 ### Overview
 This software package was designed to allow the user to configure and run a virtual reality (VR) experiment intended for headfixed zebrafish (*Danio rerio*). A virtual environment is designed in blender. With this software, an experiment is then configured. Repetitions, conditions and triggers can be implemented here. Inputs are the position updates from the tail-tracking script via [XXX], the Blendr VR model and the experiment configuration of the XXX. Outputs are the updated VR over the projectors stimuli triggers and log file.
