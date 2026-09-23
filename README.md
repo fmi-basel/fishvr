@@ -27,14 +27,13 @@ The setup configurations (.ini) are user settings that are specific to your expe
 To set up your own experiment, one would have to design a .bam VR environment.
 
 Then, to configure a trial, use configure_vr_trials_gui.py  
-    This will launch a user interface in which the settings of a trial can be configured. While the first column is compulsory, the second and third column, below 'stimulation' are optional when 'stimulation' is set to False. If 'stimulation' is True, i.a. the stimulation mode, location, duration and /or landmarks (images or videos) can be configured. The stimulation channels refer to the pins on a Teensy microcontroller. When activated these will give a 3V signal and could for example be used to toggle odour stimulation in a certain location for a certain duration within the VR. 
+    This will launch a user interface in which the settings of a Trial can be configured. While the first column is compulsory, the second and third column, below 'stimulation', are optional when 'stimulation' is set to False. If 'stimulation' is True, i.a. the stimulation mode, location, duration and/or landmarks (images or videos) can be configured. The stimulation channels refer to the pins on a Teensy microcontroller. When activated, these will give a digital 3V signal and could for example be used to toggle odour stimulation in a certain location for a certain duration within the VR. An additional single analog pin is available for for example brightness control of optogenetic stimulation. The resulting Trial configuration is saved as .json.
 
--configure_vr_experiment_gui.py  
--To run the VR software: fish_vr_world_panda3d.py 
+Once one or more trials are configured, they can be combined using configure_vr_experiment_gui.py  
+This will launch a small GUI that will let add Trials and set the repeats of the Trial. This can be repeated with different Trial configuration files to create a Trial Block. Also Trial Blocks can be added in this GUI to make it easy to combine multiple Trial Blocks. The resulting Experiment configuration is selected when the main code is launched.
 
+Running fish_vr_world_panda3d.py will start the VR experiment. The VR will be projected and updated with the datastream from the Tail Tracking software, stimuli and or landmarks will be triggerd at the specified locations for the specified durations, 2P acqusition can be started/stopped and the logfile will be update with the VR information and 2P frame count.
 
-To get started and get the 
--keyboard shortcuts
 
 ## Hardware
 A Teensy 4.0 microcontroller was used for the timing and trigger control.  
