@@ -4,26 +4,38 @@ This software package is linked to the publication 'supercoolfish VR behavior' [
 If you use use this code for your publication, please cite us.
 
 ### Overview
-This software package was designed to allow the user to configure and run a virtual reality (VR) experiment intended for headfixed zebrafish (*Danio rerio*). A virtual environment is designed in blender. With this software, an experiment is then configured. Repetitions, conditions and triggers can be implemented here. Inputs are the position updates from the tail-tracking script via [XXX], the Blendr VR model and the experiment configuration of the XXX. Outputs are the updated VR over the projectors stimuli triggers and log file.
-
-
-[image with all connections of the setup?]
+This software package was designed to allow the user to configure and run a virtual reality (VR) experiment intended for headfixed zebrafish (*Danio rerio*). Repetitions, conditions and triggers can be configured and saved. Inputs are the position updates from the tail-tracking script via [XXX], the Blendr VR model and the experiment configuration of the XXX. Outputs are the updated VR over the projectors stimuli triggers and log file.
 
 ## System requirements
 PC
 python
 
 ## Installation instructions
-Use the environment.yml file to set up your pc for proper installation and download the necessary packages
+Use the environment.yml file to download the necessary packages.
+
+## Structure  
+
+For a detailed description of all the setting options, click here.  
+For documentation on some user-editable functions, see LINK.  
+
+The package is structured as follows:
+The setup configurations (.ini) are user settings that are specific to your experimental hardware. To make it easy to repeat trials or make blocks of trials, first trials are configured, which can then be configured to be grouped and/or repeated in an experiment configuration. The setup config file (.ini) and experiment config file (.json) are selected when the main software is launched along with where the log file will be saved.
 
 ## User manual
-For a detailed description of all the setting options, click here. For documention on some user editable functions, see LINK
 
+-To configure trials, use configure_vr_trials_gui.py  
+
+-configure_vr_experiment_gui.py  
+-To run the VR software: fish_vr_world_panda3d.py 
+
+
+To get started and get the 
+-keyboard shortcuts
 
 ## Hardware
 A Teensy 4.0 microcontroller was used for the timing and trigger control.  
 The adult zebrafish were mounted with a headbar in a 4 sided tank. The VR was projected on the front and sides of the tank with three VOPLLS N3 projectors.  
-For the odour delivery, the 3.3V Teensy output was bumped to 5V with a 74ACT541. Pull-down resistors were used before the VR Timing Teensy and after the 74ACT541to prevent channels from floating causing rapid switching between ON/OFF states. Cirquit drawings can be found [here](Interface_circuit_for_teensy_4_0).   
+For the odour delivery, the 3.3V Teensy output was bumped to 5V with a 74ACT541 to control the valve controller. Pull-down resistors were used before the VR Timing Teensy and after the 74ACT541to prevent channels from floating causing rapid switching between ON/OFF states. Circuit drawings can be found [here](Interface_circuit_for_teensy_4_0).   
 An Automate Scientific ValveLink8.2/ 8.3 controller and valve system and odour manifold were used to deliver the odour compounds. [LINK](https://www.autom8.com/shop/perfusion-equipment/perfusion-accessories/micro-manifold-8-into-1-with-flow-control-ptfe-inert/)
 
 
