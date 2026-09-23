@@ -13,17 +13,21 @@ python
 ## Installation instructions
 Use the environment.yml file to download the necessary packages.
 
-## Structure  
+## User manual  
 
 For a detailed description of all the setting options, click here.  
 For documentation on some user-editable functions, see LINK.  
 
+To get the software running with an example:  
+Run fish_vr_world_panda3d.py and select [EXAMPLE SETUP CONFIG] and [EXAMPLE EXPERIMENT CONFIG], the option to determine the log save path can be canceled without consequences. An example VR environment will be loaded and the VR started. Arrows can be used to navigate in the VR.
+
 The package is structured as follows:
 The setup configurations (.ini) are user settings that are specific to your experimental hardware. To make it easy to repeat trials or make blocks of trials, first trials are configured, which can then be configured to be grouped and/or repeated in an experiment configuration. The setup config file (.ini) and experiment config file (.json) are selected when the main software is launched along with where the log file will be saved.
 
-## User manual
+To set up your own experiment, one would have to design a .bam VR environment.
 
--To configure trials, use configure_vr_trials_gui.py  
+Then, to configure a trial, use configure_vr_trials_gui.py  
+    This will launch a user interface in which the settings of a trial can be configured. While the first column is compulsory, the second and third column, below 'stimulation' are optional when 'stimulation' is set to False. If 'stimulation' is True, i.a. the stimulation mode, location, duration and /or landmarks (images or videos) can be configured. The stimulation channels refer to the pins on a Teensy microcontroller. When activated these will give a 3V signal and could for example be used to toggle odour stimulation in a certain location for a certain duration within the VR. 
 
 -configure_vr_experiment_gui.py  
 -To run the VR software: fish_vr_world_panda3d.py 
