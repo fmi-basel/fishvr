@@ -1,4 +1,4 @@
-# Manual
+# Description of configuration parameters
 
 This document contains a detailed description of all the user configurable values in the hardware configurations .ini file and the Trial Configuration.  
 
