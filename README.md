@@ -19,7 +19,7 @@ For a detailed description of all the setting options, click here.
 For documentation on some user-editable functions, see LINK.  
 
 ### To run the software with an example:  
-Run fish_vr_world_panda3d.py and select [EXAMPLE SETUP CONFIG] and then [EXAMPLE EXPERIMENT CONFIG] when prompted, the option to determine the log save path can be canceled without consequences. An example VR environment will be loaded and the VR started. Arrows can be used to navigate in the VR.  
+Run fish_vr_world_panda3d.py and select an example [Setup Configuration file](setup/vrsetup_3projectors.ini) and then [EXAMPLE EXPERIMENT CONFIG] when prompted, the option to determine the log save path can be canceled without consequences. An example VR environment will be loaded and the VR started. Arrows can be used to navigate in the VR.  
 
 ### The package is structured as follows:
 
@@ -45,6 +45,9 @@ Running fish_vr_world_panda3d.py will start the VR experiment. The VR will be pr
 
 ## Hardware
 A Teensy 4.0 microcontroller was used for the timing and trigger control.  
+Documentation on the interface circuit can be found [here]().
+
+
 The adult zebrafish were mounted with a headbar in a 4 sided tank. The VR was projected on the front and sides of the tank with three VOPLLS N3 projectors.  
 For the odour delivery, the 3.3V Teensy output was bumped to 5V with a 74ACT541 to control the valve controller. Pull-down resistors were used before the VR Timing Teensy and after the 74ACT541to prevent channels from floating causing rapid switching between ON/OFF states. Circuit drawings can be found [here](Interface_circuit_for_teensy_4_0).   
 An Automate Scientific ValveLink8.2/ 8.3 controller and valve system and odour manifold were used to deliver the odour compounds. [LINK](https://www.autom8.com/shop/perfusion-equipment/perfusion-accessories/micro-manifold-8-into-1-with-flow-control-ptfe-inert/)  
