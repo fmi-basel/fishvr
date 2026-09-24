@@ -36,6 +36,8 @@ Example values are showing the format
 
 ## Configure VR trial (configure_vr_trial_gui.py)
 
+# Note on VR dimensions vs real world distance
+
 | Parameter | Value | Description |
 |-----------|-------|-------------|
 | trial_id | "default" | Unique identifier for the trial |
@@ -71,18 +73,20 @@ Example values are showing the format
 
 
 | stim_intensity | 50 | Intensity of analog stimulation. 0-3.3V of Teensy pin distributed over 0-100 |
-| stim_coord | [[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1]] | Stimulation coordinates per channel |
-| crossing_direction | ["y","y","y","y","y","y","y","y"] | Direction of stimulus crossing |
-| stim_radius | [1.,1.,1.,1.,1.,1.,1.,1.] | Stimulus radius per channel |
-| stim_onset_time | [1.,1.,1.,1.,1.,1.,1.,1.] | Stimulus onset time per channel |
-| stim_duration | [1.,1.,1.,1.,1.,1.,1.,1.] | Stimulus duration per channel |
-| stim_pulse_duration | 0.05 | Duration of stimulus pulses |
+| stim_coord | [[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1]] | Coordinates within the VR where stimulus might be triggered |
+| crossing_direction | ["y","y","y","y","y","y","y","y"] | Direction of fish crossing the stimulation location  |
+| stim_radius | [1.,1.,1.,1.,1.,1.,1.,1.] | Stimulus radius in the VR per channel |
+| stim_onset_time | [1.,1.,1.,1.,1.,1.,1.,1.] | Stimulus onset time in ??? per channel |
+| stim_duration | [1.,1.,1.,1.,1.,1.,1.,1.] | Stimulus duration in ??? per channel |
+| stim_pulse_duration | 0.05 | Duration in ??? of stimulus pulses |
 | optic_flow | False | Enable optic flow stimulus |
 | optic_flow_reference_frame | "allocentric" | Reference frame for optic flow |
-| optic_flow_direction | 0 | Direction of optic flow movement |
-| optic_flow_velocity | -1.0 | Velocity of optic flow |
+| optic_flow_direction | 0 | Direction of optic flow movement in ??? |
+| optic_flow_velocity | -1.0 | Velocity in ??? of optic flow |
 | optic_flow_mode | "zone" | Optic flow rendering mode |
-| optic_flow_coord | [0, 15] | Optic flow zone coordinates |
+
+
+| optic_flow_coord | [0, 15] | Optic flow zone coordinates in VR|
 | optic_flow_radius | 10.0 | Radius of optic flow zone |
 | show_landmarks | True | Display landmark objects |
 | landmark_scale | 0.08 | Scale of landmark models |
@@ -90,15 +94,15 @@ Example values are showing the format
 | mirror_distance | [2.15, 2.5] | Distance for mirroring per landmark |
 | landmark_number | 2 | Number of landmarks |
 | landmark_position | [[-1.45, 10, 0.25], [-0.6, 20, 0.25]] | Position of each landmark [x, y, z] |
-| landmark_hpr | [[90, 0, 0], [90, 0, 0]] | Orientation of each landmark |
-| landmarks | ["models/VRE_autoPA_realFish.png", "models/VRE_autoPA_realFish.avi"] | Landmark model/texture files |
-| landmark_flag | [True, True] | Enable/disable each landmark |
-| hide_movie | False | Hide movie overlay |
+| landmark_hpr | [[90, 0, 0], [90, 0, 0]] | Orientation of each landmark, heading, pitch, roll |
+| landmarks | ["models/VRE_autoPA_realFish.png", "models/VRE_autoPA_realFish.avi"] | Landmark files, expected to be in ??? folder |
+| landmark_flag | [True, True] | ??? Enable/disable each landmark |
+| hide_movie | False | Hide movie |
 | background_texture | [False, False] | Enable background textures |
-| movie_onset_distance | 0.075 | Distance to trigger movie display |
-| movie_onset_delay | 0.0 | Delay before movie starts |
+| movie_onset_distance | 0.075 | Distance in m ??? to trigger movie display |
+| movie_onset_delay | 0.0 | Delay in seconds ??? before movie starts |
 | handle_collisions | True | Enable collision detection |
-| collision_radius | 0.3 | Collision detection radius |
+| collision_radius | 0.3 | Collision detection radius in mm ??? |
 | collider_flag | ["Floor", "Collider"] | Collision objects to enable |
 | hide_collider | [False, True] | Hide collision objects visually |
 
