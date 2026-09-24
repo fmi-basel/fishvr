@@ -62,4 +62,4 @@ Huang KH, Rupprecht P, Frank T, Kawakami K, Bouwmeester T, Friedrich RW (2020) A
 Desai NS, Gray R and Johnston D (2017) A Dynamic Clamp on Every Rig DOI: http://dx.doi.org/10.1523/ENEURO.0250-17.2017   
 
 ## Authors
-Alex Javier, Sriram Narayanan, Jan Eckhardt, Jaap van Krugten, Rainer Friedrich
+Alex Javier, Sriram Narayanan, Lukas Anneser, Jaap van Krugten, Rainer Friedrich
