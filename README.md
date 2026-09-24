@@ -18,7 +18,7 @@ Use the environment.yml file to download the necessary packages.
 For a detailed description of all the setting options, click here.  
 For documentation on some user-editable functions, see LINK.  
 
-### To get the software running with an example:  
+### To run the software with an example:  
 Run fish_vr_world_panda3d.py and select [EXAMPLE SETUP CONFIG] and then [EXAMPLE EXPERIMENT CONFIG] when prompted, the option to determine the log save path can be canceled without consequences. An example VR environment will be loaded and the VR started. Arrows can be used to navigate in the VR.  
 
 ### The package is structured as follows:
@@ -27,7 +27,7 @@ The Setup Configurations (.ini) are user settings that are specific to your expe
 To set up your own experiment, one would first have to design a .bam VR environment.  
 
 Then, to configure a Trial, use configure_vr_trials_gui.py.  
-This will launch a user interface in which the settings of a Trial can be configured. While the first column is compulsory, the second and third column, below 'stimulation', are optional when 'stimulation' is set to False. If 'stimulation' is True, i.a. the stimulation mode, triggers, location, duration and/or landmarks (images or videos) can be configured. The stimulation channels refer to the pins on a Teensy microcontroller. When activated, these will give a digital 3V signal and could for example be used to toggle odour stimulation in a certain location for a certain duration within the VR. An additional single analog pin on the Teensy board is available for example for brightness control of optogenetic stimulation. The resulting Trial Configuration is saved as .json.  
+This will launch a user interface in which the settings of a Trial can be configured. While the first column is compulsory, the second and third column, below 'stimulation', are optional when 'stimulation' is set to False. If 'stimulation' is True, i.a. the stimulation mode, triggers, location, duration and/or landmarks (images or videos) can be configured. The stimulation channels refer to the pins on a Teensy microcontroller. When activated, these will give a digital 3.3V signal and could for example be used to toggle odour stimulation in a certain location for a certain duration within the VR. An additional single analog pin on the Teensy board is available for example for brightness control of optogenetic stimulation. The resulting Trial Configuration is saved as .json.  
 
 Once one or more Trials are configured, they can be combined using configure_vr_experiment_gui.py  
 This will launch a small GUI that will let one add Trials and set the repeats of the Trial. This can be repeated with different Trial Configuration files to create a Trial Block. Also Trial Blocks can be added in this GUI to make it easy to combine multiple Trial Blocks into an Experiment Configuration. The resulting Experiment Configuration is selected when the main code is launched.  
