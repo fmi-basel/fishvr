@@ -3,7 +3,7 @@
 This document contains a detailed description of all the user configurable values in the hardware configurations .ini file and the Trial Configuration.  
 
 ### VR setup file (.ini)  
-
+```
 framerate = 90                                       (framerate settings of the projection/VR update in frames per second)
 syncvideo = False                                    (sync video setting)
 use_timer = False                                    (timer usage)
@@ -30,7 +30,7 @@ udp_ip = 127.0.0.1                                   (UDP address where the VR c
 udp_port = 5005                                      (UDP port where the VR code is listening to the broadcast from the Tail Tracking code)
 udp_buffer_size = 64                                 (buffer from the UDP)
 udp_timeout = 0.001                                  (Timeout from the UDP)
-
+```
 framerate = 90 (framerate settings of the projection/VR update in frames per second). 
 syncvideo = False ()  
 use_timer = False()  
