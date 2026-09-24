@@ -57,9 +57,9 @@ The adult zebrafish were mounted with a headbar in a 4 sided tank. The VR was pr
 
 ## References
 Inspiration for parts of this code has been drawn from among others:  
-Štih V, Petrucco L, Kist AM, Portugues R (2019) Stytra: An open-source, integrated system for stimulation, tracking and closed-loop behavioral experiments. PLOS Computational Biology. DOI: 10.1371/journal.pcbi.1006699  
-Huang KH, Rupprecht P, Frank T, Kawakami K, Bouwmeester T, Friedrich RW (2020) A virtual reality system to analyze neural activity and behavior in adult zebrafish. Nature Methods. DOI: 10.1038/s41592-020-0759-2  
-Desai NS, Gray R and Johnston D (2017) A Dynamic Clamp on Every Rig DOI: http://dx.doi.org/10.1523/ENEURO.0250-17.2017   
+-Štih V, Petrucco L, Kist AM, Portugues R (2019) Stytra: An open-source, integrated system for stimulation, tracking and closed-loop behavioral experiments. PLOS Computational Biology. DOI: 10.1371/journal.pcbi.1006699  
+-Huang KH, Rupprecht P, Frank T, Kawakami K, Bouwmeester T, Friedrich RW (2020) A virtual reality system to analyze neural activity and behavior in adult zebrafish. Nature Methods. DOI: 10.1038/s41592-020-0759-2  
+-Desai NS, Gray R and Johnston D (2017) A Dynamic Clamp on Every Rig DOI: http://dx.doi.org/10.1523/ENEURO.0250-17.2017   
 
 ## Authors
 Alex Javier, Sriram Narayanan, Lukas Anneser, Jaap van Krugten, Rainer Friedrich
