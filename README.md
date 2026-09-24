@@ -30,11 +30,11 @@ Run fish_vr_world_panda3d.py and select [EXAMPLE SETUP CONFIG] and then [EXAMPLE
 - Run VR with fish_vr_world_panda3d.py  
 
 To set up your own experiment, one would first have to design a .bam VR environment.  
-The Setup Configurations (.ini) are user settings that are specific to your experimental hardware.
-To make it easy to repeat Trials or make Blocks of a specific sequence of Trials, first Trials are configured, which can then be grouped and/or repeated in an Experiment Configuration. 
-The Setup Config file (.ini) and Experiment Config file (.json) are selected when the main software is launched along with the log file will be save path.  
+The Setup Configurations (.ini) are user settings that are specific to your experimental hardware.  
+To make it easy to repeat Trials or make Blocks of a specific sequence of Trials, first Trials are configured, which can then be grouped and/or repeated in an Experiment Configuration.  
+The Setup Config file (.ini) and Experiment Config file (.json) are selected, and the log file save path is chosen when the main software is launched.  
 
-Then, to configure a Trial, use configure_vr_trials_gui.py.  
+To configure a Trial, use configure_vr_trials_gui.py.  
 This will launch a user interface in which the settings of a Trial can be configured. While the first column is compulsory, the second and third column, below 'stimulation', are optional when 'stimulation' is set to False. If 'stimulation' is True, i.a. the stimulation mode, triggers, location, duration and/or landmarks (images or videos) can be configured. The stimulation channels refer to the pins on a Teensy microcontroller. When activated, these will give a digital 3.3V signal and could for example be used to toggle odour stimulation in a certain location for a certain duration within the VR. An additional single analog pin on the Teensy board is available for example for brightness control of optogenetic stimulation. The resulting Trial Configuration is saved as .json.  
 
 Once one or more Trials are configured, they can be combined using configure_vr_experiment_gui.py  
