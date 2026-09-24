@@ -5,7 +5,7 @@ This document contains a detailed description of all the user configurable value
 ### VR setup file (.ini)  
 
 Example values are showing the format
-| Parameter | Value | Description |
+| Parameter | Example value/format | Description |
 |-----------|-------|-------------|
 | framerate | 90 | Framerate settings of the projection/VR update in frames per second |
 | syncvideo | False | Sync video setting |
@@ -38,7 +38,7 @@ Example values are showing the format
 
 # Note on VR dimensions vs real world distance
 
-| Parameter | Value | Description |
+| Parameter | Example value/format | Description |
 |-----------|-------|-------------|
 | trial_id | "default" | Unique identifier for the trial |
 | repeats | 2 | Number of times to repeat the trial |
