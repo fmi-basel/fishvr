@@ -2,6 +2,15 @@
 
 This document contains a detailed description of all the user configurable values in the hardware configurations .ini file and the Trial Configuration.  
 
+When ' ??? ' is True, one can navigate in the VR with keyboard arrows. This will override the input from the Tail Tracking UDP broadcast.  
+
+The following shortkeys can be used to control the VR and start/stop 2-photon acquisition via external triggering.  
+'w' Force progress to next trial regardless of outcome  
+'s' Progress to next trial only if trial is completed  
+'e' End current trial and progress to next  
+'p' Print current position (X, Y) and heading  
+'t' Toggle 2-photon imaging on/off (start if off, stop if on)  
+
 ### VR setup file (.ini)  
 
 Example values are showing the format
