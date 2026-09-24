@@ -44,7 +44,7 @@ Running fish_vr_world_panda3d.py will start the VR experiment. The VR will be pr
 
 
 ## Hardware
-Teensy 4.0 microcontroller was used to trigger for example odour stimulation, and to log VR state and 2-photon frame.
+A Teensy 4.0 microcontroller was used to trigger for example odour stimulation, and to log VR state and 2-photon frame.
 Documentation on the interface circuit can be found [here](Interface_circuit_for_teensy_4_0).  
 Inputs are the 2-photon Frame Clock (to be able to link VR state and 2-photon frame), a digital indicator for whether a 2-photon acquisition is running (in our case linked to the laser shutter) and the commands to the 8 digital and 1 analog stimulation pins via serial communication.  
 
