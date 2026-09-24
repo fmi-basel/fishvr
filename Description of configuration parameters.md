@@ -12,6 +12,9 @@ The following shortkeys can be used to control the VR and start/stop 2-photon ac
 'p' Print current position (X, Y) and heading  
 't' Toggle 2-photon imaging on/off (start if off, stop if on)  
 
+When ' ??? ' is True, one can navigate in the VR with keyboard arrows. This will override the input from the Tail Tracking UDP broadcast.  
+
+
 ### VR setup file (.ini)  
 
 Example values are showing the format
