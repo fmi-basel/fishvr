@@ -69,9 +69,7 @@ Example values are showing the format
 | stimulation | True | Enable stimulation configurations. Everything below will not be taken into account when False |
 | nstimchannels | 8 | Number of stimulation channels |
 | use_channel | [False, False, False, False, False, False, False, False] | Enable/disable each channel |
-| stimulation_mode | "crossing" | Stimulation pattern mode |
-
-
+| stimulation_mode | "crossing" | Stimulation pattern mode | ???? DESCRIPTION OF ALL MODES
 | stim_intensity | 50 | Intensity of analog stimulation. 0-3.3V of Teensy pin distributed over 0-100 |
 | stim_coord | [[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1]] | Coordinates within the VR where stimulus might be triggered |
 | crossing_direction | ["y","y","y","y","y","y","y","y"] | Direction of fish crossing the stimulation location  |
@@ -83,9 +81,7 @@ Example values are showing the format
 | optic_flow_reference_frame | "allocentric" | Reference frame for optic flow |
 | optic_flow_direction | 0 | Direction of optic flow movement in ??? |
 | optic_flow_velocity | -1.0 | Velocity in ??? of optic flow |
-| optic_flow_mode | "zone" | Optic flow rendering mode |
-
-
+| optic_flow_mode | "zone" | Optic flow rendering mode |  ???? DESCRIPTION OF ALL MODES
 | optic_flow_coord | [0, 15] | Optic flow zone coordinates in VR|
 | optic_flow_radius | 10.0 | Radius of optic flow zone |
 | show_landmarks | True | Display landmark objects |
