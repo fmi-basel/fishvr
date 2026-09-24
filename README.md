@@ -22,6 +22,13 @@ For documentation on some user-editable functions, see LINK.
 Run fish_vr_world_panda3d.py and select [EXAMPLE SETUP CONFIG] and then [EXAMPLE EXPERIMENT CONFIG] when prompted, the option to determine the log save path can be canceled without consequences. An example VR environment will be loaded and the VR started. Arrows can be used to navigate in the VR.  
 
 ### The package is structured as follows:
+
+- Create a virtual reality environment (.bam) in for example Blendr  
+- Make Setup Configuration file (.ini)  
+- Make Trial Configuration with configure_vr_trials_gui.py  
+- Combine Trial Configurations into an Experiment Configuration with configure_vr_experiment_gui.py  
+- Run VR with fish_vr_world_panda3d.py  
+
 The Setup Configurations (.ini) are user settings that are specific to your experimental hardware. To make it easy to repeat Trials or make Blocks of a specific sequence of Trials, first Trials are configured, which can then be grouped and/or repeated in an Experiment Configuration. The Setup Config file (.ini) and Experiment Config file (.json) are selected when the main software is launched along with the log file will be save path.  
 
 To set up your own experiment, one would first have to design a .bam VR environment.  
