@@ -24,13 +24,13 @@ Run fish_vr_world_panda3d.py and select an example [Setup Configuration file](se
 ### The package is structured as follows:
 
 - Create a virtual reality environment (.bam) in for example Blendr  
-- Make Setup Configuration file (.ini)  
+- Make VR Setup configuration file (.ini)  
 - Make Trial Configuration with configure_vr_trials_gui.py  
 - Combine Trial Configurations into an Experiment Configuration with configure_vr_experiment_gui.py  
 - Run VR with fish_vr_world_panda3d.py  
 
 To set up your own experiment, one would first have to design a .bam VR environment.  
-The Setup Configurations (.ini) are user settings that are specific to your experimental hardware.  
+The VR Setup file (.ini) are user settings that are specific to your experimental hardware setup.  
 To make it easy to repeat Trials or make Blocks of a specific sequence of Trials, first Trials are configured, which can then be grouped and/or repeated in an Experiment Configuration.  
 The Setup Config file (.ini) and Experiment Config file (.json) are selected, and the log file save path is chosen when the main software is launched.  
 
