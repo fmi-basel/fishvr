@@ -44,13 +44,15 @@ Running fish_vr_world_panda3d.py will start the VR experiment. The VR will be pr
 
 
 ## Hardware
-A Teensy 4.0 microcontroller was used for the timing and trigger control.  
-Documentation on the interface circuit can be found [here]().
+Teensy 4.0 microcontroller was used to trigger for example odour stimulation, and to log VR state and 2-photon frame.
+Documentation on the interface circuit can be found [here](Interface_circuit_for_teensy_4_0).  
+Inputs are the 2-photon Frame Clock (to be able to link VR state and 2-photon frame), a digital indicator for whether a 2-photon acquisition is running (in our case linked to the laser shutter) and the commands to the 8 digital and 1 analog stimulation pins via serial communication.  
 
-
-The adult zebrafish were mounted with a headbar in a 4 sided tank. The VR was projected on the front and sides of the tank with three VOPLLS N3 projectors.  
 For the odour delivery, the 3.3V Teensy output was bumped to 5V with a 74ACT541 to control the valve controller. Pull-down resistors were used before the VR Timing Teensy and after the 74ACT541to prevent channels from floating causing rapid switching between ON/OFF states. Circuit drawings can be found [here](Interface_circuit_for_teensy_4_0).   
 An Automate Scientific ValveLink8.2/ 8.3 controller and valve system and odour manifold were used to deliver the odour compounds. [LINK](https://www.autom8.com/shop/perfusion-equipment/perfusion-accessories/micro-manifold-8-into-1-with-flow-control-ptfe-inert/)  
+
+The adult zebrafish were mounted with a headbar in a 4 sided tank. The VR was projected on the front and sides of the tank with three VOPLLS N3 projectors.  
+
 
 
 ## References
