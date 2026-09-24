@@ -16,7 +16,7 @@ Use the environment.yml file to download the necessary packages.
 ## User manual  
 
 A detailed description of all the configuration options can be found [here](/Description_of_configuration_parameters.md).  
-For documentation on some user-editable functions can be found [here]( )
+Documentation on some user-editable functions can be found [here]( )
 
 ### To run the software with an example:  
 Run fish_vr_world_panda3d.py and select an example [Setup Configuration file](setup/vrsetup_3projectors.ini) and then [EXAMPLE EXPERIMENT CONFIG] when prompted, the option to determine the log save path can be canceled without consequences. An example VR environment will be loaded and the VR started. Arrows can be used to navigate in the VR.  
