@@ -36,67 +36,67 @@ udp_timeout = 0.001                                  (Timeout from the UDP)
 
 ## Configure VR trial (configure_vr_trial_gui.py)
 
-```
-trial_id: "default",                                                   ()
-repeats: 2,                                                            ()
-use_keyboard: True,                                                    ()
-keyboard_gain: 5.0,                                                    ()
-keyboard_heading_increment: 20,                                        ()
-vr_gain: 1.0,                                                          ()
-enable2d: False,                                                       ()
-invert_turn_direction: True,                                           ()
-trial_start_coord: [0, 2],                                             ()
-trial_end_coords: [[0, 40], [15, 45]],                                 ()
-distance_threshold: 1.0,                                               ()
-trial_end_delay: 2.0,                                                  ()
-model: "models/1D-Tunnel_naturalistic.bam",                            ()
-init_position: [0.0, 0.0, 0.2],                                        ()
-init_hpr: [0.0, 0.0, 0.0],                                             ()
-scale: 0.25,                                                           ()
-intertrial_duration: 5,                                                ()
-max_trial_duration: 20.0,                                              ()
-repeat_incomplete_trials: False,                                       ()
-inactivity_threshold: 0.0,                                             ()
-max_inactive_duration: 5.0,                                            ()
-inactivity_leads_to: "flow",                                           ()
-inactivity_triggered_flow_duration: 2.0,                               ()
-do2p: True,                                                            ()
-continuous2p: False,                                                   ()
-fade_duration: 1.0,                                                    ()
-stimulation: True,                                                     ()
-nstimchannels: 8,                                                      ()
-use_channel: [False, False, False, False, False, False, False, False], ()
-stimulation_mode: "crossing",                                          ()
-stim_intensity: 50,                                                    ()
-stim_coord: [[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1]],         ()
-crossing_direction: ["y","y","y","y","y","y","y","y"],                 ()
-stim_radius: [1.,1.,1.,1.,1.,1.,1.,1.],                                ()
-stim_onset_time: [1.,1.,1.,1.,1.,1.,1.,1.],                            ()
-stim_duration: [1.,1.,1.,1.,1.,1.,1.,1.],                              ()
-stim_pulse_duration: 0.05,                                             ()
-optic_flow: False,                                                     ()
-optic_flow_reference_frame: "allocentric",                             ()
-optic_flow_direction: 0,                                               ()
-optic_flow_velocity: -1.0,                                             ()
-optic_flow_mode: "zone",                                               ()
-optic_flow_coord: [0, 15],                                             ()
-optic_flow_radius: 10.0,                                               ()
-show_landmarks: True,                                                  ()
-landmark_scale: 0.08,                                                  ()
-mirror_landmarks: [True, True],                                        ()
-mirror_distance: [2.15, 2.5],                                          ()
-landmark_number: 2,                                                    ()
-landmark_position: [[-1.45, 10, 0.25], [-0.6, 20, 0.25]],              ()
-landmark_hpr: [[90, 0, 0], [90, 0, 0]],                                ()
-landmarks: ["models/VRE_autoPA_realFish.png", "models/VRE_autoPA_realFish.avi"], ()
-landmark_flag: [True, True],                                           ()
-hide_movie: False,                                                     ()
-background_texture: [False, False],                                    ()
-movie_onset_distance: 0.075,                                           ()
-movie_onset_delay: 0.0,                                                ()
-handle_collisions: True,                                               ()
-collision_radius: 0.3,                                                 ()
-collider_flag: ["Floor", "Collider"],                                  ()
-hide_collider: [False, True]                                           ()
-```
+| Parameter | Value | Description |
+|-----------|-------|-------------|
+| trial_id | "default" | Unique identifier for the trial |
+| repeats | 2 | Number of times to repeat the trial |
+| use_keyboard | True | Enable keyboard control |
+| keyboard_gain | 5.0 | Sensitivity multiplier for keyboard input |
+| keyboard_heading_increment | 20 | Degrees per keyboard press |
+| vr_gain | 1.0 | Gain multiplier for VR stimulus |
+| enable2d | False | Enable 2D mode instead of 3D |
+| invert_turn_direction | True | Invert left/right turning direction |
+| trial_start_coord | [0, 2] | Starting position [x, y] |
+| trial_end_coords | [[0, 40], [15, 45]] | Target positions [[x1, y1], [x2, y2]] |
+| distance_threshold | 1.0 | Distance to target before triggering end |
+| trial_end_delay | 2.0 | Delay in seconds after reaching target |
+| model | "models/1D-Tunnel_naturalistic.bam" | Path to 3D environment model |
+| init_position | [0.0, 0.0, 0.2] | Initial camera position [x, y, z] |
+| init_hpr | [0.0, 0.0, 0.0] | Initial heading, pitch, roll angles |
+| scale | 0.25 | Scale factor for the environment |
+| intertrial_duration | 5 | Duration between trials in seconds |
+| max_trial_duration | 20.0 | Maximum trial duration in seconds |
+| repeat_incomplete_trials | False | Repeat trials that don't reach target |
+| inactivity_threshold | 0.0 | Movement threshold to detect inactivity |
+| max_inactive_duration | 5.0 | Max time without movement before action |
+| inactivity_leads_to | "flow" | Action triggered by inactivity |
+| inactivity_triggered_flow_duration | 2.0 | Duration of inactivity-triggered flow |
+| do2p | True | Enable two-photon imaging |
+| continuous2p | False | Continuous 2P imaging mode |
+| fade_duration | 1.0 | Fade in/out duration in seconds |
+| stimulation | True | Enable visual stimulation |
+| nstimchannels | 8 | Number of stimulation channels |
+| use_channel | [False, False, False, False, False, False, False, False] | Enable/disable each channel |
+| stimulation_mode | "crossing" | Stimulation pattern mode |
+| stim_intensity | 50 | Intensity of stimulation (0-100) |
+| stim_coord | [[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1]] | Stimulation coordinates per channel |
+| crossing_direction | ["y","y","y","y","y","y","y","y"] | Direction of stimulus crossing |
+| stim_radius | [1.,1.,1.,1.,1.,1.,1.,1.] | Stimulus radius per channel |
+| stim_onset_time | [1.,1.,1.,1.,1.,1.,1.,1.] | Stimulus onset time per channel |
+| stim_duration | [1.,1.,1.,1.,1.,1.,1.,1.] | Stimulus duration per channel |
+| stim_pulse_duration | 0.05 | Duration of stimulus pulses |
+| optic_flow | False | Enable optic flow stimulus |
+| optic_flow_reference_frame | "allocentric" | Reference frame for optic flow |
+| optic_flow_direction | 0 | Direction of optic flow movement |
+| optic_flow_velocity | -1.0 | Velocity of optic flow |
+| optic_flow_mode | "zone" | Optic flow rendering mode |
+| optic_flow_coord | [0, 15] | Optic flow zone coordinates |
+| optic_flow_radius | 10.0 | Radius of optic flow zone |
+| show_landmarks | True | Display landmark objects |
+| landmark_scale | 0.08 | Scale of landmark models |
+| mirror_landmarks | [True, True] | Mirror landmarks left/right |
+| mirror_distance | [2.15, 2.5] | Distance for mirroring per landmark |
+| landmark_number | 2 | Number of landmarks |
+| landmark_position | [[-1.45, 10, 0.25], [-0.6, 20, 0.25]] | Position of each landmark [x, y, z] |
+| landmark_hpr | [[90, 0, 0], [90, 0, 0]] | Orientation of each landmark |
+| landmarks | ["models/VRE_autoPA_realFish.png", "models/VRE_autoPA_realFish.avi"] | Landmark model/texture files |
+| landmark_flag | [True, True] | Enable/disable each landmark |
+| hide_movie | False | Hide movie overlay |
+| background_texture | [False, False] | Enable background textures |
+| movie_onset_distance | 0.075 | Distance to trigger movie display |
+| movie_onset_delay | 0.0 | Delay before movie starts |
+| handle_collisions | True | Enable collision detection |
+| collision_radius | 0.3 | Collision detection radius |
+| collider_flag | ["Floor", "Collider"] | Collision objects to enable |
+| hide_collider | [False, True] | Hide collision objects visually |
 
