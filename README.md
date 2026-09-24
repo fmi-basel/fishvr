@@ -4,7 +4,7 @@ This software package is linked to the publication 'supercoolfish VR behavior' [
 If you use use this code for your publication, please cite us.
 
 ### Overview
-This software package was designed to allow the user to configure and run a virtual reality (VR) experiment intended for headfixed zebrafish (*Danio rerio*). Repetitions, conditions and triggers can be configured and saved. Inputs are the position updates from the tail-tracking script via [XXX], the Blendr VR model and the experiment configuration of the XXX. Outputs are the updated VR over the projectors stimuli triggers and log file.
+This software package was designed to allow the user to configure and run a virtual reality (VR) experiment intended for headfixed zebrafish (*Danio rerio*). Landmarks, stimulation triggers, repetitions and other conditions can be configured and saved. Inputs are the position updates from the tail-tracking script from the UDP broadcast, the Blendr VR model, the setup configuration and the experiment configuration of the Trials. Outputs are the updated VR, stimuli triggers and a log file.
 
 ## System requirements
 PC
@@ -18,32 +18,29 @@ Use the environment.yml file to download the necessary packages.
 For a detailed description of all the setting options, click here.  
 For documentation on some user-editable functions, see LINK.  
 
-To get the software running with an example:  
-Run fish_vr_world_panda3d.py and select [EXAMPLE SETUP CONFIG] and [EXAMPLE EXPERIMENT CONFIG], the option to determine the log save path can be canceled without consequences. An example VR environment will be loaded and the VR started. Arrows can be used to navigate in the VR.
+# To get the software running with an example:  
+Run fish_vr_world_panda3d.py and select [EXAMPLE SETUP CONFIG] and then [EXAMPLE EXPERIMENT CONFIG] when prompted, the option to determine the log save path can be canceled without consequences. An example VR environment will be loaded and the VR started. Arrows can be used to navigate in the VR.  
 
-The package is structured as follows:
-The setup configurations (.ini) are user settings that are specific to your experimental hardware. To make it easy to repeat trials or make blocks of trials, first trials are configured, which can then be configured to be grouped and/or repeated in an experiment configuration. The setup config file (.ini) and experiment config file (.json) are selected when the main software is launched along with where the log file will be saved.
+# The package is structured as follows:
+The Setup Configurations (.ini) are user settings that are specific to your experimental hardware. To make it easy to repeat Trials or make Blocks of a specific sequence of Trials, first Trials are configured, which can then be grouped and/or repeated in an Experiment Configuration. The Setup Config file (.ini) and Experiment Config file (.json) are selected when the main software is launched along with the log file will be save path.  
 
-To set up your own experiment, one would have to design a .bam VR environment.
+To set up your own experiment, one would first have to design a .bam VR environment.  
 
-Then, to configure a trial, use configure_vr_trials_gui.py  
-    This will launch a user interface in which the settings of a Trial can be configured. While the first column is compulsory, the second and third column, below 'stimulation', are optional when 'stimulation' is set to False. If 'stimulation' is True, i.a. the stimulation mode, location, duration and/or landmarks (images or videos) can be configured. The stimulation channels refer to the pins on a Teensy microcontroller. When activated, these will give a digital 3V signal and could for example be used to toggle odour stimulation in a certain location for a certain duration within the VR. An additional single analog pin is available for for example brightness control of optogenetic stimulation. The resulting Trial configuration is saved as .json.
+Then, to configure a Trial, use configure_vr_trials_gui.py.  
+This will launch a user interface in which the settings of a Trial can be configured. While the first column is compulsory, the second and third column, below 'stimulation', are optional when 'stimulation' is set to False. If 'stimulation' is True, i.a. the stimulation mode, triggers, location, duration and/or landmarks (images or videos) can be configured. The stimulation channels refer to the pins on a Teensy microcontroller. When activated, these will give a digital 3V signal and could for example be used to toggle odour stimulation in a certain location for a certain duration within the VR. An additional single analog pin on the Teensy board is available for example for brightness control of optogenetic stimulation. The resulting Trial Configuration is saved as .json.  
 
-Once one or more trials are configured, they can be combined using configure_vr_experiment_gui.py  
-This will launch a small GUI that will let add Trials and set the repeats of the Trial. This can be repeated with different Trial configuration files to create a Trial Block. Also Trial Blocks can be added in this GUI to make it easy to combine multiple Trial Blocks. The resulting Experiment configuration is selected when the main code is launched.
+Once one or more Trials are configured, they can be combined using configure_vr_experiment_gui.py  
+This will launch a small GUI that will let one add Trials and set the repeats of the Trial. This can be repeated with different Trial Configuration files to create a Trial Block. Also Trial Blocks can be added in this GUI to make it easy to combine multiple Trial Blocks into an Experiment Configuration. The resulting Experiment Configuration is selected when the main code is launched.  
 
-Running fish_vr_world_panda3d.py will start the VR experiment. The VR will be projected and updated with the datastream from the Tail Tracking software, stimuli and or landmarks will be triggerd at the specified locations for the specified durations, 2P acqusition can be started/stopped and the logfile will be update with the VR information and 2P frame count.
+Running fish_vr_world_panda3d.py will start the VR experiment. The VR will be projected and updated with the data stream from the Tail Tracking UDP broadcast, stimuli and or landmarks will be triggered at the specified locations for the specified duration, 2P acquisition can be started/stopped and the logfile will be update with the VR information and 2P frame count.  
 
 
 ## Hardware
 A Teensy 4.0 microcontroller was used for the timing and trigger control.  
 The adult zebrafish were mounted with a headbar in a 4 sided tank. The VR was projected on the front and sides of the tank with three VOPLLS N3 projectors.  
 For the odour delivery, the 3.3V Teensy output was bumped to 5V with a 74ACT541 to control the valve controller. Pull-down resistors were used before the VR Timing Teensy and after the 74ACT541to prevent channels from floating causing rapid switching between ON/OFF states. Circuit drawings can be found [here](Interface_circuit_for_teensy_4_0).   
-An Automate Scientific ValveLink8.2/ 8.3 controller and valve system and odour manifold were used to deliver the odour compounds. [LINK](https://www.autom8.com/shop/perfusion-equipment/perfusion-accessories/micro-manifold-8-into-1-with-flow-control-ptfe-inert/)
+An Automate Scientific ValveLink8.2/ 8.3 controller and valve system and odour manifold were used to deliver the odour compounds. [LINK](https://www.autom8.com/shop/perfusion-equipment/perfusion-accessories/micro-manifold-8-into-1-with-flow-control-ptfe-inert/)  
 
-
-## License
-check with FMI
 
 ## References
 Inspiration for parts of this code has been drawn from among others:  
