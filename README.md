@@ -1,9 +1,9 @@
-# Virtual reality software for headfixed (zebra) fish 
+# Virtual reality software for head-fixed (zebra)fish 
 
 This software package is linked to the publication 'supercoolfish VR behavior' [LINK].  
 If you use this code for your publication, please cite us.
 
-### Overview
+## Overview
 This software package was designed to allow the user to configure and run virtual reality (VR) experiments intended for head-fixed zebrafish (*Danio rerio*). Landmarks, stimulation triggers, repetitions, block structures and other conditions can be configured and saved. Inputs are the position updates from the tail-tracking script from a UDP broadcast, a Blender VR model, a setup configuration and an experiment configuration file. Tail tracking is used to update the VR in real time. The executed trial configurations and a frame-by-frame log of the VR experiment are saved as outputs.
 
 ## System requirements
@@ -16,7 +16,7 @@ Create a python environment with the dependencies listed in the environment.yml 
 ## User manual  
 A detailed description of all the configuration options can be found [here](/Description_of_configuration_parameters.md).  
 
-### Instructions to run a VR experiment:
+## Instructions to run a VR experiment:
 - Create a python environment with the necessary dependencies
 - Export a 3D model of the VR world made in Blender as a .gltf or .glb file    
 - Convert the .gltf or .glb file to a .bam file using the gltf2bam command line utility  which will be installed as part of the panda3d-gltf package (see dependencies)    
@@ -30,7 +30,7 @@ A detailed description of all the configuration options can be found [here](/Des
 - Initiate tail tracking to start broadcasting a UDP message of the real time tracking output (see instructions in the tail tracking package)  
 - Run VR with either fish_vr_world_panda3d.py  or fish_vr_world_panda3d_record_replay.py
 
-### To run the software with an example:  
+## To run the software with an example:  
 Run fish_vr_world_panda3d.py and select an example [Setup Configuration file](setup/vrsetup_3projectors.ini) and then [EXAMPLE EXPERIMENT CONFIG] when prompted, log files can optionally be saved. An example VR environment will be loaded and the VR started. Arrow keys can be used to navigate in the VR.  
 
 ## Hardware
