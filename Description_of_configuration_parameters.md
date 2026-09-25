@@ -8,7 +8,7 @@ The following shortkeys can be used to control the VR and start/stop 2-photon ac
 's' Progress to next trial only if the current trial is completed  
 'e' End current trial and progress to next immediately  
 'p' Print current position (X, Y) and heading  
-'t' Toggle 2-photon imaging on/off (start if off, stop if on)
+'t' Toggle 2-photon imaging on/off (start if off, stop if on) 
 'r' Toggles in and out of the replay mode in which the sensory experience from past trials are replayed. Available when using the fish_vr_world_panda3d_record_replay.py script
 
 ### VR setup file (.ini)  
