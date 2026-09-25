@@ -4,7 +4,7 @@ This software package is linked to the publication 'supercoolfish VR behavior' [
 If you use this code for your publication, please cite us.
 
 ### Overview
-This software package was designed to allow the user to configure and run virtual reality (VR) experiments intended for headfixed zebrafish (*Danio rerio*). Landmarks, stimulation triggers, repetitions, block structures and other conditions can be configured and saved. Inputs are the position updates from the tail-tracking script from a UDP broadcast, a Blender VR model, a setup configuration and an experiment configuration file. Tail tracking is used to update the VR in real time. The executed trial configurations and a frame-by-frame log of the VR experiment are saved as outputs.
+This software package was designed to allow the user to configure and run virtual reality (VR) experiments intended for head-fixed zebrafish (*Danio rerio*). Landmarks, stimulation triggers, repetitions, block structures and other conditions can be configured and saved. Inputs are the position updates from the tail-tracking script from a UDP broadcast, a Blender VR model, a setup configuration and an experiment configuration file. Tail tracking is used to update the VR in real time. The executed trial configurations and a frame-by-frame log of the VR experiment are saved as outputs.
 
 ## System requirements
 - A computer with a graphics card supporting multiple displays as needed  
