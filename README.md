@@ -8,7 +8,7 @@ This software package was designed to allow the user to configure and run virtua
 
 ## System requirements
 - PC with a graphics card supporting multiple displays as needed  
-- The software has been extensively tested on windows 10 and 11 and is expected to also run across OS platforms that support the specific requirements of the python environment
+- The software has been extensively tested on Windows 10 and 11 and is expected to also run across OS platforms that support the specific requirements of the python environment
 
 ## Installation instructions
 Create a python environment with the dependencies listed in the environment.yml file. This file includes dependencies needed for both the VR and the tail tracking workflows.
