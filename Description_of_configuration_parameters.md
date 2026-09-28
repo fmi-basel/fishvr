@@ -1,8 +1,9 @@
-# Description of configuration parameters
+# Description of configuration parameters and the output log file
 
 This document contains a detailed description of all the user configurable values in the hardware configurations .ini file and the parameters available to configure a trial in a VR experiment.  
 
-### Preconfigured function keys
+### Preconfigured function keys  
+
 The following shortkeys can be used to control the VR and start/stop 2-photon acquisition via external triggering.  
 'w' Force progress to next trial regardless of outcome of the current trial  
 's' Progress to next trial only if the current trial is completed  
@@ -46,7 +47,7 @@ Example values are included to show the expected input format
 ### Configure VR trial (configure_vr_trials_gui.py)
 
 Trials are saved as a json file and are converted to an experiment configuration file, which consists of a json object of one or more trials, using configure_vr_experiment_gui.py.
-All distances are assumed to be metres in the VR model and time is specified in seconds. 
+All distances are assumed to be metres in the VR model and time is specified in seconds.   
 | Parameter | Example value/format | Description |
 |-----------|-------|-------------|
 | trial_id | "default" | Unique identifier for the trial |
@@ -109,4 +110,34 @@ All distances are assumed to be metres in the VR model and time is specified in 
 | handle_collisions | True | Enable Panda3D collision handling |
 | collision_radius | 0.3 | Collision radius |
 | collider_flag | ["Floor", "Collider"] | Name of nodes in the VR model file for which collisions are detected |
-| hide_collider | [False, True] | Hide a node flagged as a collider from being displayed in the VR |
+| hide_collider | [False, True] | Hide a node flagged as a collider from being displayed in the VR |  
+
+
+### Output log files
+Two output log files are generated. A frame-by-frame .csv log of the VR session and a .json file containing the history of execution of trials as defined in the input experiment configuration.
+The columns in the frame-by-frame log are organized as described in the table below. The fields that require external trigger signals to be read requires them to be connected to the corresponding pins on the teensy. 
+| Column name | Description |
+|-----------|-------|
+| trial | Counter incrementing every trial |
+| trial index | Index of the current trial as per the order in the experiment configuration file |
+| trial onset counter | Increments every time a new trial begins |
+| 2p framecount | The number of 2-photon frame acquisitions occurring in the interval between the last VR frame and this one |
+| timestamp | Current time (s) relative to the start of the VR |
+| xpos | X coordinate of the current position of the fish in the VR |
+| ypos | Y coordinate of the current position of the fish in the VR |
+| heading | Current orientation of the fish in the horizontal plane in degrees |
+| velocity | Forward velocity (metres per second) |
+| dheading | Change in heading (degrees per second) |
+| 2p state | Whether two-photon imaging is taking place |
+| optic flow state | Optic flow on/off |
+| optic flow direction | Direction of optic flow in degrees w.r.t. either the allocentric or egocentric frame of reference as defined by the user |
+| optic flow velocity | Optic flow velocity in m/s |
+| stim state | 8-bit integer encoding the state of each of the digital output pins. Decode to a binary string using the int_to_bools() function included in the fish_vr_world_panda3d.py code |
+| stim mode pulsed | 8-bit integer encoding whether a digital output pin is configured in 'pulsed' mode or if timing is controlled by the VR update loop |
+| tail tracking framecount | Frame counter value read from the tail tracking camera. Can be used to cross-reference this log with the tail tracking log |
+| vr gain | Global gain multiplier applied to the tracking outputs |
+| inactivity timer | Time the fish is not swimming. Relies on thresholds being set correctly in the tracking script |
+| is swimming | Whether the fish is swimming. Requires user to set thresholds correctly in the tail tracking script |
+| movie timer started | Timer to reveal the movie when hide_movie is True |
+| movie revealed | When the movie has been revealed when hide_movie is True |
+| udp sync failed | Logs events where a time-out occurs waiting for a new UDP message |
