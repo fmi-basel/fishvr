@@ -1,3 +1,35 @@
+"""
+**** Run this script to test the latency of the VR system ***
+
+Running this script generates periodic digital output triggers and sharp luminance transitions (black to white screen).
+
+These outputs can be read by feedback inputs to the teensy running the vrtiming.ino script to estimate the time difference
+between the action and its consequence. Measurements performed this way are limited by the time resolution of the VR frame rate.
+
+Latencies for the updating 1) the state of the digital trigger outputs and 2) the VR display, are estimated on independent runs
+by configuring the hardware as described below:
+
+
+For digital triggers:
+1) Connect One of the digital output pins from the teensy back to the 2-photon frame clock input. 
+2) A constant +5V source must be connected to the 2p acquisition state input pin of the teensy interface circuit to log digital input events. 
+3) Run this script and save the log file. 
+4) The log file will include a frame-by-frame timestamp, the state of the digital output and the measured feedback of
+the digital trigger being executed in hardware.
+5) The time difference between the onset of the trigger and the rising edge (time of first non-zero value in the log) of the feedback input is the latency.
+
+For VR display update:
+1) Position a light sensor, such as an amplified photodiode sensor, to detect the output from the VR display (eg. the projector).
+2) Ensure that the light sensor has a sufficiently fast response time (<VR frame rate) and limit its maximum output voltage to +5V.
+3) Visualize the output of the sensor on an oscilloscope to ensure that the signal reads close to zero when the screen is dark 
+and close to the 5V maximum when the screen displays white.
+4) Connect the output of the sensor to the 2-photon frame clock input. 
+5) As before, a constant +5V source must be connected to the 2p acquisition state input pin of the teensy interface circuit to log digital input events. 
+3) Run this script and save the log file. 
+4) The log file will include a frame-by-frame timestamp, the output state (same as above) when the screen turns white, and the measured feedback from the light sensor.
+5) The time difference between the onset of the trigger and the rising edge (time of first non-zero value in the log) of the feedback input is the latency.
+"""
+
 import sys
 import builtins
 from direct.showbase.ShowBase import ShowBase
