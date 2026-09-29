@@ -4,7 +4,7 @@ import json
 import random
 
 """
-Experiment configuration GUI made using ChatGPT with minor modifications. USE WITH CAUTION
+Experiment configuration GUI made using ChatGPT with minor modifications.
 User interface wrapper around the makeconfig function in configure_vr_experiment.py
 Functionality should be identical to configure_vr_experiment.py 
 """

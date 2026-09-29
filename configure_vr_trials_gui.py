@@ -5,7 +5,7 @@ from tkinter import *
 import json
 
 """
-Trial editor GUI made using ChatGPT. USE WITH CAUTION
+Trial editor GUI made using ChatGPT
 """
 
 # default trial parameters
