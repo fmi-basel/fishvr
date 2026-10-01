@@ -471,7 +471,7 @@ class ZebrafishVirtualReality(ShowBase):
 
     def setupScene(self):
 
-        if self.record_and_replay:
+        if self.record_and_replay and self.trial_index > 0:
 
             if self.ready_to_replay:
                     self.replay = True
@@ -736,7 +736,7 @@ class ZebrafishVirtualReality(ShowBase):
 
             if keyname == 'r':
 
-                if self.record_and_replay:
+                if self.record_and_replay and self.trial_index > 0:
 
                     self.replay = not self.replay
 
